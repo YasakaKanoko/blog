@@ -29,6 +29,7 @@ export default defineConfig({
   // cacheDir: './.vitepress/.vite', // 缓存目录
   // ignoreDeadLinks: true, // 跳过死链接
   base: '/', // 部署到github pages时，需要指定base路径, 默认/
+  // base: '/blog/', // 部署到github pages时，需要指定base路径, 默认/
   lastUpdated: true, // 最后更新时间
   cleanUrls: true, // 路径是否为hash模式，默认false
   head: [
