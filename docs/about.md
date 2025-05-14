@@ -6,7 +6,7 @@
 
 - <samp>Editor: [VS Code](https://code.visualstudio.com/)</samp>
 - <samp>VS Code Settings: [vscode-settings](https://github.com/YasakaKanoko/vscode-settings)</samp>
-- <samp>VS Code Extensions: [vscode-extensions](/blog/plugin.md)</samp>
+- <samp>VS Code Extensions: [vscode-extensions](/post/plugin.md)</samp>
 - <samp>Theme: [Catppuccin for VSCode](https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc)</samp>
 - <samp>Icon Theme: [Catppuccin Icons for VSCode](https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc-icons)</samp>
 - <samp>Product Icons: [Carbon Product Icons](https://marketplace.visualstudio.com/items?itemName=antfu.icons-carbon)</samp>

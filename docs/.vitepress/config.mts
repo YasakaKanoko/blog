@@ -6,14 +6,14 @@ const vitePressSidebarOptions = [
     documentRootPath: 'docs',
     scanStartPath: 'notes',
     resolvePath: '/notes/',
-    collapsed:true,
+    collapsed: true,
     useTitleFromFileHeading: true
   },
-    {
+  {
     documentRootPath: 'docs',
-    scanStartPath: 'blog',
-    resolvePath: '/blog/',
-    collapsed:true,
+    scanStartPath: 'post',
+    resolvePath: '/post/',
+    collapsed: true,
     useTitleFromFileHeading: true
   }
 ];
@@ -23,12 +23,15 @@ export default defineConfig({
   title: "Banished Knight",
   description: "YasakaKanoko",
   lang: 'en-US',
+  markdown: {
+    math: true
+  },
   srcDir: '.', // 指定项目根目录, 默认.
   // outDir:'../public', // 指定输出目录
   // assetsDir:'../assets', // 指定静态资源目录, 该目录需与outDir在同一目录
   // cacheDir: './.vitepress/.vite', // 缓存目录
   // ignoreDeadLinks: true, // 跳过死链接
-  // base: '/docs/', // 部署到github pages时，需要指定base路径, 默认/
+  base: '/blog/', // 部署到github pages时，需要指定base路径, 默认/
   lastUpdated: true, // 最后更新时间
   cleanUrls: true, // 路径是否为hash模式，默认false
   head: [
@@ -50,18 +53,11 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'Notes', items: [
-          { text: 'javascript', link: '/notes/js' },
-          { text: 'node', link: '/notes/node' },
-          { text: 'vue', link: '/notes/vue' },
-          { text: 'React', link: '/notes/react' }
-
+          { text: 'JavaScript', link: '/notes/JavaScript' },
+          { text: "TypeScript", link: '/notes/TypeScript' },
         ]
       },
-      {
-        text: 'Blog', items: [
-          { text: 'Tools', link: '/blog/plugin' },
-        ]
-      },
+      { text: 'Blog', link: '/post' },
       { text: 'About', link: '/about' },
     ],
     // 搜索
