@@ -5,9 +5,13 @@
 ## <samp>开发</samp>
 
 - <samp>[GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens): Git 可视化</samp>
+
 - <samp>[Code Spell Checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker): 拼写检查</samp>
+
 - <samp>[Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens): 改进错误、警告和其他语言诊断的突出显示</samp>
+
 - <samp>[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)</samp>
+
 - <samp>[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): 指定配置文件 `.prettierrc.js` 在项目中通过配置文件进行格式化</samp>
 
   ```js
@@ -18,23 +22,50 @@
   ```
 
 - <samp>[i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally)</samp>
-- <samp>[Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify): 内敛图标预览</samp>
-- <samp>[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)</samp>
+
 - <samp>[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss): Tailwind CSS 智能提示</samp>
+
 - <samp>[CSS Modules](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)</samp>
+
+- <samp>[UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss)</samp>
+
+- <samp>[Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify): 内敛图标预览</samp>
+
+- <samp>[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)</samp>
+
+- <samp>[Browse Lite](https://marketplace.visualstudio.com/items?itemName=antfu.browse-lite)</samp>
+
+- <samp>[Vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite)</samp>
+
 - <samp>[Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)</samp>
+
 - <samp>[ES7 React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=rodrigovallades.es7-react-js-snippets): ES7 React/Redux/React-Native/JS 代码片段</samp>
+
 - <samp>[Shader languages support for VS Code](https://marketplace.visualstudio.com/items?itemName=slevesque.shader)</samp>
   > <samp>Web GL 必备的着色器语言的语法高亮工具</samp>
+  
 - <samp>[shadcn Color Preview](https://marketplace.visualstudio.com/items?itemName=dexxiez.shadcn-color-preview): 颜色转换</samp>
+
+- <samp>[Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)</samp>
+
 - <samp>[Rainbow CSV](https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv): 分隔 CSV、TSV 和 其他分隔符文件</samp>
+
 - <samp>[change-case](https://marketplace.visualstudio.com/items?itemName=wmaurer.change-case): 命名转换</samp>
+
 - <samp>[Commit Message Editor](https://marketplace.visualstudio.com/items?itemName=adam-bender.commit-message-editor): 方便编辑提交信息</samp>
+
 - <samp>[px to rem & rpx & vw (cssrem)](https://github.com/cipchk/vscode-cssrem/blob/HEAD/README.zh-CN.md): px、rem 相互转换</samp>
+
 - <samp>[Template String Converter](https://marketplace.visualstudio.com/items?itemName=meganrogge.template-string-converter): 输入 `${` 自动转为模板字符串</samp>
+
 - <samp>[TabOut](https://marketplace.visualstudio.com/items?itemName=albert.TabOut): 按 `Tab` 跳出括号</samp>
+
+- <samp>[Tab Cycle](https://marketplace.visualstudio.com/items?itemName=mpontus.tab-cycle)</samp>
+
 - <samp>[vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components): 组件样式语法高亮</samp>
+
 - <samp>[Highlight Matching Tag](https://marketplace.visualstudio.com/items?itemName=vincaslt.highlight-matching-tag): 标签高亮</samp>
+
 - <samp>[Parameter Hints](https://marketplace.visualstudio.com/items?itemName=DominicVonk.parameter-hints): 函数参数智能提示</samp>
 
 ## <samp>辅助</samp>
@@ -46,6 +77,9 @@
 - <samp>[Project Manager](https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager)</samp>
 - <samp>[Todo Tree](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.todo-tree)</samp>
 - <samp>[Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)</samp>
+- <samp>[Slidev](https://marketplace.visualstudio.com/items?itemName=antfu.slidev)</samp>
+- <samp>[Where Am I?](https://marketplace.visualstudio.com/items?itemName=antfu.where-am-i)</samp>
+- <samp>[TSConfig Helper](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-tsconfig-helper)</samp>
 
 ## <samp>工具</samp>
 
@@ -54,12 +88,17 @@
 - <samp>[:emojisense:](https://marketplace.visualstudio.com/items?itemName=bierner.emojisense)</samp>
 - <samp>[CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)</samp>
 - <samp>[vscode-pdf](https://marketplace.visualstudio.com/items?itemName=tomoki1207.pdf)</samp>
-- <samp>[Office Viewer(Markdown Editor)](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-office)</samp>
+- <samp>[Office Viewer](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-office)</samp>
 - <samp>[CodeSnap](https://marketplace.visualstudio.com/items?itemName=adpyke.codesnap)</samp>
 - <samp>[Draw.io Integration](https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio)</samp>
 - <samp>[Dev Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)</samp>
 - <samp>[Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare)</samp>
 - <samp>[SQLite3 Editor](https://marketplace.visualstudio.com/items?itemName=yy0931.vscode-sqlite3-editor)</samp>
+- <samp>[Open in GitHub Button](https://marketplace.visualstudio.com/items?itemName=antfu.open-in-github-button)</samp>
+- <samp>[GitHub Actions](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions)</samp>
+- <samp>[GitHub Pull Requests](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-pull-request-github)</samp>
+- <samp>[EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)</samp>
+- <samp>[WakaTime](https://marketplace.visualstudio.com/items?itemName=WakaTime.vscode-wakatime)</samp>
 
 ## <samp>外观</samp>
 
@@ -71,6 +110,9 @@
 - <samp>[vscode-icons](https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons)</samp>
 - <samp>[One Dark Pro](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme)</samp>
 - <samp>[Vitesse Theme](https://marketplace.visualstudio.com/items?itemName=antfu.theme-vitesse)</samp>
+- <samp>[file-icons](https://marketplace.visualstudio.com/items?itemName=file-icons.file-icons)</samp>
+- <samp>[Gruvbox Material](https://marketplace.visualstudio.com/items?itemName=sainnhe.gruvbox-material)</samp>
+- <samp>[Vira Theme](https://marketplace.visualstudio.com/items?itemName=vira.vsc-vira-theme)</samp>
 
 ## <samp>自动补全</samp>
 

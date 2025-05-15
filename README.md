@@ -93,7 +93,7 @@ blog
 
 ## <samp>设定 public 根目录</samp>
 
-默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`，在 VitePress 配置中将 base 设为 `'/blog/'` 
+默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`，在 VitePress 配置中将 `base` 设为 `'/blog/'` 
 
 ```ts
 export default defineConfig({
@@ -181,7 +181,5 @@ export default defineConfig({
 3. <samp>更新文件，推送 `main` 分支</samp>
 
 ----
-
-<br>
 
 <samp>Code is licensed under <a href='./LICENSE'>MIT LICENSE</a>, <br>words and images are licensed under <a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a></samp>.
