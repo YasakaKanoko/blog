@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as a}from"./chunks/framework.DPDPlp3K.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"notes/index.md","filePath":"notes/index.md","lastUpdated":1747232457000}'),n={name:"notes/index.md"};function o(s,r,d,c,i,p){return a(),t("div")}const f=e(n,[["render",o]]);export{m as __pageData,f as default};
