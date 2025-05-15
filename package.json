@@ -1,4 +1,15 @@
 {
+  "private":"true",
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:YasakaKanoko/blog.git"
+  },
+  "author": "YasakaKanoko",
+  "license": "MIT",
+  "homepage": "https://github.com/YasakaKanoko/blog#readme",
   "devDependencies": {
     "vitepress": "^1.6.3",
     "vitepress-sidebar": "^1.31.1"
