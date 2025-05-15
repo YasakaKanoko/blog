@@ -9,7 +9,7 @@ const vitePressSidebarOptions = [
     collapsed:true,
     useTitleFromFileHeading: true
   },
-    {
+  {
     documentRootPath: 'docs',
     scanStartPath: 'blog',
     resolvePath: '/blog/',
@@ -28,7 +28,7 @@ export default defineConfig({
   // assetsDir:'../assets', // 指定静态资源目录, 该目录需与outDir在同一目录
   // cacheDir: './.vitepress/.vite', // 缓存目录
   // ignoreDeadLinks: true, // 跳过死链接
-  // base: '/blog/', // 部署到github pages时，需要指定base路径, 默认/
+  base: '/blog/', // 部署到github pages时，需要指定base路径, 默认/
   lastUpdated: true, // 最后更新时间
   cleanUrls: true, // 路径是否为hash模式，默认false
   head: [
