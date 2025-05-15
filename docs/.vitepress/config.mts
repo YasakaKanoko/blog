@@ -11,8 +11,8 @@ const vitePressSidebarOptions = [
   },
   {
     documentRootPath: 'docs',
-    scanStartPath: 'blog',
-    resolvePath: '/blog/',
+    scanStartPath: 'post',
+    resolvePath: '/post/',
     collapsed:true,
     useTitleFromFileHeading: true
   }
@@ -59,7 +59,7 @@ export default defineConfig({
       },
       {
         text: 'Blog', items: [
-          { text: 'Tools', link: '/blog/plugin' },
+          { text: 'Tools', link: '/post/plugin' },
         ]
       },
       { text: 'About', link: '/about' },
