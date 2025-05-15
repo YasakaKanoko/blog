@@ -12,12 +12,12 @@ hero:
   actions:
   - theme: brand       
     text: Quickstart ->      
-    link: /blog    
+    link: /post    
   - theme: alt       
     text: Github
     link: https://github.com/YasakaKanoko/blog
 features:
-  - title: <a href="blog">Blog</a>     
+  - title: <a href="post">Blog</a>     
     details: New Journey...   
   - title: <a href="notes">Notes</a>   
     details: Notes that I created or maintaining.  
