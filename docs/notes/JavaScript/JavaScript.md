@@ -2,6 +2,39 @@
 
 [[TOC]]
 
+## <samp>DOM</samp>
+
+<samp>**文档对象模型** ( DOM，Document Object Model ) 是一个应用变成接口 ( API )，在 HTML 中使用扩展的 XML；DOM 将整个页面抽象为一组分层节点。HTML 或 XML 每个组成部分都是一种节点，包含不同的数据</samp>
+
+```html
+<html>
+  <head>
+    <titl>Sample Page</titl>
+  </head>
+  <body>
+    <p>Hello World!</p>
+  </body>
+</html>
+```
+
+<samp>DOM 可以生成一组分层节点</samp>
+
+```
+html
+├─ head
+|   └─ title
+|  		└─ Sample Page
+└─ body
+    └─ p
+	  	└─ Hello World!
+```
+
+<samp>通过 DOM API 添加、删除、替换、修改节点</samp>
+
+
+
+
+
 <samp>**标识符**：变量、函数、属性或参数名</samp>
 
 <samp>**规则**</samp>
@@ -481,19 +514,58 @@ function resolve(value: number) {
 }
 ```
 
-### <samp>期约</samp>
+## <samp>ES2018 和 ES2019</samp>
 
-## <samp>BOM</samp>
+<samp>ES2018 于 2018 年 1 月完成，主要增加了异步迭代、剩余和扩展操作符、正则表达式和期约等特性</samp>
 
-## <samp>客户端检测</samp>
+### <samp>异步迭代</samp>
 
-<samp>由于各个浏览器存在差异，可能支持不同的特性，因此需要在实际开发中对浏览器种类或支持特性进行检测。**如果有普适的方案可以选择，应该优先选择**，而能力检测应当作为最后的方案</samp>
+<samp>异步执行用于释放对执行线程的控制以执行慢回收操作和收回控制，而迭代器协议则涉及为任意对象定义规范顺序</samp>
 
-### <samp>能力检测</samp>
+<samp>异步迭代对两个概念逻辑上统一</samp>
 
-## <samp>DOM</samp>
+<samp>**同步迭代器**在每次调用 `next()` 时都会返回 `{ value, done }` 对象，这需要确定这个对象内容的计算和资源获取在 `next()` 调用退出时必须完成，否则值将无法确定；使用同步迭代器迭代异步确定的值时，主线程会阻塞，以等待异步操作完成</samp>
 
-## <samp>事件</samp>
+<samp>**异步迭代器**会在每次调用 `next()` 时提供解决为 `{ value, done }` 对象的期约。执行线程可以释放并在当前这步循环完成之前执行其他任务</samp>
 
+### <samp>创建异步迭代器</samp>
 
+<samp>同步迭代器：下列函数定义一个简单的 `Emitter` 类，该类包含一个同步生成器函数，该函数产生一个，同步输出：0-4</samp>
+
+```js
+class Emitter {
+  constructor(max) {
+    this.max = max;
+    this.syncIdx = 0;
+  }
+  *[Symbol.iterator]() {
+    while (this.syncIdx < this.max) {
+      yield this.syncIdx++;
+    }
+  }
+}
+
+const emitter = new Emitter(5);
+
+function syncCount() {
+  const syncCounter = emitter[Symbol.iterator]();
+
+  for (const x of syncCounter) {
+    console.log(x);
+  }
+}
+syncCount();
+// 0
+// 1
+// 2
+// 3
+// 4
+```
+
+<samp>以上之所以运行起来，因为迭代器可以立即产生下一个值，假如不想在确定下一个产生的值时阻塞主线程执行，也可以定义异步迭代器函数，让它产生期约包装的值</samp>
+
+<samp>`Symbol.asyncIterator`：定义和调用输出期约的生成器函数。新增 `for-await-of` 循环，用于异步迭代器</samp>
+
+```js
+```
 
