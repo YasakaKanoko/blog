@@ -25,16 +25,22 @@ npm i -D sass
 npm start
 ```
 
-> <samp>冷知识：Sass 有两种语法</samp>
->
-> - <samp>`.scss` 最常用，是 CSS 超集</samp>
-> - <samp>`.sass` 规则比较特殊，采用缩进而不是花括号来嵌套语句，采用换行符而不是分号来分隔</samp>
+::: tip
+
+<samp>Sass 有两种语法</samp>
+
+- <samp>`.scss` 最常用，是 CSS 超集</samp>
+- <samp>`.sass` 规则比较特殊，采用缩进而不是花括号来嵌套语句，采用换行符而不是分号来分隔</samp>
+
+:::
 
 ## <samp>变量</samp>
 
 <samp>变量用于存储重复使用的信息，如：颜色、字体堆栈</samp>
 
-```scss
+::: code-group
+
+```scss [index.scss]
 $font-stack: Helvetica, sans-serif;
 $primary-color: #333;
 
@@ -44,14 +50,14 @@ body {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 body {
   font: 100% Helvetica, sans-serif;
   color: #333;
 }
 ```
+
+:::
 
 ## <samp>嵌套</samp>
 
@@ -59,7 +65,9 @@ body {
 
 <samp>过度嵌套会导致 CSS 难以维护</samp>
 
-```scss
+::: code-group
+
+```scss [index.scss]
 nav {
   ul {
     margin: 0;
@@ -79,9 +87,7 @@ nav {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 nav ul {
   margin: 0;
   padding: 0;
@@ -97,16 +103,23 @@ nav a {
 }
 ```
 
+:::
+
 ## <samp>模块</samp>
 
 <samp>创建 Sass 文件部分，使其模块化，易于维护；只需写作以下划线 `_` 开头的 Sass 文件，那么它就不会生成对应的 CSS 文件，部分文件可以使用 `@use` 引用</samp>
 
 <samp>Sass 文件可以通过 `@use` 规则将其拆分为任意的文件，将另一个 Sass 文件加载为 module，使得变量、函数、Mixins 隔离</samp>
 
-> <samp>注意：使用 `@use` 时，无需包含扩展名</samp>
+::: info <samp>注意</samp>
 
-```scss
-// _base.scss
+<samp>使用 `@use` 时，无需包含扩展名</samp>
+
+:::
+
+::: code-group
+
+```scss [_base.scss]
 $font-stack: Helvetica, sans-serif;
 $primary-color: #333;
 
@@ -114,8 +127,9 @@ body {
   font: 100% $font-stack;
   color: $primary-color;
 }
+```
 
-// index.scss
+```scss[index.scss]
 @use 'base';
 
 .inverse {
@@ -124,9 +138,7 @@ body {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 body {
   font: 100% Helvetica, sans-serif;
   color: #333;
@@ -138,11 +150,15 @@ body {
 }
 ```
 
+:::
+
 ## <samp>Mixins</samp>
 
 <samp>创建 `mixin` 需要使用 `@mixin` 并命名，在括号内定义变量，方便值传递。通过 `@include` 调用</samp>
 
-```scss
+::: code-group
+
+```scss [index.scss]
 @mixin theme($theme: DarkGray) {
   background: $theme;
   box-shadow: 0 0 1px rgba($theme, .25);
@@ -160,9 +176,7 @@ body {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 .info {
   background: DarkGray;
   box-shadow: 0 0 1px rgba(169, 169, 169, 0.25);
@@ -182,11 +196,15 @@ body {
 }
 ```
 
+:::
+
 ## <samp>继承</samp>
 
 <samp>使用扩展 `@extend` 将 CSS 属性从一个选择器共享；同类行为可以共用，因此创建一个占位符类，表示共同的行为；未使用的占位符类，将不会编译</samp>
 
-```scss
+::: code-group
+
+```scss [index.scss]
 %message-shared {
   border: 1px solid #ccc;
   padding: 10px;
@@ -219,9 +237,7 @@ body {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 .warning, .error, .success, .message {
   border: 1px solid #ccc;
   padding: 10px;
@@ -241,11 +257,15 @@ body {
 }
 ```
 
+:::
+
 ## <samp>运算符</samp>
 
 <samp>在 CSS 中进行数学运算，如：`+`、`-`、`*`、`math.div()`、`%`</samp>
 
-```scss
+::: code-group
+
+```scss [index.scss]
 @use "sass:math";
 
 .container {
@@ -262,9 +282,7 @@ aside[role="complementary"] {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[index.css]
 .container {
   display: flex;
 }
@@ -278,4 +296,6 @@ aside[role=complementary] {
   margin-left: auto;
 }
 ```
+
+:::
 

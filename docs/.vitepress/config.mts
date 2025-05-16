@@ -6,14 +6,14 @@ const vitePressSidebarOptions = [
     documentRootPath: 'docs',
     scanStartPath: 'notes',
     resolvePath: '/notes/',
-    collapsed:true,
+    collapsed: true,
     useTitleFromFileHeading: true
   },
   {
     documentRootPath: 'docs',
     scanStartPath: 'post',
     resolvePath: '/post/',
-    collapsed:true,
+    collapsed: true,
     useTitleFromFileHeading: true
   }
 ];
@@ -50,11 +50,13 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'Notes', items: [
-          { text: 'javascript', link: '/notes/js' },
-          { text: 'node', link: '/notes/node' },
-          { text: 'vue', link: '/notes/vue' },
-          { text: 'React', link: '/notes/react' }
-
+          { text: 'JavaScript', link: '/notes/JavaScript' },
+          { text: "TypeScript", link: '/notes/TypeScript' },
+          { text: 'Node.js', link: '/notes/Node' },
+          { text: 'Vue', link: '/notes/Vue' },
+          { text: 'React', link: '/notes/React' },
+          { text: '包管理器', link: '/notes/包管理器' },
+          { text: 'Browser', link: '/notes/Browser' }
         ]
       },
       {

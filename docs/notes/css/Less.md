@@ -34,7 +34,9 @@ npm i -D nodemon
 
 <samp>变量，用 `@` 表示，用于存储重复使用的信息；如：颜色、字体堆栈</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 @danger: #f40;
 @success: #0f0;
 @warning: #ff0;
@@ -45,19 +47,21 @@ npm i -D nodemon
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 #header {
   color: #0f0;
 }
 ```
 
+:::
+
 ## <samp>运算</samp>
 
 <samp>在变量中参与运算</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 @width: 100px;
 @height: @width * 2;
 .box {
@@ -66,20 +70,22 @@ npm i -D nodemon
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 .box {
   width: 100px;
   height: 200px;
 }
 ```
 
+:::
+
 ## <samp>嵌套</samp>
 
 <samp>**子集**</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 #header {
   color: black;
   .nav {
@@ -94,9 +100,7 @@ npm i -D nodemon
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 #header {
   color: black;
 }
@@ -114,9 +118,13 @@ npm i -D nodemon
 }
 ```
 
+:::
+
 <samp>**父级**：用 `&` 表示仍需同时满足的样式</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 li {
     color: #008c8c;
     &.active {
@@ -128,9 +136,7 @@ li {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 li {
   color: #008c8c;
 }
@@ -144,9 +150,13 @@ li::after {
 }
 ```
 
+:::
+
 <samp>**直接子元素**：用 `>` 表示</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 li {
   color: #008c8c;
   > a {
@@ -155,9 +165,7 @@ li {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 li {
   color: #008c8c;
 }
@@ -166,13 +174,17 @@ li > a {
 }
 ```
 
+:::
+
 ## <samp>Mixins</samp>
 
 <samp>将一组规则以函数式混入另一个规则</samp>
 
 <samp><b>无参</b></samp>
 
-```less
+::: code-group
+
+```less [style.less]
 .round() {
   border-radius: 5px;
 }
@@ -181,17 +193,19 @@ div {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 div {
   border-radius: 5px;
 }
 ```
 
+:::
+
 <samp><b>有参</b></samp>
 
-```less
+::: code-group
+
+```less [style.less]
 .round(@r) {
   border-radius: @r;
 }
@@ -200,17 +214,19 @@ div {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 div {
   border-radius: 5px;
 }
 ```
 
+:::
+
 <samp><b>参数默认值</b></samp>
 
-```less
+::: code-group
+
+```less [style.less]
 .round(@r: 5px) {
   border-radius: @r;
 }
@@ -219,13 +235,13 @@ div {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 div {
   border-radius: 5px;
 }
 ```
+
+:::
 
 ## <samp>注释</samp>
 
@@ -237,7 +253,9 @@ div {
 
 <samp>将混合和规则集作为值映射</samp>
 
-```less
+::: code-group
+
+```less [style.less]
 #colors() {
   primary: blue;
   secondary: green;
@@ -248,14 +266,14 @@ div {
 }
 ```
 
-<samp>编译</samp>
-
-```css
+```css[style.css]
 .button {
   color: blue;
   border: 1px solid green;
 }
 ```
+
+:::
 
 ## <samp>Scope</samp>
 
