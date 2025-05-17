@@ -93,11 +93,11 @@ blog
 
 ## <samp>设定 public 根目录</samp>
 
-默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`，在 VitePress 配置中将 `base` 设为 `'/blog/'` 
+默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`，在 VitePress 配置中将 `base` 设为 `'/blog/'`
 
 ```ts
 export default defineConfig({
-	title: 'VitePress',
+  title: 'VitePress',
   description: 'Vite & Vue powered static site generator.',
   lang: 'en-US',
   base: '/blog/',
@@ -110,7 +110,6 @@ export default defineConfig({
 
    ```yaml
    # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
-   #
    name: Deploy VitePress site to Pages
    
    on:
