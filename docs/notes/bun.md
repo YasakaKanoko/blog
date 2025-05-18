@@ -312,8 +312,9 @@ bun create react-app my-app
 
 - <samp>当运行 `bun test` 时，将自动递归查找文件目录中的 `*.test.{js|jsx|ts|tsx}`、`*._test.{js|jsx|ts|tsx}`、`*.spec.{js|jsx|ts|tsx}`、`*._spec.{js|jsx|ts|tsx}` 测试文件</samp>
 
-  ```ts
-  // main.test.ts
+  ::: code-group
+
+  ```ts[main.test.ts]
   import { expect, test } from "bun:test";
   
   beforeEach(() => {
@@ -327,8 +328,6 @@ bun create react-app my-app
     expect(Math.PI.toString()).toContain('3.14');
   });
   ```
-
-  <samp>执行测试</samp>
 
   ```sh
   bun test
@@ -345,9 +344,13 @@ bun create react-app my-app
   Ran 2 tests across 1 files. [90.00ms]
   ```
 
+  :::
+
 - <samp>在 Node 中的测试文件需以 `*.test.js` 和 `*.spec.js` 的后缀形式命名</samp>
 
-  ```js
+  ::: code-group
+
+  ```js[main.test.js]
   import { test, beforeEach } from 'node:test';
   import assert from 'node:assert';
   
@@ -363,8 +366,6 @@ bun create react-app my-app
     assert.equal(2 + 3, 5)
   });
   ```
-
-  <samp>执行测试</samp>
 
   ```sh
   node --test
@@ -382,8 +383,11 @@ bun create react-app my-app
   ℹ todo 0
   ℹ duration_ms 138.5318
   ```
-  
+
+  :::
+
   > <samp>Node 中的 `beforeEach` 会在所有用例执行前执行完毕，而 bun 的 `beforeEach` 会在用例之间穿插执行 </samp>
+
 
 ## <samp>SQLite</samp>
 

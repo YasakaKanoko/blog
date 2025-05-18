@@ -52,11 +52,6 @@ export default defineConfig({
         text: 'Notes', items: [
           { text: 'JavaScript', link: '/notes/JavaScript' },
           { text: "TypeScript", link: '/notes/TypeScript' },
-          { text: 'Node.js', link: '/notes/Node' },
-          { text: 'Vue', link: '/notes/Vue' },
-          { text: 'React', link: '/notes/React' },
-          { text: '包管理器', link: '/notes/包管理器' },
-          { text: 'Browser', link: '/notes/Browser' }
         ]
       },
       {
