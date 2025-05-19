@@ -26,7 +26,7 @@
    pnpm run docs:dev
    ```
 
-   <samp>服务将运行在 http://localhost:5173/ 上</samp>
+   <samp>服务将运行在 http://localhost:5173/ 上</samp>
 
 ## <samp>本地构建测试</samp>
 

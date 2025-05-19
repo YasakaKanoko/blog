@@ -621,14 +621,14 @@ console.log(proxy.id); // target
    ```js
    let count = 5;
    let color = "blue";
-   let values = [1,2,3];
+   let values = [1, 2, 3];
    let now = new Date(); 
    ```
 
    ```js[优化]
    let count = 5,
    	color = "blue",
-    	values = [1,2,3],
+    	values = [1, 2, 3],
     	now = new Date(); 
    ```
 
