@@ -23,6 +23,9 @@ export default defineConfig({
   title: "Banished Knight",
   description: "YasakaKanoko",
   lang: 'en-US',
+  markdown: {
+    math: true
+  },
   srcDir: '.', // 指定项目根目录, 默认.
   // outDir:'../public', // 指定输出目录
   // assetsDir:'../assets', // 指定静态资源目录, 该目录需与outDir在同一目录
