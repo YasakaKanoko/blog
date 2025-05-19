@@ -244,7 +244,7 @@ console.log(Bun.version);
 
   > <samp>值得注意的是：bun 中可以同时使用 ES 模块和 commonjs 模块标准</samp>
 
-## <samp>`bun add`</samp>
+## <samp>bun add</samp>
 
 <samp>添加依赖</samp>
 
@@ -276,7 +276,7 @@ bun add --peer @types/bun
 bun add react -E
 ```
 
-## <samp>`bun update`</samp>
+## <samp>bun update</samp>
 
 <samp>`bun update`：更新所有依赖项至最新版本</samp>
 
@@ -287,13 +287,13 @@ bun update --latest
 
 <samp>`bun update <package>`：更新特定依赖至最新版本</samp>
 
-## <samp>`bun remove`</samp>
+## <samp>bun remove</samp>
 
 ```sh
 bun remove ts-node
 ```
 
-## <samp>`bun create`</samp>
+## <samp>bun create</samp>
 
 <samp>vue</samp>
 
@@ -308,7 +308,7 @@ bun create vue@latest
 bun create react-app my-app
 ```
 
-## <samp>`bun test`</samp>
+## <samp>bun test</samp>
 
 - <samp>当运行 `bun test` 时，将自动递归查找文件目录中的 `*.test.{js|jsx|ts|tsx}`、`*._test.{js|jsx|ts|tsx}`、`*.spec.{js|jsx|ts|tsx}`、`*._spec.{js|jsx|ts|tsx}` 测试文件</samp>
 

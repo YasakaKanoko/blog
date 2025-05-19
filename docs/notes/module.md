@@ -42,7 +42,7 @@ console.log(example.addX(1)); // 6
 
 <samp>因此，可以认为 CommonJS 是同步的，必须等文件加载完毕后才能继续执行</samp>
 
-### <samp>`module`</samp>
+### <samp>module</samp>
 
 <samp>Node 提供一个 `Module` 构造函数，所有模块都是 `Module` 的实例</samp>
 
@@ -58,19 +58,19 @@ class Module {
 }
 ```
 
-> <samp>`module.id`：模块的标识符，通常是带有绝对路径的模块文件名</samp>
->
-> <samp>`module.filename`：模块的文件名，绝对路径</samp>
->
-> <samp>`module.loaded`：返回布尔值，表示模块是否完成加载</samp>
->
-> <samp>`module.parent`：返回对象，表示调用该模块的模块</samp>
->
-> <samp>`module.children`：返回数组，表示模块要用到的其他模块</samp>
->
-> <samp>`module.exports`：模块输出的值</samp>
+- <samp>`module.id`：模块的标识符，通常是带有绝对路径的模块文件名</samp>
 
-### <samp>[`require()`](https://fredkschott.com/post/2014/06/require-and-the-module-system/)</samp>
+- <samp>`module.filename`：模块的文件名，绝对路径</samp>
+
+- <samp>`module.loaded`：返回布尔值，表示模块是否完成加载</samp>
+
+- <samp>`module.parent`：返回对象，表示调用该模块的模块</samp>
+
+- <samp>`module.children`：返回数组，表示模块要用到的其他模块</samp>
+
+- <samp>`module.exports`：模块输出的值</samp>
+
+### <samp>[require()](https://fredkschott.com/post/2014/06/require-and-the-module-system/)</samp>
 
 <samp>Node 模块的加载机制</samp>
 
@@ -142,7 +142,7 @@ Module.prototype._compile = function(content, filename) {
 
 <samp>执行该函数，`Module._compile` 同步执行，待此代码执行完毕后，`Module._load` 开始执行并返回 `module.exports` 给用户</samp>
 
-### <samp>`exports`</samp>
+### <samp>exports</samp>
 
 `exports` 是 `module.exports` 的指针
 
@@ -175,7 +175,7 @@ module.exports = {
 
 > <samp>这里的 `this` 并没有指向 `module.exports`，而是指向了一个空对象 `{}`</samp>
 
-### <samp>`require` 规则</samp>
+### <samp>require 规则</samp>
 
 <samp>`require` 命令的基本功能，读入并执行一个 JavaScript 文件，返回该模块的 `exports` 对象</samp>
 
@@ -207,7 +207,7 @@ module.exports = {
 
   <samp>如果不存在 `main` 或 `package.json` ，则会加载该目录下 `index.js` 或 `index.node`</samp>
 
-### <samp>`require.main`</samp>
+### <samp>require.main</samp>
 
 <samp>`require` 方法有一个 `main` 属性，用于判断模块是直接执行，还是调用执行</samp>
 
@@ -295,7 +295,7 @@ console.log(counter); // 3
 
    > <samp>ESM 最初设计在浏览器中，文件的加载通过网络加载</samp>
 
-### <samp>`export`</samp>
+### <samp>export</samp>
 
 <samp>给定一个 ES 模块，浏览器无需查看导入或导出的内容，执行前整个模块都将被解析(这会涉及往返多次网络请求)</samp>
 
@@ -353,7 +353,7 @@ console.log(counter); // 3
    foo();
    ```
 
-### <samp>`import`</samp>
+### <samp>import</samp>
 
 1. <samp>通过接收一对大括号，指定需要导入的变量名，必须与导出时接口名称相同</samp>
 
@@ -408,7 +408,7 @@ console.log(counter); // 3
    myLib.add(1, 2);
    ```
 
-### <samp>`export default`</samp>
+### <samp>export default</samp>
 
 <samp>使用 `import` 命令时，必须知道加载的变量名和函数名</samp>
 
@@ -467,7 +467,7 @@ console.log(counter); // 3
    // import foo from './modules.js';
    ```
 
-### <samp>`export` 与 `import` 复合</samp>
+### <samp>export 与 import 复合</samp>
 
 1. <samp>在同一个模块中，表示输入后输出</samp>
 
@@ -532,7 +532,7 @@ export {users} from './users';
 import {db, users} from './constants/index';
 ```
 
-### <samp>`import()`</samp>
+### <samp>import()</samp>
 
 <samp>ES2020 提案：`import()` 函数支持动态加载模块</samp>
 
