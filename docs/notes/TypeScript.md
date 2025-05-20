@@ -1,6 +1,10 @@
 # <samp>TypeScript</samp>
 
+::: details <samp>目录</samp>
+
 [[TOC]]
+
+:::
 
 - <samp>**JS 动态类型在执行过程中**进行类型的匹配，JS 弱类型会在执行时进行隐式类型转换</samp>
 
@@ -750,4 +754,424 @@ let b: T = a;
 <samp>如果类型 A 的值可以赋值给 B，那么就称 A 是 B 的子类型(subtype)，类型 `number` 是 `number | string` 的子类型</samp>
 
 <samp>子类型可以用在父类型的场合，但是子类型可能具有父类型所没有的特征，所以父类型不能用在子类型的场合</samp>
+
+## <samp>数组</samp>
+
+<samp>数组写法</samp>
+
+- `数组类型[]`
+
+- <samp>泛型：Array<类型></samp>
+
+<samp>如果数组成员比较复杂，将类型写在括号内</samp>
+
+```ts
+let arr1: (number | string)[];
+
+let arr2: Array<number | string> = [1, 2, 3];
+```
+
+<samp>如果数组是任意类型，写成 `any[]`</samp>
+
+```ts
+let arr: any[];
+```
+
+<samp>声明后，成员数量是不受限制的</samp>
+
+```ts
+let arr:number[];
+arr = [];
+arr = [1];
+arr = [1, 2];
+arr = [1, 2, 3];
+```
+
+> <samp>这样设计的目的是因为数组的成员是动态变化的</samp>
+
+<samp>可以访问不存在的成员，TypeScript 不报错</samp>
+
+```ts
+let arr: number[] = [1, 2, 3];
+let foo = arr[3];
+```
+
+<samp>TypeScript 允许使用方括号读取成员的类型</samp>
+
+```ts
+type Names = string[];
+type name = Names[0];
+```
+
+> <samp>数组成员的索引类型是 `number`，所以读取成员的类型可以写成</samp>
+>
+> ```ts
+> type Names = string[];
+> type name = Names[number];
+> ```
+
+### <samp>类型推断</samp>
+
+<samp>如果是空数组，推断类型为 `any[]`；赋值后，自动更新类型推断</samp>
+
+```ts
+const arr = [];
+arr.push(1);
+arr; // const arr: number[]
+
+arr.push('a');
+arr; // const arr: (string | number)[]
+```
+
+<samp>类型推断自动更新的前提只发生在初始值为空数组的情况</samp>
+
+### <samp>只读数组</samp>
+
+<samp>只读数组：禁止删除、修改、新增数组成员</samp>
+
+1. <samp>声明只读数组，需要在类型前加上 `readonly`</samp>
+
+   ```ts
+   const arr: readonly number[] = [0, 1];
+   ```
+
+   <samp>只读数组没有 `pop()`、`push()` 等可改变原数组的方法，`number[]` 的方法数量多于 `readonly number[]` ，这意味这 `number[]` 其实是 `readonly number[]` 的子类</samp>
+
+   ```ts
+   function getSum(s: number[]) { }
+   const arr: readonly number[] = [1, 2, 3];
+   getSum(arr); // [!code error] 类型“readonly number[]”的参数不能赋给类型“number[]”的参数。类型 "readonly number[]" 为 "readonly"，不能分配给可变类型 "number[]"。
+   ```
+
+   > <samp>只读数组是数组的父类，所以不能代替原数组</samp>
+
+   > [!NOTE]
+   >
+   > <samp>`readonly` 关键字不能和数组泛型一起使用</samp>
+
+2. <samp>TypeScript 提供了两个泛型用于声明只读数组</samp>
+
+   <samp>分别是：`ReadonlyArray<T>` 和 `Readonly<T[]>`</samp>
+
+   ```ts
+   const a1: ReadonlyArray<number> = [1, 2, 3];
+   const a2: Readonly<number[]> = [1, 2, 3];
+   ```
+
+3. <samp>"`const` 断言" 也可以用于声明只读数组</samp>
+
+   ```ts
+   const arr = [0, 1] as const; // const arr: readonly [0, 1]
+   ```
+
+### <samp>多维数组</samp>
+
+<samp>TypeScript 的多维数组采用 `T[][]`，`T` 是最底层的数组成员的类型</samp>
+
+```ts
+let multi: number[][] = [
+  [1, 2, 3], 
+  [4, 5, 6]
+];
+```
+
+## <samp>元组</samp>
+
+<samp>元组(tuple)：表示成员类型可以自由设置的数组，即数组的各个成员的类型可以不同</samp>
+
+- <samp>由于成员类型不一样，所以**元组必须明确声明每个成员的类型**</samp>
+
+  ```ts
+  const s: [string, string, boolean] = ['1', '2', true];
+  ```
+
+- <samp>元素成员的类型可以添加问号(`?`)作为后缀，表示成员是可选的</samp>
+
+  ```ts
+  let a: [number, number?] = [1]; // let a: [number, (number | undefined)?]
+  ```
+  
+  > [!NOTE]
+  >
+  > <samp>可选成员必须在必选成员之后</samp>
+  >
+  > ```ts
+  > type myTuple = [
+  > number,
+  > number,
+  > number?,
+  > string?
+  > ];
+  > ```
+
+- <samp>元组越界的成员会报错</samp>
+
+- <samp>扩展运算符(`...`)：表示不限成员</samp>
+
+  ```ts
+  type NamedNums = [
+    string,
+    ...number[]
+  ];
+  const a: NamedNums = ['A', 1, 2];
+  const b:NamedNums = ['B'];
+  ```
+
+  <samp>扩展运算符（`...`）用在元组的任意位置都可以</samp>
+
+  ```ts
+  type t1 = [string, number, ...boolean[]];
+  type t2 = [string, ...boolean[], number];
+  type t3 = [...boolean[], string, number];
+  ```
+
+- <samp>不确定元组成员的类型和数量</samp>
+
+  ```ts
+  type Tuple = [...any[]]; // type Tuple = any[]
+  ```
+
+- <samp>元组成员可以添加成员名称，这个名称是说明性的，没有任何作用</samp>
+
+  ```ts
+  type Color = [
+    red: number,
+    green: number,
+    blue: number
+  ];
+  const c: Color = [255, 255, 255];
+  ```
+
+- <samp>读取元组成员类型</samp>
+
+  ```ts
+  type Tuple = [string, number];
+  type Age = Tuple[1]; // type Age = number
+  ```
+
+  <samp>元组成员的索引都是数值索引，即索引类型是 `number`</samp>
+
+  ```ts
+  type Tuple = [string, number];
+  type Age = Tuple[number]; // type Age = string | number
+  ```
+
+  
+
+### <samp>只读元组</samp>
+
+- <samp>类型前加上 `readonly`</samp>
+
+  ```ts
+  type t = readonly [number, string];
+  ```
+
+- <samp>泛型：`Readonly<T>`</samp>
+
+  ```ts
+  type t = Readonly<[number, string]>;
+  ```
+
+- <samp>"`const` 断言" 也可以用于声明只读元组</samp>
+
+  ```ts
+  let t = [3, 4] as const;
+  ```
+
+  > <samp>`as const` 生成的实际上是一个值类型，也可以称为只读数组或只读元组</samp>
+
+<samp>和数组一样，只读元组是元组的父类型，只读元组不能赋值给元组</samp>
+
+```ts
+function distanceFromOrigin([x, y]: [number, number]) {
+  return Math.sqrt(x ** 2 + y ** 2);
+}
+let point = [3, 4] as const;
+distanceFromOrigin(point); // [!code error] 类型“readonly [3, 4]”的参数不能赋给类型“[number, number]”的参数。类型 "readonly [3, 4]" 为 "readonly"，不能分配给可变类型 "[number, number]"。
+```
+
+<samp>要解决上面的报错，需要在传入的参数上使用类型断言</samp>
+
+```ts
+distanceFromOrigin(point as [number, number]); 
+```
+
+### <samp>成员数量</samp>
+
+- <samp>如果没有可选成员和扩展运算符，TypeScript 会推断出元组的成员数量(即元组长度)</samp>
+
+  ```ts
+  function f(point: [number, number]) {
+    if (point.length === 3) { // [!code error] 此比较似乎是无意的，因为类型“2”和“3”没有重叠。 
+    }
+  }
+  ```
+
+  > <samp>TypeScript 推测元组长度是 `2`，不可能是 `3`</samp>
+
+- <samp>如果包含了可选成员，TypeScript 会推断出可能的成员数量</samp>
+
+  ```ts
+  function f(point: [number, number?, number?]) {
+    if (point.length === 4) { // [!code error] 此比较似乎是无意的，因为类型“1 | 2 | 3”和“4”没有重叠。 
+    }
+  }
+  ```
+
+- <samp>如果使用了扩展运算符，TypeScript 就无法推断出成员数量</samp>
+
+### <samp>扩展运算符</samp>
+
+<samp>如果使用扩展运算符传入函数参数时，可能出现参数数量与数组数量长度不匹配的情况</samp>
+
+```ts
+const arr = [1, 2];
+
+function add(x: number, y: number) {
+}
+add(...arr); // [!code error] 扩张参数必须具有元组类型或传递给 rest 参数。
+```
+
+> <samp>因为函数的参数数量已经确定了，TypeScript 转换的参数个数是不确定的</samp>
+
+- <samp>方法一：把成员数量不确定的数组写成成员数量确定的元组，在使用扩展运算符</samp>
+
+  ```ts
+  const arr: [number, number] = [1, 2];
+  ```
+
+- <samp>方法二：使用 `as const` 断言</samp>
+
+  ```ts
+  const arr = [1, 2] as const;
+  ```
+
+## <samp>symbol</samp>
+
+<samp>Symbol 值通过`Symbol()`函数生成，每一个 Symbol 值都是独一无二的，与其他任何值都不相等</samp>
+
+```ts
+let x: symbol = Symbol();
+let y: symbol = Symbol();
+```
+
+> <samp>`x` 和 `y` 都是 symbol 类型，但是它们是不相等的</samp>
+
+### <samp>unique symbol</samp>
+
+<samp>`symbol` 类型包含所有的 Symbol 值，但无法表示某一具体的 Symbol 值，即 Symbol 值无法通过字面量表示</samp>
+
+- <samp>`unique symbol`：表示单个的、某个具体的 Symbol 值</samp>
+
+  > <samp>`unique symbol` 表示单个值且该值无法被修改，因此只能使用 `const` 声明</samp>
+  >
+  > ```ts
+  > let x: unique symbol = Symbol(); // [!code error] 类型为 "unique symbol" 的变量必须为 "const"。
+  > ```
+
+- <samp>`const` 声明的 Symbol 值，默认就是 `unique symbol`，因此可以省略值类型</samp>
+
+  ```ts
+  const x: unique symbol = Symbol(); // const x: typeof x
+  
+  // 等价于 
+  const x = Symbol(); // const x: typeof x
+  ```
+
+- <samp>`uninque symbol` 是 `symbol` 的子类型，可以将 `unique symbol` 赋值给 `symbol`</samp>
+
+  ```ts
+  const a: unique symbol = Symbol();
+  const b: symbol = a;
+  ```
+
+- <samp>每个 `unique symbol` 类型的变量，值是不一样的</samp>
+
+  ```ts
+  const a: unique symbol = Symbol();
+  const b: unique symbol = Symbol();
+  
+  console.log(a === b); // [!code error] 此比较似乎是无意的，因为类型“typeof a”和“typeof b”没有重叠。
+  ```
+
+- <samp>由于 Symbol 值是独一无二的，不能把一个赋值给另一个</samp>
+
+  ```ts
+  const a: unique symbol = Symbol();
+  const b: unique symbol = a; // [!code error] 不能将类型“typeof a”分配给类型“typeof b”。
+  ```
+
+  > <samp>如果需要写成同一个 `unique symbol` 类型，只能写成 `typeof a`</samp>
+  >
+  > ```ts
+  > const a: unique symbol = Symbol();
+  > const b: typeof a = a; 
+  > ```
+
+- <samp>`Symbol.for()`：返回相同的 Symbol 值(虽然值是相等的，但是引用完全不同)</samp>
+
+  ```ts
+  const a: unique symbol = Symbol.for('foo');
+  const b: unique symbol = Symbol.for('foo');
+  ```
+
+<samp>`unique symbol` 的作用是用作特定属性名，保证不会和其他属性名冲突；不能使用 `symbol`</samp>
+
+```ts
+const x:unique symbol = Symbol();
+const y:symbol = Symbol();
+
+interface Foo {
+  [x]: string; // [!code highlight]
+  [y]: string; // [!code error]
+}
+```
+
+<samp>`unique symbol` 类型可以用作 `class` 属性值，只能赋值给类的 `readonly static` 属性</samp>
+
+```ts
+class C {
+  static readonly foo: unique symbol = Symbol();
+}
+```
+
+> <samp>静态只读属性 `foo` 是 `unique symbol`， `static` 和 `readonly` 两个限定符缺一不可</samp>
+
+### <samp>类型推断</samp>
+
+- <samp>`let` 声明的 `symbol`，推断为 `symbol`</samp>
+
+  > <samp>如果 `let` 声明的变量，被赋值为另一个 `unique symbol` 变量，类型推断还是 `symbol`</samp>
+  >
+  > ```ts
+  > const x = Symbol();
+  > let y = x; // let y: symbol
+  > ```
+
+- <samp>`const` 声明的 `symbol`，推断为 `unique symbol`</samp>
+
+  > <samp>如果 `const` 声明的变量，被赋值为另一个 `symbol` 类型变量，则推断为 `symbol`</samp>
+  >
+  > ```ts
+  > let x = Symbol();
+  > const y = x; // const y: symbol
+  > ```
+
+## <samp>函数</samp>
+
+<samp>函数声明时，需要在声明时，给出参数的类型和返回值的类型</samp>
+
+```ts
+function hello(txt: string): void {
+  console.log('hello ' + txt);
+}
+```
+
+> <samp>`void`：表示没有返回值</samp>
+
+<samp>如果不指定类型，TypeScript 会推断参数类型为 `any`</samp>
+
+<samp>没有特定需求，返回值的类型可以不写，TypeScript 会自己推断</samp>
+
+
 
