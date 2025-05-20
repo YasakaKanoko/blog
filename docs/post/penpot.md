@@ -14,7 +14,7 @@
    docker compose -p penpot -f docker-compose.yaml up -d
    ```
 
-3. <samp>在浏览器中监听 <a href="http://localhost:9001/">http://localhost:9001/</a> </samp>
+3. <samp>在浏览器中监听 <a href="http://localhost:9001/">localhost:9001</a> </samp>
 
 4. <samp>停止 penpot</samp>
 
