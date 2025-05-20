@@ -12,7 +12,7 @@
   bun --version
   ```
 
-<samp>特点 ( 相较于 Node )</samp>
+<samp>特点(相较于 Node)</samp>
 
 1. <samp>Node 需要使用 `nvm` 进行版本控制，而 `bun` 可以直接升级自身</samp>
 
@@ -29,6 +29,15 @@
    bun --hot index.ts
    ```
 
+   > [!TIP]
+   >
+   > <samp>`--hot` 与 `--watch` 区别</samp>
+   >
+   > <samp>参考：[Watch mode](https://bun.sh/docs/runtime/hot)</samp>
+   >
+   > - <samp>`bun --watch` 会在检测导入文件变化时重启整个进程，即硬重启。会保留初始运行时的参数和环境变量，发生崩溃时尝试自动重启进程；适用于需要完全重启的场景</samp>
+   > - <samp>`bun --hot` 不会重启进程，即软重载。在检测到代码发生变化后，更新内部模块缓存并重新加载代码，同时保留所有全局状态，像 HTTP 服务器等状态不会丢失，刷新速度快，适用于需要高效开发，保持进程状态的场景</samp>
+
 ## <samp>Hello world!</samp>
 
 1. <samp>初始化</samp>
@@ -37,7 +46,7 @@
    bun init
    ```
 
-2. <samp>通过 Bun.serve 内置 API 编写一个简单服务器</samp>
+2. <samp>通过 `Bun.serve` 内置 API 编写一个简单服务器</samp>
 
    ```ts
    // index.ts
@@ -50,6 +59,8 @@
    
    console.log(`Listening on http://localhost:${server.port} ...`);
    ```
+
+3. <samp>运行</samp>
 
    ```sh
    # bun run大约比npm run(6ms 对比 170ms 的开销)快 28 倍。
@@ -80,6 +91,8 @@
   });
   ```
 
+- <samp>运行</samp>
+
   ```sh
   bun run index.ts
   
@@ -97,58 +110,64 @@
 
 > <samp>`-y`：默认参数，默认为 TypeScript 项目</samp>
 
-<samp>`@types/bun`：在 TypeScript 中安装 Bun 内置 API 便于引用全局变量</samp>
+- <samp>`@types/bun`：在 TypeScript 中安装 Bun 内置 API 便于引用全局变量</samp>
 
-```sh
-bun add -d @types/bun # devDependencies
-```
+  ```sh
+  bun add -d @types/bun
+  ```
 
-<samp>引用全局变量</samp>
+- <samp>引用全局变量</samp>
 
-```ts
-console.log(Bun.version);
-```
+  ```ts
+  console.log(Bun.version);
+  ```
 
-<samp>配置</samp>
+- <samp>配置</samp>
 
-```js
-"scripts": {
-  "start": "bun --watch run index.ts"
-},
-```
+  <samp><b>建议的编译选项</b>：支持顶级 `await`、JSX 和 ts 导入</samp>
 
-<samp><b>建议的编译选项</b>：支持顶级 `await`、JSX 和 ts 导入</samp>
+  ::: code-group
 
-```js
-{
-  "compilerOptions": {
-    // Environment setup & latest features
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-
-    // Best practices
-    "strict": true,
-    "skipLibCheck": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-
-    // Some stricter flags (disabled by default)
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
+  ```json[package.json]
+  "scripts": {
+    "start": "bun --watch run index.ts"
   },
-}
-```
+  ```
+
+  ```json[tsconfig.json]
+  {
+    "compilerOptions": {
+      // Environment setup & latest features
+      "lib": ["ESNext"],
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleDetection": "force",
+      "jsx": "react-jsx",
+      "allowJs": true,
+  
+      // Bundler mode
+      "moduleResolution": "bundler",
+      "allowImportingTsExtensions": true,
+      "verbatimModuleSyntax": true,
+      "noEmit": true,
+  
+      // Best practices
+      "strict": true,
+      "skipLibCheck": true,
+      "noFallthroughCasesInSwitch": true,
+      "noUncheckedIndexedAccess": true,
+  
+      // Some stricter flags (disabled by default)
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "noPropertyAccessFromIndexSignature": false,
+    },
+  }
+  ```
+
+  :::
+
+
 
 ## <samp>配置读取</samp>
 
@@ -246,46 +265,46 @@ console.log(Bun.version);
 
 ## <samp>bun add</samp>
 
-<samp>添加依赖</samp>
+- <samp>添加依赖</samp>
 
-```sh
-bun add lodash
-```
+  ```sh
+  bun add lodash
+  ```
 
-<samp>`--dev` 或 `-d` 或 `-D`：开发依赖</samp>
+- <samp>`--dev` 或 `-d` 或 `-D`：开发依赖</samp>
 
-```sh
-bun add -d lodash
-```
+  ```sh
+  bun add -d lodash
+  ```
 
-<samp>`--optional`：可选依赖项</samp>
+- <samp>`--optional`：可选依赖项</samp>
 
-```sh
-bun add --optional lodash
-```
+  ```sh
+  bun add --optional lodash
+  ```
 
-<samp>`--peer`：对等依赖项</samp>
+- <samp>`--peer`：对等依赖项</samp>
 
-```sh
-bun add --peer @types/bun
-```
+  ```sh
+  bun add --peer @types/bun
+  ```
 
-<samp>`--exact` 或 `-E`：使用确定版本</samp>
+- <samp>`--exact` 或 `-E`：使用确定版本</samp>
 
-```sh
-bun add react -E
-```
+  ```sh
+  bun add react -E
+  ```
 
 ## <samp>bun update</samp>
 
-<samp>`bun update`：更新所有依赖项至最新版本</samp>
+- <samp>`bun update`：更新所有依赖项至最新版本</samp>
 
-```sh
-# 更新至最新版
-bun update --latest
-```
+  ```sh
+  # 更新至最新版
+  bun update --latest
+  ```
 
-<samp>`bun update <package>`：更新特定依赖至最新版本</samp>
+- <samp>`bun update <package>`：更新特定依赖至最新版本</samp>
 
 ## <samp>bun remove</samp>
 

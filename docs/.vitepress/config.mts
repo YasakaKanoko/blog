@@ -57,11 +57,7 @@ export default defineConfig({
           { text: "TypeScript", link: '/notes/TypeScript' },
         ]
       },
-      {
-        text: 'Blog', items: [
-          { text: 'Tools', link: '/post/plugin' },
-        ]
-      },
+      { text: 'Blog', link: '/post' },
       { text: 'About', link: '/about' },
     ],
     // 搜索

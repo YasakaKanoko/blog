@@ -1,5 +1,7 @@
 # <samp>Module</samp>
 
+[[TOC]]
+
 ## <samp>CommonJS</samp>
 
 > <samp>参考</samp>

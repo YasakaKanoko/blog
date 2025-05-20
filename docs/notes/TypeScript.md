@@ -1,5 +1,7 @@
 # <samp>TypeScript</samp>
 
+[[TOC]]
+
 - <samp>**JS 动态类型在执行过程中**进行类型的匹配，JS 弱类型会在执行时进行隐式类型转换</samp>
 
 - <samp>TS 是静态类型</samp>
@@ -29,10 +31,18 @@
 
 1. <samp>初始化项目</samp>
 
-   ```sh
+   ::: code-group
+
+   ```sh[pnpm]
    # 初始化
    pnpm init
    ```
+
+   ```sh[bun]
+   bun init
+   ```
+
+   :::
 
 2. <samp>`tsc`：安装类型编译器</samp>
 
@@ -79,7 +89,7 @@
 
 3. <samp>依赖项</samp>
 
-   ```sh
+   ```sh[pnpm]
    # ts 官方类型库, 包含对 JS 代码的类型描述
    pnpm i -D @types/node
    
@@ -92,12 +102,18 @@
 
    ::: code-group
 
-   ```json[package.json]
+   ```json[pnpm.package.json]
    {
      "scripts": {
        "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts"
      },
    }
+   ```
+
+   ```json[bun.package.json]
+   "scripts": {
+     "dev": "bun --hot run index.ts"
+   },
    ```
 
    :::
@@ -148,18 +164,6 @@ tsc --noImplicitAny index.ts
 
 :::
 
-::: warning <samp>如果没有声明类型的变量，被赋值为 `undefined` 或 `null`，关闭 `noImplicitAny` 和 `strictNullChecks` 时，类型将被推断为 `any`</samp>
-
-```ts
-let a = undefined; // any
-let b = undefined; // any
-
-let c = null; // any
-let d = null; // any
-```
-
-:::
-
 ### <samp>污染问题</samp>
 
 <samp>`any` 类型可能污染其他变量，它可以赋值给任何类型的变量，导致其他变量出错</samp>
@@ -173,13 +177,13 @@ y = x; // [!code highlight] 不报错
 
 ## <samp>unknown</samp>
 
-<samp>`unknown`：表示类型不确定，可能是任意类型；( 严格版的 `any` )</samp>
+<samp>`unknown`：表示类型不确定，可能是任意类型；(严格的 `any`)</samp>
 
 <samp>`unknown` 和 `any` 的相似之处：所有类型的值都可以分配给 `unknown`</samp>
 
 <samp>不同之处</samp>
 
-- <samp>避免污染问题：`unknown` 类型的变量不能直接赋值给其他变量 ( 除了 `any` 和 `unknown` )</samp>
+- <samp>避免污染问题：`unknown` 类型的变量不能直接赋值给其他变量 (除了 `any` 和 `unknown`)</samp>
 
   ```ts
   let v1: unknown = 1;
@@ -199,25 +203,23 @@ y = x; // [!code highlight] 不报错
   v3() // [!code error] “v3”的类型为“未知”。
   ```
 
-- <samp>`unknown` 类型能进行的运算是有限的，只能进行比较运算 ( `==`, `===`, `!=`, `!==`, `||`, `&&`，`?`, `typeof`, `instanceof`)</samp>
+- <samp>`unknown` 类型能进行的运算是有限的，只能进行比较运算 (`==`, `===`, `!=`, `!==`, `||`, `&&`，`?`, `typeof`, `instanceof`)</samp>
 
   ```ts
-  let a:unknown = 1;
+  let a: unknown = 1;
   
-  a + 1; // [!code error]“a”的类型为“未知”。
+  a + 1; // [!code error] “a”的类型为“未知”。
+  
   ```
 
+- <samp>类型缩小：缩小 `unknown` 变量类型范围，将一个不确定的类型缩小到一个明确的类型</samp>
 
-### <samp>类型缩小</samp>
-
-<samp>类型缩小：缩小 `unknown` 变量类型范围，将一个不确定的类型缩小到一个明确的类型</samp>
-
-```ts
-let a: unknown = 1;
-if (typeof a === 'number') {
-  let r = a + 1; // [!code highlight]
-}
-```
+  ```ts
+  let a: unknown = 1;
+  if (typeof a === 'number') {
+    let r = a + 1; // [!code highlight]
+  }
+  ```
 
 <samp>`unknown` 可以看作是更安全的 `any`。一般来说，凡是需要设为 `any` 类型的地方，通常都应该优先考虑设为 `unknown` 类型</samp>
 
@@ -260,9 +262,9 @@ let v4: never = f();
 
 ::: info <samp>为什么 `never` 可以赋值给任意类型</samp>
 
-<samp>集合论：空集是任何集合的子集</samp>
+- <samp>集合论：空集是任何集合的子集</samp>
 
-<samp>`never` 是任何其他类型共有的，TypeScript 称其为 " 底层类型 ( bottom type ) "</samp>
+- <samp>`never` 是任何其他类型共有的，TypeScript 称其为 " 底层类型 ( bottom type ) "</samp>
 
 <samp>TypeScript 有两个"顶层类型 ( `any` 和 `unknown` )"，只有一个"底层类型 ( `never` )"</samp>
 
@@ -274,9 +276,9 @@ let v4: never = f();
 
 - <samp>`boolean`：包含 `true` 和 `false` 两个布尔值</samp>
 
-- <samp>`string`：包含所有字符串 ( 普通字符串和模板字符串 )</samp>
+- <samp>`string`：包含所有字符串 (普通字符串和模板字符串)</samp>
 
-- <samp>`number`：包含所有整数、浮点数 ( 非十进制数也属于 `number` )</samp>
+- <samp>`number`：包含所有整数、浮点数 (非十进制数也属于 `number`)</samp>
 
 - <samp>`bigint`：包含所有大整数</samp>
 
@@ -317,11 +319,23 @@ const r: null = null;
 const t: undefined = undefined;
 ```
 
+::: warning <samp>如果没有声明类型的变量，被赋值为 `undefined` 或 `null`，在关闭 `noImplicitAny` 和 `strictNullChecks` 时，类型将被推断为 `any`</samp>
+
+```ts
+let a = undefined; // any
+let b = undefined; // any
+
+let c = null; // any
+let d = null; // any
+```
+
+:::
+
 ## <samp>包装对象类型</samp>
 
 <samp>JavaScript 中的 5 种原始类型：`boolean`、`string`、`number`、`bigint`、`symbol`</samp>
 
-<samp>5 种原始类型的值，都有对应的包装对象 ( wrapper object )</samp>
+<samp>5 种原始类型的值，都有对应的包装对象(wrapper object)</samp>
 
 ```ts
 'hello'.charAt(1); // e
@@ -337,273 +351,403 @@ typeof s; // [!code highlight] 'object'
 s.charAt(1); // 'e'
 ```
 
-<samp>`s` 是字符串的包装对象，`typeof` 返回的是 `object` ，而不是 `string`，但本质上还是字符串，可以使用字符串方法</samp>
+<samp>`s` 是字符串的包装对象，`typeof` 返回的是 `object` ，不是 `string`，但本质上还是字符串，可以使用字符串方法</samp>
 
 > [!NOTE]
 >
-> <samp>`String()` 只有作为构造函数使用时 ( 即带有 `new` 关键字调用 )，才会返回包装对象；否则返回的是一个普通字符串；`Number()` 和 `Boolean()` 均如此</samp>
+> <samp>`String()` 只有作为构造函数使用时(即带有 `new` 关键字调用)，才会返回包装对象；否则返回的是一个普通字符串；`Number()` 和 `Boolean()` 均如此</samp>
 
-### <samp>Array</samp>
+### <samp>包装对象和字面量</samp>
 
-<samp>第一种方式：在元素类型后加上 `[]`</samp>
+<samp>TypeScript 提供了大写和小写进行区分</samp>
 
-::: code-group
+- <samp>`Boolean` 和 `boolean`</samp>
+- <samp>`String` 和 `string`</samp>
+- <samp>`Number` 和 `number`</samp>
+- <samp>`BigInt` 和 `bigint`</samp>
+- <samp>`Symbol` 和 `symbol`</samp>
 
-```ts [index.ts]
-let list: number[] = [1, 2, 3];
-```
+<samp>大写类型同时包含包装对象和字面量，小写类型只包含字面量</samp>
 
-```js [index.js]
-var list = [1, 2, 3];
-```
-
-:::
-
-<samp>第二种方式：使用数组泛型 `Array<元素类型>`</samp>
-
-::: code-group
-
-```ts [index.ts]
-let list: Array<number> = [1, 2, 3];
-```
-
-```js [index.js]
-var list = [1, 2, 3];
-```
-
-:::
-
-### <samp>Tuple</samp>
-
-<samp>元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同</samp>
-
-::: code-group
-
-```ts [index.ts]
-let x: [string, number];
-
-x = ['hello', 10];
-```
-
-```js [index.js]
-var x;
-
-x = ['hello', 10]; 
-```
-
-:::
-
-### <samp>Enum</samp>
-
-<samp>枚举类型：支持枚举值到枚举名的正、反向映射；默认情况下，从 `0` 开始为元素编号。也可以手动的指定成员的数值</samp>
-
-::: code-group
-
-```ts [index.ts]
-enum Color { Red, Green, Blue }
-let c: Color = Color.Green;
-
-```
-
-```js [index.js]
-var Color;
-(function (Color) {
-    Color[Color["Red"] = 0] = "Red";
-    Color[Color["Green"] = 1] = "Green";
-    Color[Color["Blue"] = 2] = "Blue";
-})(Color || (Color = {}));
-var c = Color.Green;
-
-```
-
-:::
-
-<samp><b>手动赋值</b></samp>
-
-::: code-group
-
-```ts [index.ts]
-enum Color { Red = 1, Green = 2, Blue = 4 }
-let c: Color = Color.Green;
-
-```
-
-```js [index.js]
-var Color;
-(function (Color) {
-    Color[Color["Red"] = 1] = "Red";
-    Color[Color["Green"] = 2] = "Green";
-    Color[Color["Blue"] = 4] = "Blue";
-})(Color || (Color = {}));
-var c = Color.Green;
-
-```
-
-:::
-
-<samp>枚举类型的便利在于可以由枚举的值得到它的名字，不确定映射到哪个名字，可以直接查找</samp>
+<samp>建议只使用小写类型，不使用大写类型；很多内置方法的参数，定义在小写类型中</samp>
 
 ```ts
-enum Color {Red = 1, Green, Blue}
-let colorName: string = Color[2];
+const n1: number = 1;
+const n2:Number = 1;
 
-console.log(colorName);  // Green
+Math.abs(n1);
+Math.abs(n2); // [!code error] 类型“Number”的参数不能赋给类型“number”的参数。“number”是基元，但“Number”是包装器对象。如可能首选使用“number”。
 ```
 
+<samp>`Symbol()` 和 `BigInt()` 不能当作构造函数使用，无法获取 `symbol` 类型和 `bigint` 类型的包装对象</samp>
 
-
-<samp>`any` 对现有代码进行改写时，允许在编译时包含或移除类型检查</samp>
-
-<samp>`Object` 作用相似，允许赋任意值，但不能调用任意方法</samp>
-
-```ts [index.ts]
-let notSure: any = 4;
-notSure.ifItExists(); // okay, ifItExists might exist at runtime
-notSure.toFixed(); // okay, toFixed exists (but the compiler doesn't check)
-
-let prettySure: Object = 4;
-prettySure.toFixed(); // [!code error] 类型“Object”上不存在属性“toFixed”。
-
-```
-
-<samp>当只知道一部分数据的类型时，可以使用 `any` 声明数组</samp>
-
-::: code-group
-
-```ts [index.ts]
-let list: any[] = [1, true, "free"];
-list[1] = 100;
-
-```
-
-```js [index.js]
-var list = [1, true, "free"];
-list[1] = 100;
-
-```
-
-:::
-
-### <samp>Void</samp>
-
-<samp>`void`：表示没有任何类型，通常作为一个函数的返回值类型</samp>
-
-::: code-group
-
-```ts [index.ts]
-function warnUser(): void {
-  console.log("This is my warning message");
-}
-
-```
-
-```js [index.js]
-function warnUser() {
-  console.log("This is my warning message");
-}
-
-```
-
-:::
-
-<samp>声明一个 `void` 变量，值只能赋予 `undefined` 和 `null`</samp>
+<samp>使用下面的写法获取包装对象。但是，它们没有使用场景</samp>
 
 ```ts
-let unusable: void = undefined;
-```
-
-### <samp>Null 与 Undefined</samp>
-
-<samp>和 `void` 相似，`null` 与 `undefined` 本身用处不大</samp>
-
-```ts
-let u: undefined = undefined;
-let n: null = null;
+let a = Object(Symbol());
+let b = Object(BigInt(1));
 ```
 
 > [!NOTE]
 >
-> <samp>默认情况下，`null` 与 `undefined` 是所有类型的子类型</samp> 
->
-> <samp>当指定了 `--strictNullChecks` 标记，`null` 与 `undefined` 只能赋值给 `void` 和他们自身</samp>
+> <samp>`symbol` 和 `Symbol` 两种写法没有差异；`bigint` 和 `BigInt` 也是如此，建议始终使用小写</samp>
 
-### <samp>Never</samp>
-
-<samp>`never` 类型表示永远不存在的值的类型；例如：`never` 类型总是抛出异常或根本不会有返回值的函数表达式或箭头函数表达式的返回值类型</samp>
-
-> [!NOTE]
->
-> - <samp>变量可能是 `never` 类型，当它们被永不为真的类型保护约束时</samp>
->
-> - <samp>`never` 类型是任何类型的子类型，也可以赋值给任何类型</samp>
->
-> - <samp>`never` 类型没有子类型，也不能赋值给任意类型 ( 除了 `never` 本身 )</samp>
-
-```ts
-// 返回never的函数必须存在无法达到的终点
-function error(message: string): never {
-  throw new Error(message);
-}
-
-// 推断返回值的类型为never
-function fail() {
-  return error('Failed');
-}
-
-function infiniteLoop() {
-  while (true) {
-
-  }
-}
-
-```
+## <samp>Object 与 object</samp>
 
 ### <samp>Object</samp>
 
-<samp>`object` 表示非原始类型，除 `number`, `string`, `boolean`, `symbol`, `null` 或 `undefined` 之外的类型</samp>
-
-<samp>使用 `object` 的类型，可以更好的表示类似 `Object.create` 的 API</samp>
+<samp>`Object`：JavaScript 的广义对象，即可转换为对象的值都是 `Object` 类型</samp>
 
 ```ts
-declare function create(o: object | null): void;
-create({prop:0});
-create(null);
+let obj: Object;
 
-create(42); // [!code error] 类型“number”的参数不能赋给类型“object”的参数。
-create("string"); // [!code error] 类型“string”的参数不能赋给类型“object”的参数。
-create(false); // [!code error] 类型“boolean”的参数不能赋给类型“object”的参数。
-create(undefined); // [!code error] 类型“undefined”的参数不能赋给类型“object | null”的参数。
-
+obj = true;
+obj = 'hi';
+obj = 1;
+obj = { foo: 123 };
+obj = [1, 2, 3];
+obj = (a: number) => { a + 1 };
 ```
 
-### <samp>Interface</samp>
-
-<samp>接口的作用是为类型命名和第三方代码定义契约</samp>
-
-<samp>表示自定义类型 ( 命名约定 )，与类和对象进行区分</samp>
+<samp>除了 `undefined` 和 `null` 不能转换为对象</samp>
 
 ```ts
-interface IBytedancer {
-  // readonly: 只读属性, 约束属性不可在对象初始化外赋值
-  readonly jobId: number;
-  name: string;
-  sex: 'man' | 'woman' | 'other';
-  age: number;
-  // 可选属性: 定义该属性可不存在
-  hobby?: string;
-  // 任意属性: 表示还可拥有任意数量的属性
-  [key: string]: any;
+let obj: Object;
+obj = undefined; // [!code error] 不能将类型“undefined”分配给类型“Object”。
+obj = null; // [!code error] 不能将类型“null”分配给类型“Object”。
+```
+
+<samp>`Object` 的简写形式：`{}`</samp>
+
+```ts
+let obj: {};
+```
+
+### <samp>object</samp>
+
+<samp>`object`：JavaScript 里面的狭义对象，即可以用字面量表示的对象，只包含对象、数组和函数，不包括原始类型的值</samp>
+
+```ts
+let obj: object;
+
+obj = { foo: 123 };
+obj = [1, 2, 3];
+obj = (a: number) => { a + 1 };
+obj = true; // [!code error] 不能将类型“boolean”分配给类型“object”。
+obj = 'hi'; // [!code error] 不能将类型“string”分配给类型“object”。
+obj = 1; // [!code error] 不能将类型“number”分配给类型“object”。
+```
+
+> [!NOTE]
+>
+> <samp>无论是 `Object` 还是 `object`，都只包含内置对象原生的属性和方法，自定义的属性和方法不在这两个类型中</samp>
+
+## <samp>undefined 与 null</samp>
+
+<samp>`undefined` 和 `null` 既是值，又是类型</samp>
+
+> [!NOTE]
+>
+> <samp>作为值时，任何其他类型的变量都可以赋值为 `undefined` 和 `null`</samp>
+
+```ts
+const obj: object = undefined;
+obj.toString(); // [!code highlight] 在编译阶段不报错, 在运行阶段报错。不能将类型“undefined”分配给类型“object”。
+```
+
+<samp>这样不利于发挥类型系统的优势，为了避免这种情况发生，"编译选项"开启 `strictNullChecks`</samp>
+
+::: code-group
+
+```sh
+tsc --strictNullChecks app.ts
+```
+
+```json[tsconfig.json]
+{
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
 }
-
-const bytedancer: IBytedancer = {
-  jobId: 9303245,
-  name: 'Lin',
-  sex: 'man',
-  age: 28,
-  hobby: 'swimming'
-};
-
-bytedancer.jobId = 12345; // [!code error] 无法为“jobId”赋值，因为它是只读属性。
-bytedancer.platform = 'data';// [!code highlight] 任意属性标注可以添加任意属性
 ```
+
+:::
+
+<samp>开启 `strictNullChecks` 后，`undefined` 和 `null` 只能赋值给自身、`any`、`unknown`</samp>
+
+```ts
+let x: undefined = null; // [!code error] 不能将类型“null”分配给类型“undefined”。
+let y: null = undefined; // [!code error] 不能将类型“undefined”分配给类型“null”。
+```
+
+## <samp>值类型</samp>
+
+<samp>TypeScript 规定：单个值也是一种类型，称为"值类型"</samp>
+
+<samp>声明了值类型，赋值其他值就会报错</samp>
+
+```ts
+let x: 'hello';
+x = 'world'; // [!code error] 不能将类型“"world"”分配给类型“"hello"”。
+```
+
+<samp>**类型推断**：如果遇到 const 声明变量，如果没有注明类型，就推断该变量是值类型</samp>
+
+```ts
+const x = 'https'; // const x: "https"
+const y: string = 'https'; // const y: string
+```
+
+> [!NOTE]
+>
+> <samp>如果使用 `const` 声明的变量是一个对象，不会推断为值类型</samp>
+>
+> ```ts
+> const x = { foo: 1 }; // const x: { foo: number; }
+> ```
+>
+> <samp>`x` 没有被推断为值类型，而是将属性推断为 `number` 类型；因为 JavaScript 中，`const` 变量赋值对象时，属性值是可以改变的</samp>
+
+<samp>值类型有时会发生奇怪的报错</samp>
+
+```ts
+const x: 5 = 4 + 1; // [!code error] 不能将类型“number”分配给类型“5”。
+```
+
+<samp>这是因为 TypeScript 推断右侧的类型为 `number`，`5` 是 `number` 的子类型，`number` 是 `5` 的父类型</samp>
+
+<samp>父类型不能赋值给子类型，子类型可以赋值给父类型</samp>
+
+```ts
+let x: 5 = 5;
+let y: number;
+
+y = x; // [!code highlight] 子类型可以赋值给父类型
+```
+
+<samp>如果一定需要父类型赋值给子类型，需要使用类型断言</samp>
+
+```ts
+let y: number = 4 + 1;
+const x: 5 = y as 5; // [!code highlight] OK
+```
+
+## <samp>联合类型</samp>
+
+<samp>联合类型(union types)：多个类型组成一个新类型，符号 `|`</samp>
+
+<samp>联合类型 `A|B` 表示：任何一个类型只要属于 `A` 或 `B`，就属于联合类型 `A|B`</samp>
+
+```ts
+let x: string | number;
+```
+
+> <samp>`x` 的值既可以是字符串，也可以是数值</samp>
+
+- <samp>联合类型与值类型结合</samp>
+
+  ```ts
+  let setting: true | false; // 这样写也是布尔类型boolean
+  let gender: 'male' | 'female';
+  let rainbowColor: 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'indigo' | 'violet';
+  ```
+
+- <samp>如果编译选项开启了 `strictNullChecks` 后，其他类型变量不能赋值 `undefined` 或 `null`，但是某个变量需要包含空值时，可以使用联合类型</samp>
+
+  ```ts
+  let name: string | null;
+  ```
+
+- <samp>联合类型在第一个成员前加上 `|`，方便书写</samp>
+
+  ```ts
+  let x:
+    | 'one'
+    | 'two'
+    | 'three'
+    | 'four';
+  ```
+
+- <samp>如果存在多种类型，读取时需要进行类型缩小(type narrowing)</samp>
+
+  ```ts
+  function printId(id: number | string) {
+    console.log(id.toUpperCase()); // [!code error]类型“string | number”上不存在属性“toUpperCase”。类型“number”上不存在属性“toUpperCase”。
+  }
+  ```
+
+  <samp>类型缩小：判断 id 的类型是字符串还是数值，如果是字符串，那就执行字符串的方法</samp>
+
+  ```ts
+  function printId(id: number | string) {
+    if (typeof id === 'string') {
+      console.log(id.toUpperCase());
+    } else {
+      console.log(id);
+    }
+  }
+  ```
+
+
+> [!TIP]
+>
+> <samp>"类型缩小"是 TypeScript 处理联合类型的标准方法，凡是在多种类型的场合，都需进行类型缩小再处理</samp>
+>
+> <samp>事实上，"联合类型"可以看作是"类型放大"(type windening)，处理时需要"类型缩小(type narrowing)"处理</samp>
+>
+> ```ts
+> function getPort(
+>   scheme: 'http' | 'https'
+> ) {
+>   switch (scheme) {
+>     case 'http':
+>       return 80;
+>     case 'https':
+>       return 443;
+>   }
+> }
+> ```
+
+## <samp>交叉类型</samp>
+
+<samp>交叉类型(intersection types)：多个类型组成的一个新类型，符号：`&`</samp>
+
+<samp>交叉类型 `A&B` 表示，任何一个类型必须同时属于 `A` 和 `B`，才属于交叉类型 `A&B`，即交叉类型同时满足 `A` 和 `B` 的特征</samp>
+
+```ts
+let x: number & string; // let x: never
+```
+
+> <samp>变量 `x` 同时满足数值和字符串是不可能的，类型推断为 `never`</samp>
+
+- <samp>交叉类型主要用于表示对象的合成</samp>
+
+  ```ts
+  let obj:
+    { foo: string } &
+    { bar: string };
+  
+  obj = {
+    foo: 'hello',
+    bar: 'world'
+  };
+  ```
+
+- <samp>交叉类型常用于对象类型添加新属性</samp>
+
+  ```ts
+  type A = { foo: number };
+  
+  type B = A & { bar: number };
+  ```
+
+## <samp>type</samp>
+
+<samp>`type` 定义一个类型的别名</samp>
+
+- <samp>别名具有块级作用域</samp>
+
+  ```ts
+  type Color = 'red';
+  
+  if (Math.random() < 0.5) {
+    type Color = 'blue';
+  }
+  ```
+
+- <samp>同作用域内，别名不允许重名</samp>
+
+  ```ts
+  type Color = 'red'; // [!code error] 标识符“Color”重复。
+  type Color = 'blue'; // [!code error] 标识符“Color”重复。
+  ```
+
+- <samp>别名支持表达式，可以在定义一个别名时，使用另一个别名，即别名允许嵌套</samp>
+
+  ```ts
+  type World = "world";
+  type Greeting = `hello ${World}`;
+  ```
+
+## <samp>typeof</samp>
+
+<samp>`typeof` 运算符是一个一元运算符，代表操作数的类型</samp>
+
+<samp>`typeof` 操作数是一个值</samp>
+
+> <samp>在 JavaScript 中，`typeof` 只可能返回八种结果，返回值是字符串形式</samp>
+>
+> ```js
+> typeof undefined; // "undefined"
+> typeof true; // "boolean"
+> typeof 1337; // "number"
+> typeof "foo"; // "string"
+> typeof {}; // "object"
+> typeof parseInt; // "function"
+> typeof Symbol(); // "symbol"
+> typeof 127n // "bigint"
+> ```
+
+<samp>在 TypeScript 中，`typeof` 返回的是不再是字符串，而是值类型</samp>
+
+```ts
+const a = { x: 0 };
+
+type T0 = typeof a;   // { x: number }
+type T1 = typeof a.x; // number
+```
+
+> <samp>这种写法只能用在类型运算中，不能用于值运算</samp>
+
+```ts
+let a = 1;
+let b: typeof a; // 类型运算
+
+// 值运算
+if (typeof a === 'number') {
+  b = a;
+}
+```
+
+<samp>TypeScript 规定：`typeof` 的参数只能是标识符，不能是表达式</samp>
+
+<samp>`typeof` 参数不能是类型</samp>
+
+```ts
+type Age = number;
+type myAge = typeof Age; // [!code error] “Age”仅表示类型，但在此处却作为值使用。
+```
+
+
+
+## <samp>块级类型声明</samp>
+
+<samp>TypeScript 支持块级类型声明，即类型可以声明在代码块(用大括号表示)里面，并且只在当前代码块有效</samp>
+
+```ts
+if (true) {
+  type T = number;
+  let v: T = 5;
+} else {
+  type T = string;
+  let v: T = 'hello';
+}
+```
+
+## <samp>类型兼容</samp>
+
+<samp>TypeScript 类型兼容：某些类型可以兼容其他类型</samp>
+
+```ts
+type T = number | string;
+
+let a: number = 1;
+let b: T = a;
+```
+
+> <samp>`a` 赋给 `b` 不会报错，因为 `b` 的类型兼容 `a` 的类型</samp>
+
+<samp>如果类型 A 的值可以赋值给 B，那么就称 A 是 B 的子类型(subtype)，类型 `number` 是 `number | string` 的子类型</samp>
+
+<samp>子类型可以用在父类型的场合，但是子类型可能具有父类型所没有的特征，所以父类型不能用在子类型的场合</samp>
 

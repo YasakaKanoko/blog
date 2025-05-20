@@ -245,9 +245,9 @@ div {
 
 ## <samp>注释</samp>
 
-<samp>`// 单行注释`：只存在 Less 源码</samp>
+- <samp>`// 单行注释`：只存在 Less 源码</samp>
 
-<samp>`/* 多行注释 */`：会生成到编译结果中</samp>
+- <samp>`/* 多行注释 */`：会生成到编译结果中</samp>
 
 ## <samp>Maps</samp>
 
