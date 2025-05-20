@@ -141,7 +141,7 @@ docker --version
 
    - <samp>点击 Run</samp>
 
-4. <samp>点击 Ports - [80:80](http://localhost:80) 跳转至 nginx 欢迎界面</samp>
+4. <samp>点击 Ports - <a href="http://localhost:80/">80:80</a> 跳转至 nginx 欢迎界面</samp>
 
 5. <samp>打开 VSCode - Extensions - Docker 下载 Docker 插件</samp>
 
