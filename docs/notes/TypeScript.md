@@ -843,7 +843,7 @@ arr; // const arr: (string | number)[]
    getSum(arr); // [!code error] 类型“readonly number[]”的参数不能赋给类型“number[]”的参数。类型 "readonly number[]" 为 "readonly"，不能分配给可变类型 "number[]"。
    ```
 
-   > <samp>只读数组是数组的父类，所以不能代替原数组</samp>
+   <samp>只读数组是数组的父类，所以不能代替原数组</samp>
 
    > [!NOTE]
    >
@@ -1169,9 +1169,219 @@ function hello(txt: string): void {
 
 > <samp>`void`：表示没有返回值</samp>
 
-<samp>如果不指定类型，TypeScript 会推断参数类型为 `any`</samp>
+<samp>返回值类型</samp>
 
-<samp>没有特定需求，返回值的类型可以不写，TypeScript 会自己推断</samp>
+- <samp>如果不指定类型，TypeScript 会推断参数类型为 `any`</samp>
+
+  > <samp>没有 `return` 语句，会推断出函数返回值为 `void`</samp>
+
+- <samp>没有特定需求，返回值的类型可以不写，TypeScript 会自己推断</samp>
+
+<samp>函数的写法</samp>
+
+```ts
+// 写法一
+const hello = function (txt: string) {
+  console.log('hello' + txt)
+} // const hello: (txt: string) => void
+
+// 写法二
+const hello: (txt: string) => void = function (txt) {
+  console.log('hello ' + txt);
+};
+```
+
+<samp>参数类型声明</samp>
+
+- <samp>TypeScript 参数名是必填的 (如：C可以不填)</samp>
+
+  ```ts
+  type MyFunc = (string, number) => number; // [!code error] 参数具有名称，但不具有类型。你是想使用 "arg0: string" 吗?参数具有名称，但不具有类型。你是想使用 "arg1: number" 吗?
+  ```
+
+- <samp>函数类型参数名和实际参数名可以不一致</samp>
+
+  ```ts
+  let f: (x: number) => number;
+  
+  f = function (y: number) {
+    return y;
+  };
+  ```
+
+- <samp>使用 `type` 指定类型别名，提升可读性</samp>
+
+  ```ts
+  type MyFunc = (txt: string) => void;
+  
+  const hello: MyFunc = function (txt) {
+    console.log(txt)
+  }
+  ```
+
+- <samp>TypeScript 允许省略参数，实参数量可以少于形参，不能多于</samp>
+
+  ```ts
+  type f = (a: number, b: number) => number;
+  let myFunc: f = (a: number, b: number, c: number): number => { // [!code error] 不能将类型“(a: number, b: number, c: number) => number”分配给类型“f”。目标签名提供的自变量太少。预期为 3 个或更多，但实际为 2 个。
+    return a + b + c;
+  }
+  ```
+
+- <samp>如果变量需要套用另一个函数，可以使用 `typeof`</samp>
+
+  ```ts
+  function add(x: number, y: number) {
+    return x + y;
+  }
+  const myAdd: typeof add = (x, y) => {
+    return x + y;
+  }
+  ```
+
+- <samp>函数类型的对象写法</samp>
+
+  ```ts
+  let add: {
+    (x: number, y: number): number
+  };
+  add = (x, y) => {
+    return x + y;
+  }
+  ```
+
+  > <samp>对象写法：只能使用冒号 `:` ，不能使用箭头形式 `=>`，因为属性名与属性值之间使用冒号</samp>
+
+  <samp>适用于函数本身存在属性时</samp>
+
+  ```ts
+  function f(x: number) {
+    console.log(x);
+  }
+  f.version = '1.0';
+  
+  let foo: {
+    (x: number): void;
+    version: string
+  } = f;
+  
+  foo(42); // 42
+  console.log(foo.version); // 1.0
+  ```
+
+
+- <samp>使用接口 `interface` 声明函数类型</samp>
+
+  ```ts
+  interface myfn {
+    (a: number, b: number): number;
+  }
+  const fn: myfn = (a, b) => {
+    return a + b;
+  };
+  ```
+
+### <samp>Function 类型</samp>
+
+<samp>任何函数都属于 `Function` 类型</samp>
+
+```ts
+function doSomething(f: Function) {
+  return f(1, 2, 3);
+}
+
+function fn(a: number, b: number, c: number): number {
+  return a + b + c;
+}
+
+const result = doSomething(fn);
+console.log(result); // 6
+```
+
+<samp>`Function` 可以 接受任意数量参数，每个参数都是 `any`，返回值的类型也是 `any`，表示没有任何约束</samp>
+
+### <samp>箭头函数</samp>
+
+<samp>箭头函数是普通函数的简化写法</samp>
+
+```ts
+const repeat = (str: string, times: number): string => str.repeat(times);
+```
+
+<samp>类型定义写法和箭头函数是不同的</samp>
+
+```ts
+let f: (x: number, y: number) => number = (x, y) => {
+  return x + y;
+}
+```
+
+<samp>类型推断</samp>
+
+```ts
+type Person = { name: string };
+
+const people = ['alice', 'bob', 'jan'].map(
+  (name): Person => ({ name })
+);
+```
+
+> <samp>这个箭头函数的参数类型省略了，是靠函数返回值类型 `Person` 去推断函数的类型</samp>
+>
+> <samp>函数右侧的 `name` 必须被括号包裹，否则会把 `{}` 当做函数体处理</samp>
+
+### <samp>可选参数</samp>
+
+<samp>如果某个参数可以省略，在参数名后加上 `?` 标识</samp>
+
+```ts
+function f(x?: number) { // (parameter) x: number | undefined
+}
+```
+
+> <samp>带有问号的参数，表示该参数可以省略；参数的实际类型是原始类型或`undefined`</samp>
+>
+> - <samp>隐式 `undefined`</samp>
+>
+>   ```ts
+>   function f(x?: number) {
+>     return x;
+>   }
+>   f(); // undefined
+>   ```
+>
+> - <samp>显式 `undefined`：可能返回 `any`</samp>
+>
+>   ```ts
+>   function f(x: number | undefined) {
+>     return x;
+>   }
+>   f(); // [!code error] 应有 1 个参数，但获得 0 个。
+>   ```
+
+- <samp>函数的可选参数只能在参数列表的尾部，跟在必选参数之后</samp>
+
+  <samp>如果前面参数可能为空，就只能显式注明参数类型可能为 `undefined`，传参时也必须显式传入 `undefined`</samp>
+
+  ```ts
+  // 可选参数不能在必选参数之前
+  let myFunc: (a: number | undefined, b: number) => number;
+  ```
+
+- <samp>函数体内部使用可选参数时，需要判断该参数是否为 `undefined`</samp>
+
+  ```ts
+  let myFunc: (a: number, b?: number) => number;
+  
+  myFunc = (x, y) => {
+    if (y === undefined) {
+      return x;
+    }
+    return x + y;
+  }
+  ```
+
+### <samp>参数默认值</samp>
 
 
 

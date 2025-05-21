@@ -17,8 +17,8 @@ hero:
     text: Github
     link: https://github.com/YasakaKanoko/blog
 features:
-  - title: <a href="post">Blog</a>     
-    details: New Journey...   
+  - title: <a href="post">Blog</a>
+    details: New Journey...
   - title: <a href="notes">Notes</a>   
     details: Notes that I created or maintaining.  
   - title: <a href="about">About Me</a>  

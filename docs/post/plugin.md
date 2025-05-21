@@ -1,6 +1,10 @@
 # <samp>插件</samp>
 
+::: details <samp>目录</samp>
+
 [[TOC]]
+
+:::
 
 ## <samp>开发</samp>
 
