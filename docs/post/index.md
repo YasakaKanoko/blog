@@ -1,3 +1,4 @@
 # <samp>Blog</samp>
-- <samp>[插件](/post/plugin)</samp>
 
+- <samp>[Things I am using](/post/plugin)</samp>
+- <samp>[How to Contribute to Open Source](/post/contributor)</samp>

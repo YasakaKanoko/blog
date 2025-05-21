@@ -1,39 +1,39 @@
 # <samp>Module</samp>
 
+::: details <samp>目录</samp>
+
 [[TOC]]
+
+:::
 
 ## <samp>CommonJS</samp>
 
-> <samp>参考</samp>
->
-> - <samp>[CommonJS 规范](https://javascript.ruanyifeng.com/nodejs/module.html#toc0)</samp>
-> - <samp>[Node.js 中的 `require()`](https://fredkschott.com/post/2014/06/require-and-the-module-system/)</samp>
-> - <samp>[module.js 源码](https://github.com/nodejs/node-v0.x-archive/blob/master/lib/module.js)</samp>
+<samp>CommonJS 模块</samp>
 
-<samp>CommonJS 模块：每个文件都是一个模块，有自己的作用域，在一个文件中定义的变量、函数、类都是私有的</samp>
+- <samp>每个文件都是一个模块，有自己的作用域，在一个文件中定义的变量、函数、类都是私有的</samp>
 
-<samp>CommonJS 规范规定：每个模块内部，存在一个 `module` 对象，`module` 代表当前模块，有一个 `exports` 属性表示对外部的接口</samp>
+- <samp>每个模块内部，存在一个 `module` 对象，`module` 代表当前模块，有一个 `exports` 属性表示对外部的接口</samp>
 
-> <samp>通过 `global` 暴露，这种做法是不推荐的</samp>
+  > <samp>通过 `global` 暴露，这种做法是不推荐的</samp>
 
-```js
-// example.js
-let x = 5;
-let addX = (value) => {
-    return value + x;
-};
-module.exports.x = x;
-module.exports.addX = addX;
-```
+  ```js
+  // example.js
+  let x = 5;
+  let addX = (value) => {
+      return value + x;
+  };
+  module.exports.x = x;
+  module.exports.addX = addX;
+  ```
 
-<samp>`require()` 方法用于加载模块</samp>
+- <samp>`require()` 方法用于加载模块</samp>
 
-```js
-const example = require('./example.js');
-
-console.log(example.x); // 5
-console.log(example.addX(1)); // 6
-```
+  ```js
+  const example = require('./example.js');
+  
+  console.log(example.x); // 5
+  console.log(example.addX(1)); // 6
+  ```
 
 <samp>CommonJS 模块化的特点</samp>
 
@@ -48,7 +48,7 @@ console.log(example.addX(1)); // 6
 
 <samp>Node 提供一个 `Module` 构造函数，所有模块都是 `Module` 的实例</samp>
 
-> <samp>每个模块都是该基础模块的实例</samp>
+<samp>每个模块都是该基础模块的实例</samp>
 
 ```js
 class Module {
@@ -79,52 +79,37 @@ class Module {
 ```js
 Module._load = function(request, parent, isMain) {
   // 1. Check Module._cache for the cached module.
-  // 1. 检查模块中是否已有缓存
     
   // 2. Create a new Module instance if cache is empty. 
-  // 2. 如果缓存为空，则创建一个新的 Module 实例
     
   // 3. Save it to the cache.
-  // 3. 将其保存到缓存中
     
   // 4. Call module.load() with your the given filename.
   //    This will call module.compile() after reading the file contents.
-  // 4. 使用给定文件名并调用 module.load()
-  //    读取完文件内容后调用 module.compile()
     
   // 5. If there was an error loading/parsing the file,
   //    delete the bad module from the cache
-  // 5. 如果加载/解析文件时出错
-  //    从缓存中删除错误的模块
     
   // 6. return module.exports
-  // 6. 返回 module.exports
 };
 ```
 
-<samp>`Module._load` 负责加载新模块并管理模块缓存，加载时减少冗余文件的读取次数，提升程序速度</samp>
+- <samp>`Module._load` 负责加载新模块并管理模块缓存，加载时减少冗余文件的读取次数，提升程序速度</samp>
 
-<samp>如果缓存中不存在该模块，`Module._load` 会创建一个模块实例，读取文件内容，并调用 `Module.compile`</samp>
+- <samp>如果缓存中不存在该模块，`Module._load` 会创建一个模块实例，读取文件内容，并调用 `Module.compile`</samp>
 
-<samp>`Module.compile`</samp>
-
-```js
-Module.prototype._compile = function(content, filename) {
-  // 1. Create the standalone require function that calls module.require.
-  // 1. 创建独立的require函数用于调用module.require
-    
-  // 2. Attach other helper methods to require.
-  // 2. 将其他辅助方法附加到require中
-    
-  // 3. Wraps the JS code in a function that provides our require,
-  //    module, etc. variables locally to the module scope.
-  // 3. 将JS代码包装在一个函数中,  
-  //    该函数将require, module等变量本地提供给模块作用域
-    
-  // 4. Run that function
-  // 4. 运行函数
-};
-```
+  ```js
+  Module.prototype._compile = function(content, filename) {
+    // 1. Create the standalone require function that calls module.require.
+      
+    // 2. Attach other helper methods to require.
+      
+    // 3. Wraps the JS code in a function that provides our require,
+    //    module, etc. variables locally to the module scope.
+      
+    // 4. Run that function
+  };
+  ```
 
 <samp>这里会将 `require` 封装在一个独立函数中，这个函数包含一些鲜为人知的(lesser-known)方法</samp>
 
@@ -146,44 +131,34 @@ Module.prototype._compile = function(content, filename) {
 
 ### <samp>exports</samp>
 
-`exports` 是 `module.exports` 的指针
+<samp>`exports` 是 `module.exports` 的指针</samp>
 
 ```js
 const exports = module.exports;
 ```
 
-<samp>使用 `exports` 输出模块接口时，可以向 `exports` 对象添加方法</samp>
+- <samp>使用 `exports` 输出模块接口时，可以向 `exports` 对象添加方法</samp>
 
-> <samp>不能让 `exports` 指向单一的值，这样会改变 `exports` 的指向</samp>
+  > <samp>不能让 `exports` 指向单一的值，这样会改变 `exports` 的指向</samp>
 
-```js
-exports.hello = function (r) {
-  return Math.PI * r * r;
-};
-```
+- <samp>`exports` 是 `module.exports` 对象的指针，修改 `module.exports` 会让 `exports` 失效</samp>
 
-> <samp>`exports` 是 `module.exports` 对象的指针，修改 `module.exports` 会让 `exports` 失效</samp>
->
-> <samp>建议不要使用 `exports`，使用 `module.exports`</samp>
-
-```JS
-this.m = 5;
-exports.c = 3;
-module.exports = {
-  a: 1,
-  b: 2
-}; // 输出: { a: 1, b: 2 }
-```
-
-> <samp>这里的 `this` 并没有指向 `module.exports`，而是指向了一个空对象 `{}`</samp>
+  > <samp>建议不要使用 `exports`，使用 `module.exports`</samp>
+  >
+  > ```js
+  > this.m = 5;
+  > exports.c = 3;
+  > module.exports = {
+  >   a: 1,
+  >   b: 2
+  > }; // 输出: { a: 1, b: 2 }
+  > ```
+  >
+  > <samp>这里的 `this` 并没有指向 `module.exports`，而是指向了一个空对象 `{}`</samp>
 
 ### <samp>require 规则</samp>
 
-<samp>`require` 命令的基本功能，读入并执行一个 JavaScript 文件，返回该模块的 `exports` 对象</samp>
-
-<samp>如果未发现指定模块，会报错</samp>
-
-<samp>`require` 加载文件</samp>
+<samp>`require` 命令的基本功能，读入并执行一个 JavaScript 文件，返回该模块的 `exports` 对象；如果未发现指定模块，会报错</samp>
 
 - <samp>默认后缀名是 `.js`</samp>
 
@@ -213,13 +188,13 @@ module.exports = {
 
 <samp>`require` 方法有一个 `main` 属性，用于判断模块是直接执行，还是调用执行</samp>
 
-<samp>直接执行 ( `node module.js` )，`require.main` 指向模块自身</samp>
+- <samp>直接执行 (`node module.js`)，`require.main` 指向模块自身</samp>
 
-```js
-require.main === module; // true 
-```
+  ```js
+  require.main === module; // true 
+  ```
 
-<samp>调用执行时 (通过 `require` 加载执行)，返回 `false`</samp>
+- <samp>调用执行时 (通过 `require` 加载执行)，返回 `false`</samp>
 
 ### <samp>模块缓存</samp>
 
@@ -233,15 +208,15 @@ require.main === module; // true
 // 删除指定模块缓存
 delete require.cache[moduleName];
 
-// 删除所偶模块缓存
+// 删除所有模块缓存
 Object.keys(require.cache).forEach((key) => {
   delete require.cache[key];
 });
 ```
 
-### <samp>模块加载</samp>
+### <samp>模块的加载机制</samp>
 
-<samp>CommonJS 模块加载机制，输入的值是输出的值的拷贝</samp>
+<samp>CommonJS 模块加载机制，输入的是输出的值的拷贝</samp>
 
 ```js
 // lib.js
@@ -275,25 +250,17 @@ console.log(counter); // 3
 
 ## <samp>ESM</samp>
 
-> <samp>参考</samp>
->
-> - <samp>[ES6 Module 的语法](https://es6.ruanyifeng.com/#docs/module)</samp>
-> - <samp>[从 CommonJS 迁移到 ES Module 以便获得与浏览器有更良好的兼容性](https://typescript.tv/errors/#ts80001)</samp>
-> - <samp>[Asynchronous vs. Synchronous Programming: Key Similarities and Differences](https://www.mendix.com/blog/asynchronous-vs-synchronous-programming/)</samp>
-> - <samp>[CommonJS loads modules synchronously, ES modules are asynchronous](https://blog.logrocket.com/commonjs-vs-es-modules-node-js/)</samp>
-> - <samp>[CommonJS 不会消失](https://bun.sh/blog/commonjs-is-not-going-away)</samp>
-
-<samp>`import` 和 `export` 必须处于模块顶层</samp>
-
 <samp>CommonJS 加载模块称为"运行时加载"，只有运行时才能得到整个对象，无法在编译时"静态优化"</samp>
 
 <samp>ESM 的设计思想是尽量静态化，编译时确定模块的依赖关系，以及输入和输出变量，称"编译时加载"</samp>
 
-<samp><b>浏览器的模块化</b></samp>
+<samp><b>ESM 的特点</b></samp>
 
-1. <samp>异步加载：加载完成后使用回调函数</samp>
+1. <samp>`import` 和 `export` 必须处于模块顶层</samp>
 
-2. <samp>模块的代码需要放置在函数的环境中</samp>
+2. <samp>异步加载：加载完成后使用回调函数</samp>
+
+3. <samp>模块的代码需要放置在函数的环境中</samp>
 
    > <samp>ESM 最初设计在浏览器中，文件的加载通过网络加载</samp>
 
@@ -338,22 +305,23 @@ console.log(counter); // 3
    };
    ```
 
-<samp>注意</samp>
-
-1. <samp>`export` 对外输出三种接口：函数、类、使用 `var`, `let`, `const` 声明的变量</samp>
-
-2. <samp>通过 `export` 输出的接口，与对应的值存在动态绑定，即通过接口可以获取模块内部实时的值</samp>
-
-   > <samp>CommonJS 的模块输出具有缓存，不存在动态更新</samp>
-
-3. <samp>`export` 命令可以出现在模块任意位置，但必须处于模块顶层；如果处于块级作用域，会报错</samp>
-
-   ```js
-   function foo() {
-     export default 'bar';
-   }
-   foo();
-   ```
+> [!NOTE]
+>
+> 1. <samp>`export` 对外输出三种接口：函数、类、使用 `var`, `let`, `const` 声明的变量</samp>
+>
+> 2. <samp>通过 `export` 输出的接口，与对应的值存在动态绑定，即通过接口可以获取模块内部实时的值</samp>
+>
+>    > <samp>CommonJS 的模块输出具有缓存，不存在动态更新</samp>
+>
+> 3. <samp>`export` 命令可以出现在模块任意位置，但必须处于模块顶层；如果处于块级作用域，会报错</samp>
+>
+>    ```js
+>    function foo() {
+>      export default 'bar';
+>    }
+>    foo();
+>    ```
+>
 
 ### <samp>import</samp>
 
@@ -592,9 +560,7 @@ import {db, users} from './constants/index';
 
 <samp>在大型项目中，ESM 速度较慢，与 `require` 相比，要么导入时使用 `await` 表达式，这样必须返回一个 Promise，这将带来额外的 microticks 和开销</samp>
 
-> <samp>参考：[CommonJS 不会消失](https://bun.sh/blog/commonjs-is-not-going-away)</samp>
-
-<samp>三大差异</samp>
+<samp>**差异**</samp>
 
 - <samp>CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用</samp>
 
@@ -604,6 +570,14 @@ import {db, users} from './constants/index';
 
 - <samp>CommonJS 的 `require()` 是同步加载，ES6 的 `import` 是异步加载</samp>
 
-  > <samp>[Asynchronous vs. Synchronous Programming: Key Similarities and Differences](https://www.mendix.com/blog/asynchronous-vs-synchronous-programming/)</samp>
-  >
-  > <samp>[CommonJS loads modules synchronously, ES modules are asynchronous](https://blog.logrocket.com/commonjs-vs-es-modules-node-js/)</samp>
+## <samp>参考</samp>
+
+- <samp>[CommonJS 规范](https://javascript.ruanyifeng.com/nodejs/module.html#toc0)</samp>
+- <samp>[The Node.js Way - How `require()` Actually Works](https://fredkschott.com/post/2014/06/require-and-the-module-system/)</samp>
+- <samp>[module.js 源码](https://github.com/nodejs/node-v0.x-archive/blob/master/lib/module.js)</samp>
+
+- <samp>[ES6 Module 的语法](https://es6.ruanyifeng.com/#docs/module)</samp>
+- <samp>[Changing `require` to `import` updates the module syntax to ES modules, which are more compatible with modern JavaScript environments and tooling](https://typescript.tv/errors/#ts80001)</samp>
+- <samp>[Asynchronous vs. Synchronous Programming: Key Similarities and Differences](https://www.mendix.com/blog/asynchronous-vs-synchronous-programming/)</samp>
+- <samp>[CommonJS loads modules synchronously, ES modules are asynchronous](https://blog.logrocket.com/commonjs-vs-es-modules-node-js/)</samp>
+- <samp>[CommonJS is not going away](https://bun.sh/blog/commonjs-is-not-going-away)</samp>

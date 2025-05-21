@@ -24,7 +24,16 @@ export default defineConfig({
   description: "YasakaKanoko",
   lang: 'en-US',
   markdown: {
-    math: true
+    // 数学公式
+    math: true,
+    // 图片懒加载
+    image: {
+      lazyLoading: true
+    },
+    // 显示三级标题
+    toc: {
+      level: [2, 3, 4]
+    }
   },
   srcDir: '.', // 指定项目根目录, 默认.
   // outDir:'../public', // 指定输出目录
@@ -53,8 +62,8 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'Notes', items: [
-          { text: 'JavaScript', link: '/notes/JavaScript' },
-          { text: "TypeScript", link: '/notes/TypeScript' },
+          { text: 'JavaScript', link: '/notes/javascript' },
+          { text: "TypeScript", link: '/notes/typescript' },
         ]
       },
       { text: 'Blog', link: '/post' },
@@ -75,7 +84,7 @@ export default defineConfig({
     ],
     // 页脚
     footer: {
-      copyright: `<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a> ${new Date().getFullYear()} © Banished Knight`
+      copyright: `<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a> 2025-${new Date().getFullYear()} © <a href="https://github.com/YasakaKanoko">Banished Knight</a>`
     }
   }
 })

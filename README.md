@@ -1,7 +1,5 @@
 # <samp>How to Use</samp>
 
-<samp><b>my personal website</b></samp>
-
 1. <samp>前置准备：[Node.js](https://nodejs.org/) 18 及以上版本</samp>
 
 2. <samp>安装依赖</samp>
@@ -25,8 +23,6 @@
    ```sh
    pnpm run docs:dev
    ```
-
-   <samp>服务将运行在 http://localhost:5173/ 上</samp>
 
 ## <samp>本地构建测试</samp>
 
@@ -52,48 +48,25 @@
 
 ## <samp>文件结构</samp>
 
-````
+```
 blog
 ├─ .vitepress
 ├─ CC BY-NC-SA 4.0
 ├─ docs
 │  ├─ .vitepress
 │  │  └─ config.mts
-│  ├─ about.md
-│  ├─ blog
-│  │  ├─ index.md
-│  │  └─ plugin.md
-│  ├─ index.md
-│  └─ notes
-│     ├─ browser
-│     │  └─ index.md
-│     ├─ css
-│     │  ├─ index.md
-│     │  ├─ Less.md
-│     │  └─ Sass.md
-│     ├─ html
-│     │  └─ index.md
-│     ├─ index.md
-│     ├─ js
-│     │  └─ index.md
-│     ├─ node
-│     │  └─ index.md
-│     ├─ react
-│     │  └─ index.md
-│     └─ vue
-│        └─ index.md
+│  ├─ api-examples.md
+│  ├─ markdown-examples.md
+│  └─ index.md
 ├─ LICENSE
 ├─ package.json
 ├─ pnpm-lock.yaml
 └─ README.md
-
 ````
-
-
 
 ## <samp>设定 public 根目录</samp>
 
-默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`，在 VitePress 配置中将 `base` 设为 `'/blog/'`
+<samp>默认部署在域名根路径上 ( `/` )，如果希望在子路径中提供服务，如： `http://localhost:8080/blog/`；在 VitePress 配置中将 `base` 设为 `'/blog/'`</samp>
 
 ```ts
 export default defineConfig({
@@ -113,8 +86,8 @@ export default defineConfig({
    name: Deploy VitePress site to Pages
    
    on:
-     # 在针对 `main` 分支的推送上运行。如果你
-     # 使用 `master` 分支作为默认分支，请将其更改为 `master`
+     # 在针对 `main` 分支的推送上运行
+     # 如果你使用 `master` 分支作为默认分支，请将其更改为 `master`
      push:
        branches: [main]
    
@@ -142,21 +115,21 @@ export default defineConfig({
            uses: actions/checkout@v4
            with:
              fetch-depth: 0 # 如果未启用 lastUpdated，则不需要
-         # - uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消此区域注释
-         #   with:
-         #     version: 9
+         - uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消此区域注释
+           with:
+             version: 9
          # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
          - name: Setup Node
            uses: actions/setup-node@v4
            with:
              node-version: 22
-             cache: npm # 或 pnpm / yarn
+             cache: pnpm # 或 npm / yarn
          - name: Setup Pages
            uses: actions/configure-pages@v4
          - name: Install dependencies
-           run: npm ci # 或 pnpm install / yarn install / bun install
+           run: pnpm install # 或 npm ci / yarn install / bun install
          - name: Build with VitePress
-           run: npm run docs:build # 或 pnpm docs:build / yarn docs:build / bun run docs:build
+           run: pnpm docs:build # 或 npm run docs:build / yarn docs:build / bun run docs:build
          - name: Upload artifact
            uses: actions/upload-pages-artifact@v3
            with:
@@ -176,7 +149,7 @@ export default defineConfig({
            uses: actions/deploy-pages@v4
    ```
 
-2. <samp>在存储库设置中的 " Pages " 菜单项下，选择 " Build and deployment > Source > GitHub Actions "</samp>
+2. <samp>在存储库设置中的 "Pages" 菜单项下，选择 "Build and deployment > Source > GitHub Actions"</samp>
 3. <samp>更新文件，推送 `main` 分支</samp>
 
 ----
