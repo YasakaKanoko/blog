@@ -86,8 +86,8 @@ export default defineConfig({
    name: Deploy VitePress site to Pages
    
    on:
-     # 在针对 `main` 分支的推送上运行。如果你
-     # 使用 `master` 分支作为默认分支，请将其更改为 `master`
+     # 在针对 `main` 分支的推送上运行
+     # 如果你使用 `master` 分支作为默认分支，请将其更改为 `master`
      push:
        branches: [main]
    
