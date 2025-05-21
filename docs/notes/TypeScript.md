@@ -1383,5 +1383,241 @@ function f(x?: number) { // (parameter) x: number | undefined
 
 ### <samp>参数默认值</samp>
 
+<samp>参数默认值与 JavaScript 一致</samp>
 
+- <samp>如果设置了参数默认值，那就表示这个值就默认是可选的</samp>
+
+  ```ts
+  function createPoint(x: number = 0, y: number = 0): [number, number] {
+    return [x, y];
+  }
+  ```
+
+- <samp>可选参数和默认值不能同时使用</samp>
+- <samp>传参时，如果传入 `undefined`，也会触发默认值</samp>
+- <samp>具有默认值的参数如果不位于参数列表的末尾，调用时不能省略，且传参是必须显式地传入 `undefined`</samp>
+
+## <samp>对象</samp>
+
+<samp>声明对象</samp>
+
+- <samp>对象字面量：用大括号描述属性和方法的类型</samp>
+
+  ```ts
+  const obj: { x: number; y: number } = {
+    x: 1,
+    y: 1
+  };
+  ```
+
+- <samp>属性类型可以以分号结尾，也可以以逗号结尾</samp>
+
+  ```ts
+  type obj = {
+    x: number,
+    y: number
+  };
+  ```
+
+- <samp>一旦声明类型，对象赋值时，不能缺少指定的属性，也不能有多余的属性</samp>
+
+- <samp>读写不存在的属性会报错</samp>
+
+- <samp>不能删除类型声明中存在的属性，但可以修改属性值</samp>
+
+  ```ts
+  const users = {
+    name: "Sabrina"
+  };
+  delete users.name; // [!code error] "delete" 运算符的操作数必须是可选的。
+  users.name = "Cynthia";
+  ```
+
+- <samp>声明方法时，使用函数类型描述</samp>
+
+  ```ts
+  const obj: {
+    x: number,
+    y: number,
+    add: (x: number, y: number) => number
+  } = {
+    x: 1,
+    y: 2,
+    add(x, y) {
+      return x + y;
+    }
+  }
+  ```
+
+- <samp>读取属性类型可以使用方括号</samp>
+
+  ```ts
+  type User = {
+    name: string,
+    age: number
+  };
+  type Name = User['name'];
+  ```
+
+- <samp>`interface` 声明对象类型</samp>
+
+  ```ts
+  interface Obj {
+    x: number;
+    y: number;
+  };
+  const obj: Obj = {
+    x: 1,
+    y: 2
+  };
+  ```
+
+- <samp>TypeScript 无法区分自身属性和继承的属性，一律视为对象的属性</samp>
+
+  ```ts
+  interface MyInterface {
+    toString(): string;
+    prop: number;
+  };
+  const obj: MyInterface = {
+    prop: 123,
+  }
+  ```
+
+### <samp>可选属性</samp>
+
+<samp>可选属性：在属性名前加上一个问号</samp>
+
+```ts
+const obj: {
+  x: number,
+  y?: number
+} = {
+  x: 1
+}
+```
+
+- <samp>可选属性赋值时，允许赋值 `undefined`</samp>
+
+- <samp>读取没有值的可选属性，返回 `undefined`</samp>
+
+- <samp>建议使用可选属性前，先进行判断是否为 `undefined`</samp>
+
+  ```ts
+  const user: {
+    firstName: string,
+    lastName?: string
+  } = {
+    firstName: 'John'
+  }
+  if (user.lastName !== undefined) {
+    console.log(`Hello ${user.firstName} ${user.lastName} `);
+  }
+  ```
+
+  > [!TIP]
+  >
+  > - <samp>使用三元运算符判断</samp>
+  >
+  >   ```ts
+  >   let firstName = (user.firstName === undefined) ? 'Foo' : user.firstName;
+  >   let lastName = (user.lastName === undefined) ? 'Bar' : user.lastName;
+  >   ```
+  >
+  > - <samp>使用空值合并运算符判断</samp>
+  >
+  >   ```ts
+  >   let firstName = user.firstName ?? 'Foo';
+  >   let lastName = user.lastName ?? 'Bar';
+  >   ```
+
+- <samp>当编译选项开启 `strictNullChecks` 和 `exactOptionalPropertyType` 选项时，可选属性不能赋值 `undefined`</samp>
+
+  ::: code-group
+
+  ```json[tsconfig.json]
+  {
+    "compilerOptions": {
+      "strictNullChecks": true,
+      "exactOptionalPropertyTypes": true,
+    }
+  }
+  ```
+
+  :::
+
+- <samp>可选属性与可设置为必选属性 `undefined` 两者不等价</samp>
+
+  ```ts
+  type A = { x: number; y?: number; };
+  type B = { x: number; y: number | undefined; };
+  
+  let obj1: A = { x: 1 };
+  let obj2: B = { x: 1 }; // [!code error] 类型 "{ x: number; }" 中缺少属性 "y"，但类型 "B" 中需要该属性。
+  ```
+
+### <samp>只读属性</samp>
+
+<samp>只读属性：在关键字前加上 `readonly`，表示不可修改</samp>
+
+- <samp>只读属性只能在对象初始化时赋值</samp>
+
+- <samp>如果属性值是一个对象，`readonly` 修饰符并不禁止修改该对象的属性，只是禁止完全替换掉该对象</samp>
+
+  ```ts
+  interface Home {
+    readonly resident: {
+      name: string;
+      age: number;
+    }
+  }
+  const h: Home = {
+    resident: {
+      name: "John",
+      age: 42
+    }
+  };
+  h.resident.name = "Alice";
+  h.resident = {}; // [!code error] 无法为“resident”赋值，因为它是只读属性。
+  ```
+
+- <samp>如果一个对象有两个引用，即两个变量指向同一个对象，其中一个变量是只读的，那么修改属性值时，会影响到只读属性</samp>
+
+  ```ts
+  interface Person {
+    name: string;
+    age: number;
+  };
+  
+  interface ReadOnlyPerson {
+    readonly name: string;
+    readonly age: number;
+  };
+  
+  let w: Person = {
+    name: "John",
+    age: 42
+  };
+  
+  let r: ReadOnlyPerson = w;
+  
+  w.age += 1;
+  console.log(r.age); // 43
+  ```
+
+  > [!NOTE]
+  >
+  > <samp>如果设置了 `as const`，会以声明时的类型为准，所以属性最终还是可以修改</samp>
+
+### <samp>属性名的索引类型</samp>
+
+<samp>TypeScript 可以声明属性名的索引类型</samp>
+
+```ts
+type Obj = {
+  [property: string]: string
+}
+```
+
+> <samp>以上 `property` 名是随便起的</samp>
 
