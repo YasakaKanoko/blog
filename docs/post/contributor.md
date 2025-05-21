@@ -55,15 +55,15 @@
 
 ## <samp>[Semantic Commit Messages](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular)</samp>
 
-<samp>最初提出 Commit 约定的项目是 AngularJS，团队建立了详尽的文档说明成员们应该如何进行 commit。</samp>
+<samp>最初提出 Commit 约定的项目是 AngularJS，团队建立了详尽的文档说明成员们应该如何进行 Commit</samp>
 
-<samp>[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 是一种规范，简化了 Angular 约定并简单说明了一些基础的 commit 约定</samp>
+<samp>[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) 是一种规范，简化了 Angular 约定并简单说明了一些基础的 Commit 约定</samp>
 
-- <samp>semantic：提交信息语义化；将 commit 分类，使其具有意义</samp>
+- <samp>semantic：提交信息语义化；将 Commit 分类，使其具有意义</samp>
 
 - <samp>conventional：提交信息是约定俗成的，格式是固定的，类型是常用的</samp>
 
-<samp>语义化 commit， 可以带来更高可读性和更快的速度，更利于编写自动化工具</samp>
+<samp>语义化 Commit， 可以带来更高可读性和更快的速度，更利于编写自动化工具</samp>
 
 ### <samp>示例</samp>
 
@@ -118,7 +118,7 @@
 
 ### <samp>格式</samp>
 
-<samp>Angular 约定要求 commit 分为 header、body、footer 三部分</samp>
+<samp>Angular 约定要求 Commit 分为 Header、Body、Footer 三部分</samp>
 
 ```sh
 <type>[optional scope]: <description>
@@ -142,7 +142,7 @@
 
 - <samp>Subject：本次修改的简洁描述</samp>
 
-<samp>Git 中只是 commit 信息的第一行</samp>
+<samp>Git 中只是 Commit 信息的第一行</samp>
 
 ```sh
 # 修复了 core 包中的 bug，具体操作是 remove deprecated and defunct wtf* apis
@@ -151,8 +151,8 @@ git commit -m "fix(core): remove deprecated and defunct wtf* apis"
 
 <samp>`:` 左侧部分称为前缀</samp>
 
-- <samp>`type`：`fix`</samp>
-- <samp>`scope`：`core` 表示受影响的包</samp>
+- <samp>`type`：`fix` 操作</samp>
+- <samp>`scope`：表示受影响的包是 `core`</samp>
 
 <samp>`:` 右侧部分是 `subject` 表示本次提交的主题</samp>
 
@@ -164,7 +164,7 @@ git commit -m "fix(core): remove deprecated and defunct wtf* apis"
 git commit -m "fix(core): remove deprecated and defunct wtf* apis" -m "These apis have been deprecated in v8, so they should stick around till v10, but since they are defunct we are removing them early so that they don't take up payload size."
 ```
 
-<samp>`-m` 分段描写，header 和 body 之间必须有空行，这种操作自带空行</samp>
+<samp>`-m` 分段描写，Header 和 Body 之间必须有空行，这种操作自带空行</samp>
 
 > [!NOTE]
 >
@@ -172,7 +172,7 @@ git commit -m "fix(core): remove deprecated and defunct wtf* apis" -m "These api
 
 #### <samp>Footer</samp>
 
-<samp>footer 非必填，描述提交的"后续效果"，如：此次修改是 breaking change、关闭 issue、提及贡献者等</samp>
+<samp>Footer 非必填，描述提交的"后续效果"，如：此次修改是 breaking change、关闭 issue、提及贡献者等</samp>
 
 ::: code-group
 
@@ -300,9 +300,9 @@ PR Close #33949
 
 1. <samp>每个提交都**必须**使用类型字段前缀，如： `feat` 或 `fix` ， 后接**可选的**范围字段，**可选的** `!`，以及**必要的**冒号（英文半角）和空格</samp>
 
-2. <samp>`feat` ：当一个提交为应用或类库实现了新功能时，使用该类型</samp>
+2. <samp>`feat` ：当一个提交为应用或类库实现了新功能时，**必须**使用该类型</samp>
 
-3. <samp>`fix`：当一个提交为应用修复了 bug 时，使用该类型</samp>
+3. <samp>`fix`：当一个提交为应用修复了 bug 时，**必须**使用该类型</samp>
 
 4. <samp>范围字段**可以**跟随在类型字段后面。范围**必须**是一个描述某部分代码的名词，并用圆括号包围，例如： `fix(parser):`</samp>
 
@@ -312,19 +312,19 @@ PR Close #33949
    fix: array parsing issue when multiple spaces were contained in string
    ```
 
-6. <samp>在简短描述之后，可以编写较长的提交正文，为代码变更提供额外的上下文信息。正文必须起始于描述字段结束的一个空行后</samp>
+6. <samp>在简短描述之后，**可以**编写较长的提交正文，为代码变更提供额外的上下文信息。正文**必须**起始于描述字段结束的一个空行后</samp>
 
-7. <samp>提交的正文内容自由编写，可以使用空行分隔不同段落</samp>
+7. <samp>提交的正文内容自由编写，**可以**使用空行分隔不同段落</samp>
 
 8. <samp>正文结束的一个空行之后，**可以**编写一行或多行脚注。每行脚注都**必须**包含一个令牌（token），后面紧跟 `:<space>` 或 `<space>#` 作为分隔符，后面再紧跟令牌的值</samp>
 
-9. <samp>脚注的令牌必须使用 `-` 作为连字符，比如：`Acked-by` (这样有助于区分脚注和多行正文)。有一种例外情况就是 `BREAKING CHANGE`，它可以被认为是一个令牌</samp>
+9. <samp>脚注的令牌**必须**使用 `-` 作为连字符，比如：`Acked-by` (这样有助于区分脚注和多行正文)。有一种例外情况就是 `BREAKING CHANGE`，它**可以**被认为是一个令牌</samp>
 
-10. <samp>脚注的值可以包含空格和换行，值的解析过程必须直到下一个脚注的令牌/分隔符出现为止</samp>
+10. <samp>脚注的值**可以**包含空格和换行，值的解析过程**必须**直到下一个脚注的令牌/分隔符出现为止</samp>
 
-11. <samp>破坏性变更必须在提交信息中标记出来，要么在 `<类型>(范围)` 前缀中标记，要么作为脚注的一项</samp>
+11. <samp>破坏性变更**必须**在提交信息中标记出来，要么在 `<类型>(范围)` 前缀中标记，要么作为脚注的一项</samp>
 
-12. <samp>包含在脚注中时，破坏性变更必须包含大写的文本 `BREAKING CHANGE`，后面紧跟着冒号、空格，然后是描述</samp>
+12. <samp>包含在脚注中时，破坏性变更**必须**包含大写的文本 `BREAKING CHANGE`，后面紧跟着冒号、空格，然后是描述</samp>
 
     ```sh
      BREAKING CHANGE: environment variables now take precedence over config files
