@@ -261,7 +261,7 @@ PR Close #33949
   ```sh
   perf: refactor Array.includes checks to use Sets (#32133)
   perf(nuxt): use Set for circular dep plugin (#32110)
-  perf(nuxt): tree-shake router's handleHotUpdate in production (#31971)
+  perf(nuxt): use Intl.Collator instead of localeCompare (#32167)
   perf(nuxt): remove unecessary type check for useFetch (#31910)
   perf(nuxt): remove oxc-parser manual wasm fallback logic (#31484)
   ```
