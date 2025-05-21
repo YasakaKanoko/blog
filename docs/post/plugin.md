@@ -1,4 +1,4 @@
-# <samp>插件</samp>
+# <samp>Things I am using</samp>
 
 ::: details <samp>目录</samp>
 
