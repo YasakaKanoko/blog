@@ -1619,5 +1619,82 @@ type Obj = {
 }
 ```
 
-> <samp>以上 `property` 名是随便起的</samp>
+> <samp>以上 `property` 可以取任意名称</samp>
+
+<samp>对象的属性名同时具有数值索引和字符串索引，数值索引必须服从字符串索引，因为 JavaScript 内部的数值属性会自动转换为字符串属性</samp>
+
+```ts
+type MyType = {
+  [x: string]: string;
+  [x: number]: number; // [!code error] “number”索引类型“number”不能分配给“string”索引类型“string”。
+}
+```
+
+<samp>声明属性名索引，同时声明单个属性名；如果属性名不符合索引范围，会报错</samp>
+
+```ts
+type MyType = {
+  [x: string]: string;
+  foo: boolean; // [!code error] 类型“boolean”的属性“foo”不能赋给“string”索引类型“string”。
+}
+```
+
+<samp>属性索引类型，应谨慎使用，属性名的声明太宽泛，约束太少；尤其不适用于声明数组，使用这种方式声明数组，不能使用内部的数组方法和 `length` 属性</samp>
+
+```ts
+type MyArr = {
+  [n: number]: number;
+};
+
+const arr: MyArr = [1, 2, 3];
+arr.length; // [!code error] 类型“MyArr”上不存在属性“length”。
+```
+
+### <samp>解构赋值</samp>
+
+<samp>JavaScript 解构赋值直接从对象中提取属性</samp>
+
+```ts
+const { id, name, price } = product;
+```
+
+<samp>对解构赋值的类型声明，和对象一样</samp>
+
+```ts
+const { id, name, price }: {
+  id: number;
+  name: string;
+  price: number
+} = product;
+```
+
+> [!NOTE] <samp>注意</samp>
+>
+> <samp>无法单独指定解构变量的类型，因为冒号在 JavaScript 中表示指定新变量名</samp>
+>
+> ```ts
+> let obj = {
+>   id: 1,
+>   name: "John",
+>   age: 30
+> };
+> let { id: x, name: y }: {
+>   id: number;
+>   name: string
+> } = obj;
+> 
+> console.log(x, y); // 1 John
+> ```
+>
+> <samp>在实际中使用要特别小心，例如：在函数参数中解构对象</samp>
+>
+> ```ts
+> function draw({
+>   shape: Shape,
+>   xPos: number = 100
+> }) {
+>   let myShape = shape; // [!code error] 找不到名称“shape”。你是否指的是“Shape”?
+>   let x = xPos; // [!code error] 找不到名称“xPos”。
+> }
+> ```
 
