@@ -14,43 +14,148 @@
 
 - <samp>[Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens): 改进错误、警告和其他语言诊断的突出显示</samp>
 
-- <samp>[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)</samp>
+- <samp>[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)：代码检查工具</samp>
+
+  ::: details
+
+  ```json
+  {
+    // Disable the default formatter, use eslint instead
+    "prettier.enable": false,
+    "editor.formatOnSave": false,
+  
+    // Auto fix
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "never"
+    },
+  
+    // Silent the stylistic rules in you IDE, but still auto fix them
+    "eslint.rules.customizations": [
+      { "rule": "style/*", "severity": "off", "fixable": true },
+      { "rule": "format/*", "severity": "off", "fixable": true },
+      { "rule": "*-indent", "severity": "off", "fixable": true },
+      { "rule": "*-spacing", "severity": "off", "fixable": true },
+      { "rule": "*-spaces", "severity": "off", "fixable": true },
+      { "rule": "*-order", "severity": "off", "fixable": true },
+      { "rule": "*-dangle", "severity": "off", "fixable": true },
+      { "rule": "*-newline", "severity": "off", "fixable": true },
+      { "rule": "*quotes", "severity": "off", "fixable": true },
+      { "rule": "*semi", "severity": "off", "fixable": true }
+    ],
+  
+    // Enable eslint for all supported languages
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "html",
+      "markdown",
+      "json",
+      "jsonc",
+      "yaml",
+      "toml",
+      "xml",
+      "gql",
+      "graphql",
+      "astro",
+      "svelte",
+      "css",
+      "less",
+      "scss",
+      "pcss",
+      "postcss"
+    ]
+  }
+  ```
+
+  :::
 
 - <samp>[Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): 指定配置文件 `.prettierrc.js` 在项目中通过配置文件进行格式化</samp>
 
-  ```js
+  ::: details
+
+  ```json
   "prettier.enable": false,
   "prettier.printWidth": 200,
   "prettier.semi": false,
   "prettier.singleQuote": true,
   ```
 
-- <samp>[i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally)</samp>
+  :::
+
+- <samp>[i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally)：国际化</samp>
 
 - <samp>[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss): Tailwind CSS 智能提示</samp>
 
-- <samp>[CSS Modules](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)</samp>
+- <samp>[CSS Modules](https://marketplace.visualstudio.com/items?itemName=clinyong.vscode-css-modules)：查找 CSS 模块；仅支持 React</samp>
 
-- <samp>[UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss)</samp>
+- <samp>[UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss)：创建一些规则后，您可以将它们提取到预设中，并与他人共享</samp>
+
+  ::: details
+
+  ::: code-group
+
+  ```ts[uno.config.ts]
+  import {
+    defineConfig,
+    presetAttributify,
+    presetIcons,
+    presetTypography,
+    presetWebFonts,
+    presetWind3,
+    transformerDirectives,
+    transformerVariantGroup
+  } from 'unocss'
+  
+  export default defineConfig({
+    shortcuts: [
+      // ...
+    ],
+    theme: {
+      colors: {
+        // ...
+      }
+    },
+    presets: [
+      presetWind3(),
+      presetAttributify(),
+      presetIcons(),
+      presetTypography(),
+      presetWebFonts({
+        fonts: {
+          // ...
+        },
+      }),
+    ],
+    transformers: [
+      transformerDirectives(),
+      transformerVariantGroup(),
+    ],
+  })
+  ```
+
+  :::
 
 - <samp>[Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify): 内敛图标预览</samp>
 
-- <samp>[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)</samp>
+- <samp>[Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)：静态和动态页面实时重新加载功能的开发本地服务器</samp>
 
-- <samp>[Browse Lite](https://marketplace.visualstudio.com/items?itemName=antfu.browse-lite)</samp>
+- <samp>[Browse Lite](https://marketplace.visualstudio.com/items?itemName=antfu.browse-lite)：VSCode 中嵌入简版服务器</samp>
 
-- <samp>[Vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite)</samp>
+- <samp>[Vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite)：VSCode 本地嵌入 Vite 服务器</samp>
 
-- <samp>[Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)</samp>
+- <samp>[Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)：Vue 官方提供的格式化、语法检查工具</samp>
 
-- <samp>[ES7 React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=rodrigovallades.es7-react-js-snippets): ES7 React/Redux/React-Native/JS 代码片段</samp>
+- <samp>[ES7 React/Redux/React-Native snippets](https://marketplace.visualstudio.com/items?itemName=rodrigovallades.es7-react-js-snippets): 代码片段</samp>
 
-- <samp>[Shader languages support for VS Code](https://marketplace.visualstudio.com/items?itemName=slevesque.shader)</samp>
-  > <samp>Web GL 必备的着色器语言的语法高亮工具</samp>
-  
+- <samp>[Shader languages support for VS Code](https://marketplace.visualstudio.com/items?itemName=slevesque.shader)：Web GL 必备的着色器语言的语法高亮工具</samp>
+
 - <samp>[shadcn Color Preview](https://marketplace.visualstudio.com/items?itemName=dexxiez.shadcn-color-preview): 颜色转换</samp>
 
-- <samp>[Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)</samp>
+- <samp>[Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)：颜色高亮</samp>
 
 - <samp>[Rainbow CSV](https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv): 分隔 CSV、TSV 和 其他分隔符文件</samp>
 
@@ -64,7 +169,9 @@
 
 - <samp>[TabOut](https://marketplace.visualstudio.com/items?itemName=albert.TabOut): 按 `Tab` 跳出括号</samp>
 
-- <samp>[Tab Cycle](https://marketplace.visualstudio.com/items?itemName=mpontus.tab-cycle)</samp>
+- <samp>[Tab Cycle](https://marketplace.visualstudio.com/items?itemName=mpontus.tab-cycle)：确保最近选项卡始终保持在最前</samp>
+
+  > <samp>`Alt` + `<number>` 选项卡将顺序切换；`Ctrl` + `<PageUp>` / `<PageDown>` 选项卡将循环切换</samp>
 
 - <samp>[vscode-styled-components](https://marketplace.visualstudio.com/items?itemName=styled-components.vscode-styled-components): 组件样式语法高亮</samp>
 
