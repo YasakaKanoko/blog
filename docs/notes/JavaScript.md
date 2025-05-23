@@ -1,6 +1,10 @@
 # <samp>JavaScript</samp>
 
+::: details <samp>目录</samp>
+
 [[TOC]]
+
+:::
 
 <samp>如果是浏览器环境，提供的额外 API 可以分成三大类</samp>
 
