@@ -207,7 +207,7 @@
 >   ```
 >
 
-::: warning 
+::: warning
 
 <samp>如果没有声明类型的变量，被赋值为 `undefined` 或 `null`，在关闭 `noImplicitAny` 和 `strictNullChecks` 时，类型将被推断为 `any`</samp>
 
@@ -682,14 +682,14 @@ obj = (a: number) => { a + 1 };
    > - <samp>只读数组没有 `pop()`、`push()` 等可改变原数组的方法；数组是只读数组的子类，只读数组是数组的父类</samp>
    >
    > - <samp>`readonly` 关键字不能和数组泛型一起使用</samp>
-   
+
 2. <samp>`ReadonlyArray<T>` 和 `Readonly<T[]>`：声明只读数组的泛型</samp>
 
    ```ts
    const a1: ReadonlyArray<number> = [1, 2, 3];
    const a2: Readonly<number[]> = [1, 2, 3];
    ```
-   
+
 3. <samp>`as const`：const 断言，声明只读数组</samp>
 
    ```ts
@@ -1156,4 +1156,557 @@ const people = ['alice', 'bob', 'jan'].map(
 - <samp>默认值的参数如果不位于参数列表的末尾，调用时不能省略，传参时必须显式地传入 `undefined`</samp>
 
 ### <samp>参数解构</samp>
+
+- <samp>数组</samp>
+
+  ```ts
+  function fn([x, y]: [number, number]) {
+    return x + y;
+  }
+  ```
+
+- <samp>对象</samp>
+
+  ```ts
+  type ISum = { a: number, b: number };
+  function sum({ a, b }: ISum) {
+    return a + b;
+  }
+  ```
+
+### <samp>rest 参数</samp>
+
+- <samp>剩余参数为数组</samp>
+
+  ```ts
+  function f(...nums: number[]) { }
+  ```
+
+- <samp>剩余参数为元组</samp>
+
+  ```ts
+  function f(...args: [boolean, number]) { }
+  ```
+
+- <samp>剩余参数可以嵌套</samp>
+
+  ```ts
+  function f(...args: [boolean, ...string[]]) { }
+  ```
+
+- <samp>剩余参数与变量解构</samp>
+
+  ```ts
+  function f(...[str, times]: [string, number]): string {
+    return str.repeat(times);
+  }
+  ```
+
+### <samp>readonly</samp>
+
+<samp>在参数类型前加上 `readonly` 关键字，表示只读参数；只读参数只能用在数组和元组</samp>
+
+```ts
+function arraySum(
+  arr: readonly number[]
+) { }
+```
+
+### <samp>void</samp>
+
+<samp>`void`：表示函数无返回值</samp>
+
+- <samp>`void` 只允许返回 `undefined` 与 `null`</samp>
+
+  > [!TIP]
+  >
+  > <samp>打开 `strictNullChecks` 后，只能返回 `undefined`</samp>
+
+- <samp>变量、方法、函数参数返回 `void`，并不代表不能赋值为一个有返回值的函数</samp>
+
+  > <samp>如：数组方法 `Array.prototype.forEach(fn)` 的参数返回值是 `void`；如果与 `push` 使用时，违反了约定；由于该返回值没有作用，因此不报错</samp>
+  >
+  > ```ts
+  > let list = [4, 5, 6];
+  > let res: number[] = [];
+  > list.forEach(el => res.push(el));
+  > ```
+
+- <samp>函数抛出错误的返回值为 `void`</samp>
+
+  ```ts
+  function throwErr(): void {
+    throw new Error('something wrong');
+  }
+  ```
+
+### <samp>never</samp>
+
+<samp>`never` 表示一定不会出现返回值，即函数不会结束</samp>
+
+- <samp>抛出错误</samp>
+
+  ```ts
+  function fail(msg: string): never {
+    throw new Error(msg);
+  }
+  ```
+
+  > <samp>抛出错误属于 `never` 和 `void` 类型，无法从返回值获取哪一种错误</samp>
+
+- <samp>死循环</samp>
+
+> [!NOTE]
+>
+> - <samp>`never` 表示函数异常或死循环</samp>
+> - <samp>`void` 表示函数正常执行结束或不返回值或返回 `undefined`</samp>
+
+### <samp>函数重载</samp>
+
+<samp>函数重载 (function overload)：根据参数的不同，会有不同的函数行为</samp>
+
+<samp>逐一定义每种情况的类型</samp>
+
+```ts
+function add(x: number, y: number): number;
+function add(x: any[], y: any[]): any[];
+function add(x: number | any[], y: number | any[]): number | any[] {
+  if (typeof x === 'number' && typeof y === 'number') {
+    return x + y;
+  } else if (Array.isArray(x) && Array.isArray(y)) {
+    return [...x, ...y];
+  }
+  throw new Error('wrong parameters');
+}
+```
+
+> [!NOTE]
+>
+> - <samp>重载与具体实现之间不能存在其他代码</samp>
+>
+> - <samp>重载的类型声明和函数实现类型不能冲突</samp>
+>
+>   ```ts
+>   function fn(x: boolean): void; // [!code error] 此重载签名与其实现签名不兼容。
+>   function fn(x: string): void;
+>   function fn(x: number | string) {
+>     console.log(x);
+>   }
+>   ```
+>
+> - <samp>重载声明的顺序是按顺序向下检查，宽的声明应该在后面，防止覆盖其他类型声明</samp>
+>
+> - <samp>对象的方法也可以进行重载</samp>
+>
+>   ```ts
+>   class StringBuilder {
+>     #data = '';
+>   
+>     add(num: number): this;
+>     add(bool: boolean): this;
+>     add(str: string): this;
+>     add(value: any): this {
+>       this.#data += String(value);
+>       return this;
+>     }
+>   
+>     toString() {
+>       return this.#data;
+>     }
+>   }
+>   ```
+
+### <samp>构造函数</samp>
+
+<samp>构造函数的调用必须使用 `new` 关键字</samp>
+
+<samp>类(`class`) 本质上也是构造函数</samp>
+
+```ts
+class User {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: any) {
+    this.name = name;
+    this.age = age;
+  }
+}
+```
+
+## <samp>interface</samp>
+
+<samp>接口(interface)：类型约定，对象模板</samp>
+
+- <samp>对象属性</samp>
+
+  - <samp>如果属性可选，在属性名后加上 `?`</samp>
+  - <samp>如果属性只读，在属性名前加上 `readonly`</samp>
+
+- <samp>对象属性索引</samp>
+
+  - <samp>属性索引只有 `string`、`number`、`symbol` 三种类型</samp>
+  - <samp>一个接口中最多只能有一种同类型索引</samp>
+  - <samp>数值型索引必须服从于字符串索引</samp>
+
+- <samp>对象方法</samp>
+
+  - <samp>方法的三种写法</samp>
+
+    ```ts
+    interface A {
+      f(x: boolean): string;
+    }
+    interface B {
+      f: (x: boolean) => string;
+    }
+    interface C {
+      f: { (x: boolean): string };
+    }
+    ```
+
+  - <samp>属性名可以采用表达式</samp>
+
+    ```ts
+    const f = 'f';
+    interface A {
+      [f]:(x: boolean): string;
+    }
+    ```
+
+  - <samp>方法重载</samp>
+
+    ```ts
+    interface A {
+      f(): number;
+      f(x: boolean): boolean;
+      f(x: string, y: string): string;
+    }
+    ```
+
+  - <samp>对象函数重载</samp>
+
+    ```ts
+    interface IAdd {
+      f(): number;
+      f(x: boolean): boolean;
+      f(x: string, y: string): string;
+    }
+    
+    function myFun(): number;
+    function myFun(x: boolean): boolean;
+    function myFun(x: string, y: string): string;
+    function myFun(x?: boolean | string, y?: string): number | boolean | string {
+      if (x === undefined && y === undefined) return 1;
+      if (typeof x === 'boolean' && y === undefined) return true;
+      if (typeof x === 'string' && typeof y === 'string') return 'hello';
+      throw new Error('wrong parameters');
+    };
+    const a: IAdd = {
+      f: myFun
+    }
+    ```
+
+- <samp>函数</samp>
+
+- <samp>构造函数</samp>
+
+  ```ts
+  interface ErrorConstructor {
+    new (message?: string): Error;
+  }
+  ```
+
+  
+
+### <samp>interface 继承</samp>
+
+- <samp>继承使用 `extends` 关键字其他 `interface`</samp>
+
+  ```ts
+  interface Shape {
+    name: string;
+  }
+  
+  interface Circle extends Shape {
+    radius: number;
+  }
+  ```
+
+- <samp>允许多重继承</samp>
+
+  ```ts
+  interface Style {
+    color: string;
+  }
+  
+  interface Shape {
+    name: string;
+  }
+  
+  interface Circle extends Style, Shape {
+    radius: number;
+  }
+  ```
+
+- <samp>子接口与父接口存在同名属性时，会覆盖父接口的属性</samp>
+
+  ::: info <samp>前提条件</samp>
+
+  <samp>子接口和父接口的同名属性的类型是兼容的</samp>
+
+  :::
+
+- <samp>继承 `type`：只能继承 `type` 定义的对象</samp>
+
+  ```ts
+  type Country = {
+    name: string;
+    capital: string;
+  
+  };
+  interface CountryWithPop extends Country {
+    population: number;
+  }
+  ```
+
+- <samp>继承 `class`：继承该类的所有成员</samp>
+
+  > [!NOTE]
+  >
+  > <samp>`interface` 可以继承类的私有成员和保护成员，但是没有意义(类中无法构成父类和子类关系，对象中则无法使用这些私有成员)</samp>
+
+  ```ts
+  class A {
+    x: string = '';
+  
+    y(): boolean {
+      return true;
+    }
+  }
+  
+  interface B extends A {
+    z: number
+  }
+  
+  const b: B = {
+    x: '',
+    y: function () { return true },
+    z: 123
+  }
+  ```
+
+### <samp>接口合并</samp>
+
+- <samp>向全局对象或外部库，添加自定义的属性和方法</samp>
+
+  ```ts
+  // TypeScript 中不具有window对象和document对象, 如果需要向其中添加自定义属性
+  interface Document {
+    foo: string；
+  }
+  document.foo = 'hello';
+  ```
+
+- <samp>同名接口合并时，同名属性的类型不能有冲突</samp>
+
+- <samp>同名接口合并时，同名方法类型声明不同，会发生函数重载</samp>
+
+  ::: code-group
+
+  ```ts[index.ts]
+  interface Document {
+    createElement(tagName: any): Element;
+  }
+  interface Document {
+    createElement(tagName: "div"): HTMLDivElement;
+    createElement(tagName: "span"): HTMLSpanElement;
+  }
+  interface Document {
+    createElement(tagName: string): HTMLElement;
+    createElement(tagName: "canvas"): HTMLCanvasElement;
+  }
+  ```
+
+  ```ts[函数重载]
+  interface Document {
+    createElement(tagName: "canvas"): HTMLCanvasElement;
+    createElement(tagName: "div"): HTMLDivElement;
+    createElement(tagName: "span"): HTMLSpanElement;
+    createElement(tagName: string): HTMLElement;
+    createElement(tagName: any): Element;
+  }
+  ```
+
+  :::
+
+  > [!NOTE]
+  >
+  > <samp>字面量会具有更高的优先级，字面量会在函数重载之前</samp>
+  >
+  > ```ts
+  > interface A {
+  >   f(x: 'foo'): boolean;
+  >   f(x: any): void;
+  > }
+  > ```
+
+- <samp>如果两个 `interface` 组合的联合类型存在同名属性，那么该属性也是联合类型</samp>
+
+  ```ts
+  interface Circle {
+    area: bigint;
+  }
+  
+  interface Rectangle {
+    area: number;
+  }
+  
+  declare const s: Circle | Rectangle;
+  ```
+
+### <samp>interface 与 type</samp>
+
+<samp>相同点：都可以作为类型别名</samp>
+
+<samp>**不同点**</samp>
+
+- <samp>`type` 可表示非对象类型，`interface` 只能表示对象类型(数组、函数等)</samp>
+
+- <samp>继承</samp>
+
+  - <samp>`type` 的继承：使用 `&` 运算符</samp>
+
+    ```ts
+    interface Foo { x: number };
+    type Bar = Foo & { y: string; };
+    ```
+
+  - <samp>`interface` 的继承：使用 `extends` 关键字</samp>
+
+    ```ts
+    type Foo = { x: number };
+    interface Bar extends Foo { y: string; }
+    ```
+
+- <samp>同名的 `interface` 会自动合并，同名 `type` 会报错</samp>
+
+- <samp>`interface` 不能映射；`type` 可以映射</samp>
+
+  ```ts
+  interface Point {
+    x: number;
+    y: number;
+  }
+  
+  type PointCopy1 = {
+    [Key in keyof Point]: Point[Key];
+  };
+  ```
+
+- <samp>`this` 只能用于 `interface`</samp>
+
+  ```ts
+  // 正确
+  interface Foo {
+    add(num: number): this;
+  };
+  
+  // 报错
+  type Bar = {
+    add(num: number): this; // [!code error] "this" 类型仅在类或接口的非静态成员中可用。
+  };
+  ```
+
+- <samp>`type` 可以扩展原始数据</samp>
+
+  ```ts
+  type MyStr = string & {
+    type: 'new'
+  };
+  ```
+
+- <samp>`interface` 无法表达某些复杂类型 (比如交叉类型和联合类型)，但是 `type` 可以</samp>
+
+## <samp>类</samp>
+
+<samp>类(class)是面向对象编程的基本构建，封装了属性和方法</samp>
+
+- <samp>支持顶层声明属性及其类型</samp>
+
+- <samp>如果打开了 `strictPropertyInitialization`(默认打开)，会检测属性是否设置了初值，未设置初值会报错</samp>
+
+  > <samp>`!`：非空断言</samp>
+  >
+  > ```ts
+  > class Point {
+  >   x!: number;
+  >   y!: number;
+  > }
+  > ```
+
+- <samp>`readonly` 表示属性只读</samp>
+
+  ```ts
+  class A {
+    readonly id: string;
+  
+    constructor() {
+      this.id = 'bar';
+    }
+  }
+  ```
+
+### <samp>方法</samp>
+
+<samp>方法与普通函数、类的声明方式一致</samp>
+
+> <samp>构造函数不能声明返回值，它的返回值是实例对象</samp>
+
+- <samp>参数默认值</samp>
+
+  ```ts
+  class Point {
+    x: number;
+    y: number;
+  
+    constructor(x = 0, y = 0) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+  ```
+
+- <samp>函数重载</samp>
+
+  ```ts
+  class Point {
+    constructor(x: number, y: string);
+    constructor(s: string);
+    constructor(xs: number | string, y?: string) {
+    }
+  }
+  ```
+
+### <samp>存储器方法</samp>
+
+<samp>存储器(accessor)是特殊的类方法，包括取值器(getter)和存值器(setter)</samp>
+
+<samp>取值器用来读取属性，存值器用来写入属性</samp>
+
+```ts
+class C {
+  _name = '';
+  get name() {
+    return this._name;
+  }
+  set name(value) {
+    this._name = value;
+  }
+}
+```
+
+- <samp>如果只有 `get`，没有 `set`，那么该属性自动转为只读属性</samp>
+
+- <samp>`get` 和 `set` 可访问性必须一致，要么都为公开方法，要么都为私有方法</samp>
 
