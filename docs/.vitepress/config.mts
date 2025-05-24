@@ -75,7 +75,7 @@ export default defineConfig({
     ],
     // 页脚
     footer: {
-      copyright: `<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a> ${new Date().getFullYear()} © Banished Knight`
+      copyright: `<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a> 2025-${new Date().getFullYear()} © <a href="https://github.com/YasakaKanoko">Banished Knight</a>`
     }
   }
 })
