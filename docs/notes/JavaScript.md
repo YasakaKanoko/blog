@@ -346,17 +346,11 @@ for (var i = 0; i < 3; i++) {
 
 <samp>转换规则</samp>
 
-- <samp>`undefined`、`null`、`false`、`0`、`NaN`、`""` 和 `''` 为 `false`</samp> 
+- <samp>`undefined`、`null`、`false`、`0`、`NaN`、`""` 和 `''` 为 `false`</samp>
 
 - <samp>其余为 `true`</samp>
 
   > <samp>空数组和空对象都为 `true`</samp>
-
-
-
-
-
-
 
 ## <samp>严格模式</samp>
 

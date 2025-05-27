@@ -1,9 +1,9 @@
-# <samp>[bun](https://bun.sh/)</samp>
+# <samp>bun</samp>
 
 - <samp>安装 bun</samp>
 
   ```sh
-  npm i -g bun
+  irm bun.sh/install.ps1 | iex
   ```
 
 - <samp>校验安装</samp>

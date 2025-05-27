@@ -6,34 +6,35 @@
 
 :::
 
-<samp>为什么选择 TypeScript?</samp>
+<samp>**特点**</samp>
 
-- <samp>**JS 动态类型在执行过程中**进行类型匹配，JS 弱类型会在执行时进行隐式类型转换</samp>
+- <samp>TS 是一个可选的、**静态的类型系统**</samp>
 
-- <samp>TS 是静态类型</samp>
+  ::: details 
 
-  > [!Tip]
-  >
-  > <samp>如：Java、C/C++ 等是静态类型</samp>
+  <samp>**静态**：类型检查始终发生在编译时，而非运行时</samp>
 
-  1. <samp>可读性强：基于语法解析 TSDoc, ide 增强</samp>
+  <samp>**类型系统**：对代码中的标识符(变量、函数、参数、返回值)进行类型检查</samp>
 
-  2. <samp>可维护性强：**在编译阶段暴露大部分错误**</samp>
+  :::
 
-  3. <samp>大型项目中，可以获得更好的稳定性和开发效率</samp>
+- <samp>TS 是 JS 的**超集**</samp>
 
-- <samp>TS 是 JS 超集</samp>
+- <samp>拥抱 ES 标准</samp>
 
-  1. <samp>兼容所有 JS 特性</samp>
-  2. <samp>支持渐进式引入和升级</samp>
+- <samp>**类型检查**增强了面向对象开发</samp>
 
-## <samp>编译器</samp>
+## <samp>编译选项</samp>
 
-<samp>想要运行 TypeScript 代码，就必须先转为 JavaScript ，这个代码的转换过程叫做"编译" ( Compile )</samp>
+<samp>"**编译(Compile)**"：TS 编译器将 TypeScript 代码编译成 JavaScript 代码的过程，编译时会将类型声明和相关的代码删除，不改变 JavaScript 的运行结果</samp>
 
-<samp>TypeScript 只提供编译器，编译时会将类型声明和相关的代码删除，不会改变 JavaScript 的运行结果</samp>
+<samp>默认情况下，TS 编译器可能的**假设**</samp>
 
-<samp>TypeScript 的类型检查只是编译时的类型检查，而不是运行时的类型检查</samp>
+- <samp>假设当前环境是 DOM</samp>
+- <samp>如果代码中未使用模块化，便认为当前代码是全局执行</samp>
+- <samp>编译目标是 ES3</samp>
+
+<samp>**编译选项**：通过修改 `tsconfig.json` 编译选项改变 TypeScript 的假设</samp>
 
 1. <samp>初始化项目</samp>
 
@@ -42,6 +43,12 @@
    ```sh[pnpm]
    # 初始化
    pnpm init
+   
+   # 安装类型编译器
+   pnpm i -D typescript
+   
+   # 初始化ts编译器, 生成ts配置文件
+   npx tsc --init
    ```
 
    ```sh[bun]
@@ -50,77 +57,62 @@
 
    :::
 
-2. <samp>`tsc`：安装类型编译器</samp>
+2. <samp>`tsconfig.json`</samp>
 
-   ```sh
-   npm i -g typescript
-   
-   # 生成ts配置文件
-   tsc --init
-   ```
+   <samp>参考：[tsconfig.json](https://www.typescriptlang.org/tsconfig/)</samp>
 
-   ::: details <samp>参考：[tsconfig.json](https://www.typescriptlang.org/tsconfig/)</samp>
+   ::: details
+
+   - <samp>`"outDir": "./dist"`：导出路径</samp>
+
+   - <samp>`"esModuleInterop": true`：改善CommonJS/ES模块互操作性</samp>
+   - <samp>`"forceConsistentCasingInFileNames": true`：强制文件导入路径大小写一致</samp>
+   - <samp>`"include": ["src"]`：包含的目录</samp>
+   - <samp>`"exclude": ["node_modules"]`：排除的目录</samp>
+   - <samp>`"strict": true`：严格类型检查</samp>
+     - <samp>`noImplicitAny`：不允许隐式 `any` 类型</samp>
+     - <samp>`strictNullChecks`：在类型检查中考虑 `null` 和 `undefined`</samp>
+     - <samp>`strictFunctionTypes`：在函数赋值时进行严格的类型检查</samp>
+     - <samp>`strictBindCallApply`：检查 `bind`, `call`, `apply` 方法的参数和返回值类型</samp>
+     - <samp>`strictPropertyInitialization`：检查类字段是否在构造函数中被初始化</samp>
+     - <samp>`strictBuiltinIteratorReturn`：内置迭代器的返回类型为 `undefined` 而不是 `any`</samp>
+     - <samp>`noImplicitThis`：不允许 `this` 具有隐式的 `any` 类型</samp>
+     - <samp>`useUnknownInCatchVariables`：默认情况下将 `catch` 变量视为 `unknown` 而不是 `any`</samp>
+     - <samp>`alwaysStrict`：确保在生成的 JavaScript 文件中包含 `'use strict'`</samp>
+
+   ::: 
 
    ::: code-group
 
-   ```json[pnpm.tsconfig.json]
-   {
-     // 编译选项
-     "compilerOptions": {
-       
-       // 生成的JavaScript版本
-       "target": "es2016",
-       // 内部类型声明库, 不包含dom
-       "lib": ["ES2016"],   
-       // 模块
-       "module": "commonjs",
-       // 导出路径
-       "outDir": "./dist",  
-       // 改善CommonJS/ES模块互操作性
-       "esModuleInterop": true,
-       // 强制文件导入路径大小写一致
-       "forceConsistentCasingInFileNames": true, 
-       // 严格模式
-       "strict": true, 
-       // 跳过声明文件的类型检查, 提升编译速度
-       "skipLibCheck": true
-       
-     },
-     // 包含的目录
-     "include": ["src"],
-     // 排除的目录
-     "exclude": ["node_modules"]
-   }
-   ```
-
-   ```json[bun.tsconfig.json]
+   ```json[tsconfig.json]
    {
      "compilerOptions": {
-       // Environment setup & latest features
-       "lib": ["ESNext"],
-       "target": "ESNext",
-       "module": "Preserve",
-       "moduleDetection": "force",
-       "jsx": "react-jsx",
-       "allowJs": true,
-   
+     
+     	// Environment setup & latest features
+       "lib": ["ESNext"], // 生成的JavaScript版本
+       "target": "ESNext", // 内部类型声明库, 不包含dom   
+       "module": "Preserve", // TypeScript 编译器不会将其转换为其他模块系统
+       "moduleDetection": "force", // 强制 TypeScript 编译器检测模块文件的格式
+       "jsx": "react-jsx", // 指定生成的 JSX 代码的类型为 React.jsx
+       "allowJs": true, // 允许编译 JavaScript 文件
+       
        // Bundler mode
-       "moduleResolution": "bundler",
-       "allowImportingTsExtensions": true,
-       "verbatimModuleSyntax": true,
-       "noEmit": true,
+       "moduleResolution": "bundler", // 指定模块解析的模式为 bundler
+       "allowImportingTsExtensions": true, // 允许导入带有 .ts 和 .tsx 扩展名的文件
+       "verbatimModuleSyntax": true, // 确保 TypeScript 编译器在编译时不会对模块语法进行任何转换
+       "noEmit": true, // 不要生成任何 JavaScript 文件
    
        // Best practices
-       "strict": true,
-       "skipLibCheck": true,
-       "noFallthroughCasesInSwitch": true,
-       "noUncheckedIndexedAccess": true,
-       "noImplicitOverride": true,
+       "strict": true, // 启用所有严格类型检查选项
+       "skipLibCheck": true, // 跳过所有 .d.ts 文件的类型检查
+       "noFallthroughCasesInSwitch": true, // 确保每个 case 语句都有明确的终止条件
+       "noUncheckedIndexedAccess": true, // 通过索引访问对象属性时，确保返回的类型包含 undefined
+       "noImplicitOverride": true, // 确保覆盖方法的意图是显式的
    
        // Some stricter flags (disabled by default)
-       "noUnusedLocals": false,
-       "noUnusedParameters": false,
-       "noPropertyAccessFromIndexSignature": false,
+       "noUnusedLocals": false, // 关闭对未使用的本地变量的类型检查
+       "noUnusedParameters": false, // 禁止报告未使用的函数参数
+       "noPropertyAccessFromIndexSignature": false, // 关闭对从索引签名访问属性时的严格类型检查
      },
    }
    ```
@@ -132,18 +124,18 @@
    ::: code-group
 
    ```sh[pnpm]
-   # ts 官方类型库, 包含对 JS 代码的类型描述
+   # TypeScript 的类型定义包
    pnpm i -D @types/node
    
-   # ts 执行引擎, 直接运行而无需编译
+   # Node.js 执行环境，可以直接运行 TypeScript 文件
    pnpm i -D ts-node
    
-   # 监听文件变化, 自动启动 node 程序
+   # 监视文件变化的工具，当检测到项目中的文件发生变化时，会自动重启 Node.js 应用程序
    pnpm i -D nodemon
    ```
 
    ```sh[bun]
-   bun add -d @types/bun
+   bun add -D @types/bun
    ```
 
    :::
@@ -171,61 +163,45 @@
 
 ## <samp>基本类型</samp>
 
-- <samp>`boolean`：包含 `true` 和 `false` 两个布尔值</samp>
+- <samp>`boolean`：布尔值</samp>
 
-- <samp>`string`：包含所有字符串 (普通字符串和模板字符串)</samp>
+- <samp>`string`：字符串</samp>
 
-- <samp>`number`：包含所有整数、浮点数 (非十进制数也属于 `number`)</samp>
+- <samp>`number`：数值</samp>
 
-- <samp>`bigint`：包含所有大整数</samp>
+- <samp>`bigint`：大整数</samp>
 
-  > [!CAUTION]
+- <samp>`symbol`：符号</samp>
+
+- <samp>`object`：所有对象、数组和函数</samp>
+
+- <samp>`undefined`：未定义</samp>
+
+- <samp>`null`：空</samp>
+
+  > [!NOTE]
   >
-  > - <samp>`bigint` 和 `number` 不兼容</samp>
-  >
-  > - <samp>`bigint` 是 ES2020 引入。TypeScript 的"编译选项" `target` 参数不能低于 `es2020`</samp>
+  > - <samp>`null` 和 `undefined` 是所有类型的子类型，可以赋值给任意类型</samp>
+  > - <samp>**编译选项**开启 `strictNullChecks` 后，`undefined` 和 `null` 只能赋值给自身、`any`、`unknown`</samp>
 
-- <samp>`symbol`：`Symbol()` 函数的返回值就是 `symbol` 类型</samp>
 
-- <samp>`object`：包含所有对象、数组和函数</samp>
+## <samp>类型约束</samp>
 
-- <samp>`undefined`：表示未定义，即可表示类型，也可表示值</samp>
+<samp>**类型约束**：变量、函数参数、函数返回值</samp>
 
-- <samp>`null`：表示为空，此处没有值</samp>
-
-> [!NOTE]
->
-> - <samp>首字母大写的 `Number`、`Boolean`、`String` 等是 JavaScript 内置包装对象类型，而不是类型名称</samp>
->
-> - <samp>`undefined` 和 `null` 既可以作为值，也可以作为类型</samp>
->
->   <samp>作为值时，任何其他类型的变量都可以赋值为 `undefined` 和 `null`</samp>
->
->   ```ts
->   const obj: object = undefined;
->   obj.toString(); // [!code highlight] 在编译阶段不报错, 在运行阶段报错。不能将类型“undefined”分配给类型“object”。
->   ```
->
-
-::: warning
-
-<samp>如果没有声明类型的变量，被赋值为 `undefined` 或 `null`，在关闭 `noImplicitAny` 和 `strictNullChecks` 时，类型将被推断为 `any`</samp>
-
-:::
-
-<samp>开启 `strictNullChecks` 后，`undefined` 和 `null` 只能赋值给自身、`any`、`unknown`</samp>
-
-::: code-group
-
-```json[tsconfig.json]
-{
-  "compilerOptions": {
-    "strictNullChecks": true
-  }
-}
+```ts
+const q: string = 'string';
+const w: number = 1;
+const e: boolean = true;
+const r: null = null;
+const t: undefined = undefined;
 ```
 
-:::
+## <samp>类型推导</samp>
+
+<samp>`any`：任意类型；关闭类型检查</samp>
+
+
 
 ### <samp>symbol</samp>
 
@@ -383,7 +359,7 @@ obj = (a: number) => { a + 1 };
 2. <samp>为了适配老的 JavaScript ，让代码迅速迁移到 TypeScript</samp>
 3. <samp>不希望对来自用户或第三方库的值进行类型检查</samp>
 
-<samp>`any` 可以看作是所有其他类型的全集，TypeScript 将这种类型称为"顶层类型(top type)"</samp>
+<samp>`any` 可以看作是所有其他类型的全集，TypeScript 将这种类型称为"**顶层类型**(top type)"</samp>
 
 :::
 
@@ -632,6 +608,8 @@ obj = (a: number) => { a + 1 };
   ```
 
 ## <samp>数组</samp>
+
+数组建议使用方括号形式，而不是泛型，因为在 React 中 `<>` 是组件的写法
 
 - <samp>「类型+方括号」</samp>
 
@@ -1301,7 +1279,7 @@ function add(x: number | any[], y: number | any[]): number | any[] {
 >   ```ts
 >   class StringBuilder {
 >     #data = '';
->   
+>       
 >     add(num: number): this;
 >     add(bool: boolean): this;
 >     add(str: string): this;
@@ -1309,7 +1287,7 @@ function add(x: number | any[], y: number | any[]): number | any[] {
 >       this.#data += String(value);
 >       return this;
 >     }
->   
+>       
 >     toString() {
 >       return this.#data;
 >     }
