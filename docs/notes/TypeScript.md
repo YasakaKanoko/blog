@@ -161,19 +161,17 @@
 
    :::
 
-## <samp>基本类型</samp>
+## <samp>原始类型</samp>
 
-- <samp>`boolean`：布尔值</samp>
+- <samp>`number`：数值</samp>
 
 - <samp>`string`：字符串</samp>
 
-- <samp>`number`：数值</samp>
+- <samp>`boolean`：布尔值</samp>
 
 - <samp>`bigint`：大整数</samp>
 
 - <samp>`symbol`：符号</samp>
-
-- <samp>`object`：所有对象、数组和函数</samp>
 
 - <samp>`undefined`：未定义</samp>
 
@@ -184,8 +182,7 @@
   > - <samp>`null` 和 `undefined` 是所有类型的子类型，可以赋值给任意类型</samp>
   > - <samp>**编译选项**开启 `strictNullChecks` 后，`undefined` 和 `null` 只能赋值给自身、`any`、`unknown`</samp>
 
-
-## <samp>类型约束</samp>
+### <samp>类型约束</samp>
 
 <samp>**类型约束**：变量、函数参数、函数返回值</samp>
 
@@ -197,13 +194,118 @@ const r: null = null;
 const t: undefined = undefined;
 ```
 
-## <samp>类型推导</samp>
+### <samp>其他类型</samp>
 
-<samp>`any`：任意类型；关闭类型检查</samp>
+- <samp>**联合类型**(union types)：多种类型任选其一；符号 `|`</samp>
+
+  ```ts
+  let name: string | undefined;
+  ```
+
+  <samp>**类型保护**：通常情况下，可以通过 `typeof` 触发类型保护</samp>
+
+  ```ts
+  if (typeof name === 'string') {
+    name; // let name: string
+  }
+  ```
+
+- <samp>**交叉类型**(intersection types)：多种类型叠加在一起形成一种新类型，包含了所需的所有类型的特性；符号：`&`</samp>
+
+- <samp>`void`：约束函数返回值；表示函数没有任何值返回</samp>
+
+- <samp>`never`：约束函数返回值；表示函数永远不会结束</samp>
+
+- <samp>**值类型**：使用值进行约束，变量为字面量</samp>
+
+  ```ts
+  // 和联合类型一起约束, 表示只能取其中一个值
+  let gender: 'male' | 'female';
+  
+  // 约束空数组
+  let arr: [];
+  
+  // 约束对象属性的类型
+  let user: { 
+    name: string; 
+    age: number; 
+  }
+  ```
+
+- <samp>**元组**(Tuple)：定长数组，数组每一项的类型确定</samp>
+
+- <samp>`any`：任意类型；绕过类型检查</samp>
+
+  > <samp>`any` 是"**顶层类型**(top type)"，可以赋值给任意类型的数据</samp>
+
+## <samp>类型别名</samp>
+
+<samp>`type`：类型别名；相当于 C++ 中的 `typedef`</samp>
+
+```ts
+type IBookList = Array<{
+  author: string;
+} & ({
+  type: 'history';
+  range: string;
+} | {
+  type: 'story';
+  theme: string;
+})>; 
+```
+
+## <samp>object</samp>
+
+- <samp>`object`：**非原始类型**；包含**对象**、**数组**和**函数**</samp>
+
+  > <samp>**非原始类型**：除了 `number`、`string`、`boolean`、`symbol`、`bigint`、`null`、`undefined` 之外的任何类型</samp> 
+
+- <samp>`Object`：所有可转换为对象值的构造函数；简写形式：`{}`</samp>
+
+  > <samp>除了 `undefined`、`null`</samp>
+
+### <samp>数组</samp>
+
+- <samp>字面量</samp>
+- <samp>泛型</samp>
+
+### <samp>函数</samp>
 
 
 
-### <samp>symbol</samp>
+#### <samp>可选参数</samp>
+
+<samp>**可选参数**：在参数末尾加上 `?` 实现可选参数</samp>
+
+- <samp>函数体使用可选参数时，需要先判断该参数是否为 `undefined`</samp>
+- <samp>可选参数必须在必选参数之后</samp>
+
+#### <samp>默认参数</samp>
+
+<samp>**默认参数**：提供一个默认值，当用户没有传递该参数或传递值为 `undefined` 时，默认初始化值的参数</samp>
+
+<samp>如果默认参数在必选参数之前，调用时必须显式传入 `undefined`</samp>
+
+
+
+#### <samp>重载</samp>
+
+<samp>**函数重载**：根据参数的不同，产生不同的函数行为</samp>
+
+```ts
+function combine(a: number, b: number): number;
+function combine(a: string, b: string): string;
+function combine(a: number | string, b: number | string): number | string {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a * b;
+  } else if (typeof a === 'string' && typeof b === 'string') {
+    return a + b;
+  }
+  throw new Error('a与b必须是相同类型');
+}
+```
+
+## <samp>symbol</samp>
 
 <samp>Symbol 值通过 `Symbol()` 函数生成，每一个 Symbol 值都是独一无二的</samp>
 
@@ -438,26 +540,15 @@ obj = (a: number) => { a + 1 };
 
 ## <samp>值类型</samp>
 
-<samp>单个值也是一种类型，称为"值类型"</samp>
 
-- <samp>声明值类型，就表示为固定值</samp>
 
-- <samp>**类型推断**：如果使用 `const` 声明，没有注明类型，就推断该变量是值类型</samp>
-
-  ```ts
-  const x = 'https'; // const x: "https"
-  const y: string = 'https'; // const y: string
-  ```
-
-  > [!NOTE]
-  >
-  > <samp>如果使用 `const` 声明的变量是一个对象，不会推断为值类型</samp>
-  >
-  > ```ts
-  > const x = { foo: 1 }; // const x: { foo: number; }
-  > ```
-  >
-  > <samp>`const` 变量赋值对象时，属性值是可以改变的</samp>
+> 
+>
+> ```ts
+>const x = { foo: 1 }; // const x: { foo: number; }
+> ```
+> 
+> <samp>`const` 变量赋值对象时，属性值是可以改变的</samp>
 
 - <samp>值类型是基本类型的子类型</samp>
 
@@ -474,76 +565,7 @@ obj = (a: number) => { a + 1 };
   > const x: 5 = y as 5; // [!code highlight] OK
   > ```
 
-## <samp>联合类型</samp>
 
-<samp>联合类型(union types)：多个类型组成一个新类型，符号 `|`</samp>
-
-- <samp>联合类型与值类型联合</samp>
-
-  ```ts
-  let setting: true | false; // 这样写也是布尔类型boolean
-  let gender: 'male' | 'female';
-  let rainbowColor: 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'indigo' | 'violet';
-  ```
-
-- <samp>如果编译选项开启了 `strictNullChecks` 后，其他类型变量不能赋值 `undefined` 或 `null`，但是某个变量需要包含空值时，可以使用联合类型</samp>
-
-  ```ts
-  let name: string | null;
-  ```
-
-- <samp>联合类型在第一个成员前加上 `|`，方便书写</samp>
-
-  ```ts
-  let x:
-    | 'one'
-    | 'two'
-    | 'three'
-    | 'four';
-  ```
-
-- <samp>如果存在多种类型，读取时需要进行类型缩小(type narrowing)</samp>
-
-  ```ts
-  function printId(id: number | string) {
-    if (typeof id === 'string') {
-      console.log(id.toUpperCase());
-    } else {
-      console.log(id);
-    }
-  }
-  ```
-  
-  > [!TIP]
-  >
-  > <samp>事实上，"联合类型"可以看作是"类型放大"(type windening)，处理时需要"类型缩小(type narrowing)"处理</samp>
-  >
-  > <samp>"类型缩小"是 TypeScript 处理联合类型的标准方法，凡是在多种类型的场合，都需进行类型缩小再处理</samp>
-
-## <samp>交叉类型</samp>
-
-<samp>交叉类型(intersection types)：多个类型组成的一个新类型，符号：`&`</samp>
-
-- <samp>交叉类型主要用于表示对象的合成</samp>
-
-  ```ts
-  let obj:
-    { foo: string } &
-    { bar: string };
-  
-  obj = {
-    foo: 'hello',
-    bar: 'world'
-  };
-  ```
-
-- <samp>交叉类型常用于对象类型添加新属性</samp>
-
-  ```ts
-  type A = { foo: number };
-  
-  type B = A & { bar: number };
-  ```
 
 ## <samp>type</samp>
 
@@ -1279,7 +1301,7 @@ function add(x: number | any[], y: number | any[]): number | any[] {
 >   ```ts
 >   class StringBuilder {
 >     #data = '';
->       
+>         
 >     add(num: number): this;
 >     add(bool: boolean): this;
 >     add(str: string): this;
@@ -1287,7 +1309,7 @@ function add(x: number | any[], y: number | any[]): number | any[] {
 >       this.#data += String(value);
 >       return this;
 >     }
->       
+>         
 >     toString() {
 >       return this.#data;
 >     }
