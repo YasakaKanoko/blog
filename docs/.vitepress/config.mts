@@ -24,7 +24,10 @@ export default defineConfig({
   description: "YasakaKanoko",
   lang: 'en-US',
   markdown: {
-    math: true
+    math: true,
+    image: {
+      lazyLoading: true
+    }
   },
   srcDir: '.', // 指定项目根目录, 默认.
   // outDir:'../public', // 指定输出目录
