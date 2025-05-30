@@ -1,5 +1,4 @@
 # <samp>TypeScript</samp>
-
 ::: details <samp>目录</samp>
 
 [[TOC]]
@@ -78,7 +77,7 @@
      - <samp>`noImplicitThis`：不允许 `this` 具有隐式的 `any` 类型</samp>
      - <samp>`useUnknownInCatchVariables`：默认情况下将 `catch` 变量视为 `unknown` 而不是 `any`</samp>
      - <samp>`alwaysStrict`：确保在生成的 JavaScript 文件中包含 `'use strict'`</samp>
-   - <samp>`noImplicitUseStrict`：编译结果中不包含 `"use strict"`</samp>
+   - <samp>`noImplicitUseStrict`：编译结果中不包含 `'use strict'`</samp>
    - <samp>`removeComments`：编译结果不包含注释</samp>
    - <samp>`noEmitOnError`：错误时不生成编译结果</samp>
 
@@ -175,6 +174,32 @@
 
 - <samp>`symbol`：符号</samp>
 
+  - <samp>通过 `Symbol()` 函数生成，每一个 Symbol 值都是独一无二的</samp>
+
+    ```ts
+    let x: symbol = Symbol();
+    ```
+
+  - <samp>`unique symbol`：表示单个的、某个具体的 Symbol 值</samp>
+
+    ```ts
+    // unique symbol只能使用const声明
+    const x: unique symbol = Symbol();
+    
+    // const声明的symbol类型是unique symbol类型
+    const x = Symbol();
+    
+    // 如果需要写成同一个unique symbol类型, 只能写成typeof x
+    const a: unique symbol = Symbol();
+    const b: typeof a = a; 
+    
+    // Symbol.for(): 返回相同的 Symbol 值(虽然值是相等的，但是引用完全不同)
+    const a: unique symbol = Symbol.for('foo');
+    const b: unique symbol = Symbol.for('foo');
+    ```
+
+    
+
 - <samp>`undefined`：未定义</samp>
 
 - <samp>`null`：空</samp>
@@ -186,9 +211,7 @@
   > - <samp>`null` 和 `undefined` 是所有类型的子类型，可以赋值给任意类型</samp>
   > - <samp>**编译选项**开启 `strictNullChecks` 后，`undefined` 和 `null` 只能赋值给自身、`any`、`unknown`</samp>
 
-### <samp>类型约束</samp>
-
-<samp>**类型约束**：变量、函数参数、函数返回值</samp>
+<samp>**类型约束**：常用于约束**变量**、**函数参数**、**函数返回值**</samp>
 
 ```ts
 const q: string = 'string';
@@ -198,21 +221,284 @@ const r: null = null;
 const t: undefined = undefined;
 ```
 
+## <samp>object</samp>
+
+- <samp>`object`：**非原始类型**；包含**对象**、**数组**和**函数**</samp>
+
+  > <samp>**非原始类型**：除了 `number`、`string`、`boolean`、`symbol`、`bigint`、`null`、`undefined` 之外的任何类型</samp>
+
+- <samp>`Object`：所有可转换为对象值的构造函数；简写形式：`{}`</samp>
+
+  > <samp>除了 `undefined`、`null`</samp>
+  >
+  > - <samp>`boolean`、`string`、`number`、`bigint`、`symbol`</samp>
+  
+  ```ts
+  let obj: Object;
+  
+  obj = true;
+  obj = 'hi';
+  obj = 1;
+  obj = { foo: 123 };
+  obj = [1, 2, 3];
+  obj = (a: number) => { a + 1 };
+  ```
+
+### <samp>对象</samp>
+
+<samp>声明了对象类型，赋值时不能缺少指定属性，也不能有多余的属性</samp>
+
+```ts
+type Obj1 = {
+  x:number;
+  y:number;
+};
+
+interface Obj2 {
+  x: number;
+  y: number;
+}
+```
+
+####  <samp>可选属性</samp>
+
+- <samp>可选属性等同于 undefined，在属性名前使用 `?` 表示</samp>
+
+  ```ts
+  type User = { name?: string; }
+  let user: User = {};
+  ```
+
+- <samp>读写可选属性前，需要先判断是否为 `undefined`</samp>
+
+  ::: code-group
+
+  ```ts[===运算符]
+  if (user.name === undefined) {
+    user.name = 'Alice';
+  }
+  ```
+
+  ```ts[?:运算符]
+  (user.name === undefined) ? 'Alice' : user.name;
+  ```
+
+  ```ts[空值合并运算符]
+  user.name ?? 'Alice';
+  ```
+
+  :::
+
+- <samp>如果打开 `"exactOptionalPropertyTypes"` 和 `"strictNullChecks"` 选项，则可选属性不能设为 `undefined` </samp>
+
+#### <samp>只读属性</samp>
+
+<samp>属性名前加上 `readonly` 关键字，表示只读属性，不能修改</samp>
+
+- <samp>只读属性值只能在初始化期间赋值，此后不能修改该属性</samp>
+
+- <samp>`readonly` 修饰符并不禁止修改该对象的属性，只是禁止完全替换该对象</samp>
+
+  ```ts
+  interface Home {
+    readonly resident: {
+      name: string;
+      age: number;
+    }
+  }
+  
+  const h: Home = {
+    resident: {
+      name: "Alice",
+      age: 17
+    }
+  }
+  
+  h.resident = { name: 'Kate' }; // [!code --] 无法为“resident”赋值，因为它是只读属性。
+  h.resident.age = 18; // [!code ++]
+  ```
+
+- <samp>如果一个对象有两个引用，那么修改其中一个，会影响只读变量</samp>
+
+  ```ts
+  interface Person { name: string; age: number; }
+  interface ReadonlyPerson { readonly name: string; readonly age: number; }
+  
+  let w: Person = { name: 'Vicky', age: 42 };
+  let r: ReadonlyPerson = w;
+  w.age += 1;
+  
+  console.log(w.age); // 43
+  console.log(r.age); // [!code warning] 43
+  ```
+
+  
+
+### <samp>数组</samp>
+
+- <samp>**字面量**：「类型+方括号」</samp>
+- <samp>**泛型**：`Array<T>`</samp>
+
+  > <samp>建议少用泛型的形式声明数组，因为在 React 中尖括号会被识别为组件</samp>
+
+#### <samp>只读数组</samp>
+
+- <samp>字面量加上 `readonly` 关键字</samp>
+
+  ```ts
+  const arr: readonly number[] = [0, 1];
+  ```
+
+- <samp>泛型</samp>
+
+  ```ts
+  const a1: ReadonlyArray<number> = [0, 1];
+  
+  const a2: Readonly<number[]> = [0, 1];
+  ```
+
+#### <samp>多维数组</samp>
+
+<samp>使用 `T[][]` 声明二维数组</samp>
+
+```ts
+var multi: number[][] = [
+  [1, 2, 3],
+  [23, 24, 25]
+];
+```
+
+#### <samp>元组</samp>
+
+<samp>元组(tuple)：元组必须声明每个成员的类型</samp>
+
+- <samp>`?`：表示该成员可选；可选成员必须在必选成员之后</samp>
+
+  ```ts
+  type tuple = [number, string?];
+  ```
+
+- <samp>`...`：扩展运算符，表示不限成员数量的元组</samp>
+
+  ```ts
+  type tuple = [number, ...string[]];
+  ```
+
+- <samp>元组可以通过方括号读取类型</samp>
+
+  ```ts
+  type Tuple = [string, number, Date];
+  type TupleEl = Tuple[number]; // type TupleEl = string | number | Date
+  ```
+
+### <samp>函数</samp>
+
+```ts
+type mult1 = (x: number, y: number) => number;
+
+type mult2 = { (x: number, y: number): number }
+
+interface mult3 { (x: number, y: number): number; }
+```
+
+#### <samp>可选参数</samp>
+
+<samp>**可选参数**：在参数末尾加上 `?` 实现可选参数</samp>
+
+- <samp>函数体使用可选参数时，需要先判断该参数是否为 `undefined`</samp>
+- <samp>可选参数必须在必选参数之后</samp>
+- <samp>可选参数与显式 `undefined` 不同：可选参数可以省略，`undefined` 必须显式传参</samp>
+
+  ```ts
+  type F2 = (a: number, b: number | undefined) => number;
+  let f2: F2 = (x, y) => {
+    return x + (y ?? 0);
+  }
+  f2(1); // [!code --] 应有 2 个参数，但获得 1 个。
+  f2(1, undefined); // [!code ++]
+  ```
+
+#### <samp>默认参数</samp>
+
+<samp>**默认参数**：提供一个默认值，当用户没有传递该参数或传递值为 `undefined` 时，默认初始化值的参数</samp>
+
+<samp>如果默认参数在必选参数之前，调用时必须显式传入 `undefined`</samp>
+
+```ts
+function add(x: number = 0, y: number) {
+  return x + y;
+}
+
+add(1); // [!code --] 应有 2 个参数，但获得 1 个。
+add(undefined, 1); // [!code ++] 
+```
+
+#### <samp>参数解构</samp>
+
+- <samp>数组</samp>
+
+  ```ts
+  type A = [x: number, y: number];
+  function sum([a, b]: A) {
+    return a + b;
+  }
+  ```
+
+- <samp>对象</samp>
+
+  ```ts
+  type A = { x: number; y: number };
+  function sum({ x, y }: A) {
+    return x + y;
+  }
+  ```
+
+#### <samp>rest</samp>
+
+- <samp>`rest` 可以嵌套</samp>
+
+  ```ts
+  function f(...args: [boolean, ...string[]]) { }
+  ```
+
+- <samp>`rest` 可以结合解构使用</samp>
+
+  ```ts
+  function repeat(...[str, times]: [string, number]): string {
+    return str.repeat(times);
+  }
+  ```
+
+#### <samp>readonly</samp>
+
+<samp>`readonly` 表示只读参数，函数内部无法修改</samp>
+
+```ts
+function arraySum(arr: readonly number[]) { }
+```
+
+
+
+#### <samp>函数重载</samp>
+
+<samp>**函数重载**：根据参数的不同，产生不同的函数行为</samp>
+
+```ts
+function combine(a: number, b: number): number;
+function combine(a: string, b: string): string;
+function combine(a: number | string, b: number | string): number | string {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a * b;
+  } else if (typeof a === 'string' && typeof b === 'string') {
+    return a + b;
+  }
+  throw new Error('a与b必须是相同类型');
+}
+```
+
 ## <samp>其他类型</samp>
 
 - <samp>**联合类型**(union types)：多种类型任选其一；符号 `|`</samp>
-
-  ```ts
-  let name: string | undefined;
-  ```
-
-  <samp>**类型保护**：通常情况下，可以通过 `typeof` 触发类型保护</samp>
-
-  ```ts
-  if (typeof name === 'string') {
-    name; // let name: string
-  }
-  ```
 
 - <samp>**交叉类型**(intersection types)：多种类型叠加在一起形成一种新类型，包含了所需的所有类型的特性；符号：`&`</samp>
 
@@ -244,7 +530,7 @@ const t: undefined = undefined;
 
   > <samp>`any` 是"**顶层类型**(top type)"，可以赋值给任意类型的数据</samp>
 
-- <samp>`unknown`：表示类型不确定，可能是任意类型；(严格的 `any`)</samp>
+- <samp>`unknown`：表示类型不确定，可能是任意类型；(严格的 `any`)，也是"**顶层类型**"(top type)</samp>
 
   > [!NOTE]
   >
@@ -256,86 +542,33 @@ const t: undefined = undefined;
   >
   > - <samp>`unknown` 类型能进行的运算是有限的，只能进行比较运算 (`==`, `===`, `!=`, `!==`, `||`, `&&`，`?`, `typeof`, `instanceof`)</samp>
 
-## <samp>object</samp>
-
-- <samp>`object`：**非原始类型**；包含**对象**、**数组**和**函数**</samp>
-
-  > <samp>**非原始类型**：除了 `number`、`string`、`boolean`、`symbol`、`bigint`、`null`、`undefined` 之外的任何类型</samp>
-
-- <samp>`Object`：所有可转换为对象值的构造函数；简写形式：`{}`</samp>
-
-  > <samp>除了 `undefined`、`null`</samp>
-  >
-  > ```ts
-  > let obj: Object;
-  > 
-  > obj = true;
-  > obj = 'hi';
-  > obj = 1;
-  > obj = { foo: 123 };
-  > obj = [1, 2, 3];
-  > obj = (a: number) => { a + 1 };
-  > ```
-
-### <samp>对象</samp>
-
-- `type`
-- `interface`
-
-### <samp>数组</samp>
-
-- <samp>**字面量**：「类型+方括号」</samp>
-- <samp>**泛型**</samp>
-
-### <samp>函数</samp>
-
-#### <samp>可选参数</samp>
-
-<samp>**可选参数**：在参数末尾加上 `?` 实现可选参数</samp>
-
-- <samp>函数体使用可选参数时，需要先判断该参数是否为 `undefined`</samp>
-- <samp>可选参数必须在必选参数之后</samp>
-
-#### <samp>默认参数</samp>
-
-<samp>**默认参数**：提供一个默认值，当用户没有传递该参数或传递值为 `undefined` 时，默认初始化值的参数</samp>
-
-<samp>如果默认参数在必选参数之前，调用时必须显式传入 `undefined`</samp>
-
-#### <samp>函数重载</samp>
-
-<samp>**函数重载**：根据参数的不同，产生不同的函数行为</samp>
-
-```ts
-function combine(a: number, b: number): number;
-function combine(a: string, b: string): string;
-function combine(a: number | string, b: number | string): number | string {
-  if (typeof a === 'number' && typeof b === 'number') {
-    return a * b;
-  } else if (typeof a === 'string' && typeof b === 'string') {
-    return a + b;
-  }
-  throw new Error('a与b必须是相同类型');
-}
-```
-
 ## <samp>扩展类型</samp>
 
 ### <samp>类型别名</samp>
 
 <samp>`type`：类型别名；相当于 C++ 中的 `typedef`</samp>
 
-```ts
-type IBookList = Array<{
-  author: string;
-} & ({
-  type: 'history';
-  range: string;
-} | {
-  type: 'story';
-  theme: string;
-})>; 
-```
+- <samp>类型别名具有块级作用域</samp>
+
+  ```ts
+  function hello(txt: string) {
+    type msg = string;
+    let newTxt: msg = 'Hello' + txt;
+    return newTxt;
+  }
+  const newTxt: msg = hello('world'); // [!code error] 找不到名称“msg”。
+  ```
+
+- <samp>类型别名不允许重名</samp>
+
+- <samp>别名支持表达式，允许嵌套</samp>
+
+  ```ts
+  type World = "world";
+  type Greeting = `hello ${World}`;
+  ```
+
+
 
 ### <samp>枚举</samp>
 
@@ -394,7 +627,7 @@ export {};
 
 - <samp>枚举中尽量不要出现字符串字段，又出现数字字段</samp>
 
-<samp>**值类型**</samp>
+#### <samp>枚举与值类型比较</samp>
 
 - <samp>**值类型**在类型约束时会产生重复代码</samp>
 
@@ -503,7 +736,7 @@ p = p ^ Permission.Write;
   }
   ```
 
-- <samp>`interface` 继承 `type` 定义的对象类型</samp>
+- <samp>`interface` 可以继承 `type` 定义的对象类型</samp>
 
   ```ts
   type A = {
@@ -516,7 +749,7 @@ p = p ^ Permission.Write;
   }
   ```
 
-- <samp>`interface` 继承 `class`</samp>
+- <samp>`interface` 可以继承 `class`</samp>
 
   ```ts
   class A {
@@ -589,66 +822,239 @@ p = p ^ Permission.Write;
 
 - <samp>`type` 可以扩展复杂类型(联合类型和交叉类型)</samp>
 
+
+
+
+
+
+
 ### <samp>类</samp>
 
 
 
+## <samp>类型推断</samp>
+
+<samp>类型声明不是必需的，如果没有，TypeScript 会自己推断类型</samp>
+
+- <samp>`any`：如果无法推断出类型，TypeScript 就会认为该变量的类型是 `any`</samp>
+
+  > <samp>`noImplicitAny` 选项：不允许隐式 `any`</samp>
+
+- <samp>`never`</samp>
+
+  - <samp>联合类型</samp>
+  - <samp>抛出错误的函数</samp>
+  - <samp>无限执行的函数</samp>
+
+- <samp>`symbol`</samp>
+
+  - <samp>`let` 声明的 `symbol`，推断为 `symbol`</samp>
+
+    > <samp>如果 `let` 声明的变量，被 `unique symbol` 变量赋值，类型推断依然是 `symbol`</samp>
+    >
+    > ```ts
+    > const x = Symbol();
+    > let y = x; // let y: symbol
+    > ```
+
+
+  - <samp>`const` 声明的 `symbol`，推断为 `unique symbol`</samp>
+
+    > <samp>如果 `const` 声明的变量，被赋值为另一个 `symbol` 类型变量，则推断为 `symbol`</samp>
+    >
+    > ```ts
+    > let x = Symbol();
+    > const y = x; // const y: symbol
+    > ```
+
+- <samp>数组：如果初始值是空数组，推断为 `any[]`</samp>
+
+- <samp>`void`：函数返回 `undefined` 或 `null`</samp>
+
+## <samp>类型保护</samp>
+
+<samp>**类型保护**：通常情况下，可以通过 `typeof` 触发类型保护</samp>
+
+## <samp>类型断言</samp>
+
+<samp>允许绕过编译器的类型检查</samp>
+
+- <samp>`<T>value`</samp>
+- <samp>`value as T`</samp>
+
+```ts
+// 类型断言的条件: 值的实际类型是 T 的子类型，或 T 是值的子类型
+const p1: { x: number } = { x: 0, y: 0 } as { x: number; y: number };
+
+// 类型断言不应该滥用, 可能留下安全隐患
+const data: object = {
+  a: 1, b: 2, c: 3
+};
+console.log((data as Array<string>).length);
+
+// 类型断言的作用: 指定未知类型的变量具体类型
+const value: unknown = 'Hello World!';
+const s1: string = value as string;
+```
+
+### <samp>as const</samp>
+
+<samp>`as const`：类型推断时，将变量断言为**值类型**</samp>
+
+- <samp>`as const` 只能用于字面量，不能用于变量</samp>
+- <samp>`as const` 无法用于表达式</samp>
+- <samp>`as const` 的前置形式(`<const>val`)</samp>
+
+```ts
+// as const 将数组断言成只读元组
+const arr = [1, 2, 3] as const; // const arr: readonly [1, 2, 3]
+
+// as const 断言枚举成员
+enum f { x, y };
+let e = f.x as const; 
+```
+
+### <samp>非空断言</samp>
+
+<samp>**非空断言**：符号 `!`；针对可能为空的变量(即 `undefined` 与 `null`)</samp>
+
+::: code-group
+
+```ts[非空断言运算符]
+function f(x: number | null) {
+  console.log(x!.toFixed());
+}
+```
+
+```ts[typeof]
+function f(x: number | null) {
+  if (typeof x !== 'number') {
+    throw new Error('Not a number');
+  }
+  console.log(x.toFixed)
+}
+```
+
+:::
+
+<samp>非空断言在类中，表示类的属性初始化时有初始值</samp>
+
+```ts
+class Point {
+  x!: number;
+  y!: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+```
+
+### <samp>断言函数</samp>
+
+<samp>`asserts` 语句等同于 `void`</samp>
+
+```ts
+type AccessLevel = 'r' | 'w' | 'rw';
+
+function allowsReadAccess(level: AccessLevel): asserts level is 'r' | 'rw' {
+  if (!level.includes('r')) {
+    throw new Error('Read not allowed');
+  }
+}
+```
+
+<samp>`NonNullable<T>`：表示类型 `T` 去除空以后的剩余类型</samp>
+
+```ts
+function assertIsDefined<T>(
+  value: T
+): asserts value is NonNullable<T> {
+  if (value === undefined || value === null) {
+    throw new Error(`${value} is not defined`);
+  }
+}
+```
+
 ## <samp>模块</samp>
 
-- <samp>如果编译结果是 commonjs 模块，导出的声明是 `exports` 属性，默认导出会变成 `exports` 的 `default` 属性</samp>
+<samp>TS 支持所有的 ES 模块语法</samp>
 
-  <samp>导出</samp>
+- <samp>TS 允许输出和输入类型</samp>
 
   ::: code-group
 
-  ```ts[myModule.ts]
-  export const name = "Kevin";
-  export function sum(a: number, b: number) {
+  ```ts[a.ts]
+  // export type Bool = true | false;
+  
+  type Bool = true | false;
+  export { Bool };
+  ```
+
+  ```ts[b.ts]
+  import { Bool } from './a';
+  let foo: Bool = true;
+  ```
+
+  :::
+
+### <samp>commonjs</samp>
+
+<samp>如果编译结果是 commonjs 模块，导出的声明是 `exports` 属性，默认导出会变成 `exports` 的 `default` 属性</samp>
+
+<samp>导出</samp>
+
+::: code-group
+
+```ts[myModule.ts]
+export const name = "Kevin";
+export function sum(a: number, b: number) {
+  return a + b;
+}
+export default function (){
+  console.log("Hello World!")
+}
+```
+
+```js[myModule.js]
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.name = void 0;
+exports.sum = sum;
+exports.default = default_1;
+exports.name = "Kevin";
+function sum(a, b) {
     return a + b;
-  }
-  export default function (){
-    console.log("Hello World!")
-  }
-  ```
+}
+function default_1() {
+    console.log("Hello World!");
+}
+```
 
-  ```js[myModule.js]
-  "use strict";
-  Object.defineProperty(exports, "__esModule", { value: true });
-  exports.name = void 0;
-  exports.sum = sum;
-  exports.default = default_1;
-  exports.name = "Kevin";
-  function sum(a, b) {
-      return a + b;
-  }
-  function default_1() {
-      console.log("Hello World!");
-  }
-  ```
+:::
 
-  :::
+<samp>导入</samp>
 
-  <samp>导入</samp>
+::: code-group
 
-  ::: code-group
+```ts[index.ts]
+import sayHello, { name, sum } from './myModule'
+console.log(name)
+console.log(sum(3, 4))
+sayHello();
+```
 
-  ```ts[index.ts]
-  import sayHello, { name, sum } from './myModule'
-  console.log(name)
-  console.log(sum(3, 4))
-  sayHello();
-  ```
+```js[index.js]
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const myModule_1 = require("./myModule");
+console.log(myModule_1.name);
+console.log((0, myModule_1.sum)(3, 4));
+(0, myModule_1.default)();
+```
 
-  ```js[index.js]
-  "use strict";
-  Object.defineProperty(exports, "__esModule", { value: true });
-  const myModule_1 = require("./myModule");
-  console.log(myModule_1.name);
-  console.log((0, myModule_1.sum)(3, 4));
-  (0, myModule_1.default)();
-  ```
-
-  :::
+:::
 
 - <samp>解决默认导出的问题</samp>
 
@@ -695,95 +1101,3 @@ import myModule = require ('./myModule'); // [!code ++]
 - <samp>classic：递归查找模块</samp>
 - <samp>bundler：bundler 模式，使用打包工具解析规则，在打包过程中将所有模块打包成一个文件</samp>
 - <samp>node：查找本地 node_modules，再查找库 </samp>
-
-
-
-## <samp>symbol</samp>
-
-<samp>Symbol 值通过 `Symbol()` 函数生成，每一个 Symbol 值都是独一无二的</samp>
-
-> <samp>symbol 类型无法表示某一具体的 Symbol 值，即 Symbol 值无法通过字面量表示</samp>
-
-```ts
-let x: symbol = Symbol();
-let y: symbol = Symbol();
-```
-
-### <samp>unique symbol</samp>
-
-<samp>`unique symbol`：表示单个的、某个具体的 Symbol 值</samp>
-
-- <samp>`unique symbol` 只能使用 `const` 声明</samp>
-
-- <samp>`const` 声明的 `symbol` 类型是 `unique symbol` 类型</samp>
-
-- <samp>`uninque symbol` 是 `symbol` 的子类型，`unique symbol` 可以赋值给 `symbol`</samp>
-
-- <samp>每个 `unique symbol` 类型的变量，值是不一样的</samp>
-
-- <samp>如果需要写成同一个 `unique symbol` 类型，只能写成 `typeof x`</samp>
-
-  ```ts
-  const a: unique symbol = Symbol();
-  const b: typeof a = a; 
-  ```
-
-- <samp>`Symbol.for()`：返回相同的 Symbol 值(虽然值是相等的，但是引用完全不同)</samp>
-
-  ```ts
-  const a: unique symbol = Symbol.for('foo');
-  const b: unique symbol = Symbol.for('foo');
-  ```
-
-- <samp>`unique symbol` 的作用是用作特定属性名，保证不会和其他属性名冲突</samp>
-
-  > <samp>`unique symbol` 是 `symbol` 的子类型，在 `interface` 中，不能同时存在两个同类型的索引签名</samp>
-
-  ```ts
-  interface Foo {
-    [x: unique symbol]: string; // [!code error] 类型“symbol”的索引签名重复。
-    [y: symbol]: string; // [!code error] 类型“symbol”的索引签名重复。
-  }
-  ```
-
-- <samp>`unique symbol` 类型可以用作 `class` 属性值，只能赋值给类的 `readonly static` 属性</samp>
-
-  ```ts
-  class C {
-    static readonly foo: unique symbol = Symbol();
-  }
-  ```
-
-  > <samp>静态只读属性 `foo` 是 `unique symbol`， `static` 和 `readonly` 两个限定符缺一不可</samp>
-
-<samp>**类型推断**</samp>
-
-- <samp>`let` 声明的 `symbol`，推断为 `symbol`</samp>
-
-  > <samp>如果 `let` 声明的变量，被 `unique symbol` 变量赋值，类型推断依然是 `symbol`</samp>
-  >
-  > ```ts
-  > const x = Symbol();
-  > let y = x; // let y: symbol
-  > ```
-
-- <samp>`const` 声明的 `symbol`，推断为 `unique symbol`</samp>
-
-  > <samp>如果 `const` 声明的变量，被赋值为另一个 `symbol` 类型变量，则推断为 `symbol`</samp>
-  >
-  > ```ts
-  > let x = Symbol();
-  > const y = x; // const y: symbol
-  > ```
-
-<samp>`never` 类型可以赋值给任意其他类型</samp>
-
-::: info <samp>为什么 `never` 可以赋值给任意类型</samp>
-
-- <samp>集合论：空集是任何集合的子集</samp>
-
-- <samp>`never` 是任何其他类型共有的，TypeScript 称其为"底层类型 (bottom type)"</samp>
-
-<samp>TypeScript 有两个"顶层类型 (`any` 和 `unknown`)"，只有一个"底层类型 (`never`)"</samp>
-
-:::
