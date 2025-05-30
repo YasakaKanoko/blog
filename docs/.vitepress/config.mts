@@ -24,9 +24,15 @@ export default defineConfig({
   description: "YasakaKanoko",
   lang: 'en-US',
   markdown: {
+    // 数学公式
     math: true,
+    // 图片懒加载
     image: {
       lazyLoading: true
+    },
+    // 显示三级标题
+    toc: {
+      level: [2, 3, 4]
     }
   },
   srcDir: '.', // 指定项目根目录, 默认.
