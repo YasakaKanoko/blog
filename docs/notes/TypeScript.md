@@ -1,4 +1,5 @@
 # <samp>TypeScript</samp>
+
 ::: details <samp>目录</samp>
 
 [[TOC]]
@@ -198,7 +199,7 @@
     const b: unique symbol = Symbol.for('foo');
     ```
 
-    
+
 
 - <samp>`undefined`：未定义</samp>
 
@@ -260,7 +261,7 @@ interface Obj2 {
 }
 ```
 
-####  <samp>可选属性</samp>
+#### <samp>可选属性</samp>
 
 - <samp>可选属性等同于 undefined，在属性名前使用 `?` 表示</samp>
 
@@ -290,6 +291,19 @@ interface Obj2 {
   :::
 
 - <samp>如果打开 `"exactOptionalPropertyTypes"` 和 `"strictNullChecks"` 选项，则可选属性不能设为 `undefined` </samp>
+
+  ::: code-group
+
+  ```ts[tsconfig.json]
+  {
+    "compilerOptions": {
+      "strictNullChecks": true,
+      "exactOptionalPropertyTypes": true,   
+    }
+  }
+  ```
+
+  :::
 
 #### <samp>只读属性</samp>
 
@@ -332,7 +346,53 @@ interface Obj2 {
   console.log(r.age); // [!code warning] 43
   ```
 
+
+#### <samp>索引类型</samp>
+
+- <samp>同名索引的属性名的类型可以不同，但是必须优先服从字符串类型</samp>
+
+  ```ts
+  type MyType = {
+    [x: string]: string;
+    [x: number]: string; // ✅
+  }
+  ```
+
+- <samp>同名索引的属性值的类型必须相同</samp>
+
+  ```ts
+  type MyType = {
+    [x: string]: string;
+    [x: number]: number; // [!code error] “number”索引类型“number”不能分配给“string”索引类型“string”。
+  }
+  ```
+
+#### <samp>对象解构</samp>
+
+- <samp>解构赋值</samp>
+
+  ```ts
+  let product = { id: '1', name: 'cup', price: 3 }
   
+  const { id, name, price }: {
+    id: string;
+    name: string;
+    price: number
+  } = product;
+  ```
+
+- <samp>为解构的属性命名</samp>
+
+  ```ts
+  let obj = { x: 'Hello', y: 1 };
+  
+  let { x: foo, y: bar }
+    : { x: string; y: number } = obj;
+  
+  console.log(foo, bar);
+  ```
+
+
 
 ### <samp>数组</samp>
 
@@ -572,7 +632,13 @@ function combine(a: number | string, b: number | string): number | string {
 
 ### <samp>枚举</samp>
 
-<samp>`enum`：定义一组带名称的常量，在编译结果中表现为对象</samp>
+<samp>`enum`：定义一组带名称的常量，在编译结果中**表现为对象**</samp>
+
+> <samp>**表现为对象**</samp>
+>
+> - <samp>可以使用方括号运算符或点运算符调用对象的属性</samp>
+>
+> - <samp>不能出现与 enum 结构同名的变量</samp>
 
 ::: code-group
 
@@ -597,7 +663,7 @@ export {};
 
 <samp>**枚举规则**</samp>
 
-- <samp>枚举字段值只能为字符串、数字</samp>
+- <samp>枚举字段值可以是字符串、数字(不能是 `bigint`)、表达式</samp>
 
 - <samp>数字枚举的值会自增，默认值从 0 开始</samp>
 
@@ -625,7 +691,69 @@ export {};
 
   :::
 
-- <samp>枚举中尽量不要出现字符串字段，又出现数字字段</samp>
+- <samp>枚举的成员值是只读的，不能重新赋值(建议在声明时加上 `const` 修饰)</samp>
+
+  ```ts
+  const enum Color {
+    Red,
+    Green,
+    Blue
+  }
+  ```
+
+- <samp>枚举可以混合，但尽量不要即出现字符串字段，又出现数字字段</samp>
+
+- <samp>枚举可以合并</samp>
+
+  - <samp>首个成员的值可以省略初始值</samp>
+  - <samp>不能有同名的成员</samp>
+
+- <samp>`keyof`：取出枚举中的所有成员的名，作为联合类型返回</samp>
+
+  ```ts
+  enum MyEnum {
+    A = 'a',
+    B = 'b'
+  }
+  
+  type Foo = keyof typeof MyEnum; // type Foo = "A" | "B"
+  ```
+
+- <samp>`in`：取出索引</samp>
+
+  ```ts
+  enum MyEnum {
+    A = 'a',
+    B = 'b'
+  }
+  for (let key in MyEnum) {
+    console.log(key); // A B
+  }
+  ```
+
+- <samp>**反向映射**：通过成员值获取成员名</samp>
+
+  ```ts
+  enum Direction {
+      Up = 1,
+      Down,
+      Left,
+      Right
+  }
+  console.log(Direction[3]); // Left
+  ```
+
+  <samp>**原理**：两段赋值</samp>
+
+  ```ts
+  Direction[Direction["Up"] = 0] = "Up";
+  
+  // 等价于
+  Direction["Up"] = 0
+  Direction[0] = "Up";
+  ```
+
+  > <samp>字符串不存在反向映射</samp>
 
 #### <samp>枚举与值类型比较</samp>
 
@@ -782,6 +910,7 @@ p = p ^ Permission.Write;
       bar: number;
     };
     ```
+
   - <samp>`type` 使用交叉类型继承会将相同成员交叉</samp>
 
     ```ts
@@ -818,19 +947,82 @@ p = p ^ Permission.Write;
     add(num: number): this;
   };
   ```
+
 - <samp>`type` 只能表示非对象类型，`interface` 只能表示对象(数组、函数、对象、类等)</samp>
 
 - <samp>`type` 可以扩展复杂类型(联合类型和交叉类型)</samp>
 
-
-
-
-
-
-
 ### <samp>类</samp>
 
+```ts
+class User {
+  name: string;
+  age: number;
 
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+```
+
+- <samp>参数默认值</samp>
+
+  ::: code-group
+
+  ```ts[index.ts]
+  // 在参数中初始化默认值
+  class User {
+    name: string;
+    age: number;
+    gender: "男" | "女" = "男";
+  
+    constructor(name: string, age: number) {
+      this.name = name;
+      this.age = age;
+    }
+  }
+  
+  ```
+
+  ```ts[index.ts]
+  // 在构造函数中初始化默认值
+  class User {
+    name: string;
+    age: number;
+    gender: "男" | "女";
+  
+    constructor(name: string, age: number, gender: "男" | "女" = "男") {
+      this.name = name;
+      this.age = age;
+      this.gender = gender;
+    }
+  }
+  ```
+
+  :::
+
+  > <samp>检查是否设置初值</samp>
+  >
+  > ::: code-group
+  >
+  > ```json[tsconfig.json]
+  > {
+  >   "compilerOptions": {
+  >   	"strictPropertyInitialization": true;
+  >   },
+  > }
+  > ```
+  >
+  > :::
+
+- <samp>可选属性：`?`</samp>
+
+- <samp>访问修饰符，控制类中的某个成员的访问权限</samp>
+
+  - <samp>`public`：公共的(默认)</samp>
+  - <samp>`private`：私有的；只在类中范围内可用</samp>
+  - <samp>protected：</samp>
 
 ## <samp>类型推断</samp>
 
@@ -977,9 +1169,25 @@ function assertIsDefined<T>(
 }
 ```
 
+<samp>`asserts x`：断言为真，即不为 `undefined`、`null`、`false` ，断言函数的简写形式</samp>
+
+```ts
+function assertIsDefined(x: unknown): asserts x {
+  if (!x) {
+    throw new Error("x is not defined");
+  }
+}
+```
+
 ## <samp>模块</samp>
 
-<samp>TS 支持所有的 ES 模块语法</samp>
+<samp>TS 支持所有的 ES 模块语法(即 `import`、`export` 语句)</samp>
+
+- <samp>如果希望一个文件作为模块(变量不暴露)，在脚本顶部加上一行</samp>
+
+  ```ts
+  export {};
+  ```
 
 - <samp>TS 允许输出和输入类型</samp>
 
