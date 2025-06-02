@@ -13,9 +13,11 @@
 > - <samp>rollup is a JavaScript module bundler that primarily works with JavaScript and TypeScript</samp>
 > - <samp>rolldown：a Rust-based next-generation bundler</samp>
 
+<samp>使用 `rolldown-vite`，只需将 `vite` 依赖修改为 `npm:rolldown-vite@latest`</samp>
+
 ::: code-group
 
-```json[package.json]
+```json[Rolldown]
 {
   "dependencies": {
     "vite": "npm:rolldown-vite@latest"
@@ -23,7 +25,7 @@
 }
 ```
 
-```json[package.json]
+```json[Rollup]
 {
   "dependencies": {
     "vite": "^6.3.5"
@@ -35,12 +37,12 @@
 
 ::: code-group
 
-```sh
-pnpm run build # 1.64s
+```sh[Rolldown]
+pnpm run build # 733ms
 ```
 
-```sh
-pnpm run build # 733ms
+```sh[rollup]
+pnpm run build # 1.64s
 ```
 
 :::
