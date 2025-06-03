@@ -80,9 +80,7 @@
 
 - <samp>根元素只能有一个</samp>
 
-  <samp>如：`div`；如果不需要多余的 `div`，可以使用 `Fragment` 片段，简写：`<></>`</samp>
-
-  ::: details <samp>details</samp>
+  ::: details <samp>如：`div`；如果不需要多余的 `div`，可以使用 `Fragment` 片段，简写：`<></>`</samp>
 
   ```jsx
   import React from 'react';
@@ -102,9 +100,7 @@
 
 - <samp>在 `{}` 使用变量、表达式</samp>
 
-  > <samp>模板字符串、函数返回值、三元运算符</samp>
-
-  ::: details <samp>details</samp>
+  ::: details <samp>如：模板字符串、函数返回值、三元运算符</samp>
 
   ```jsx
   return (<>
@@ -127,11 +123,23 @@
 
   - <samp>`class` 写作 `className`</samp>
 
+  ::: details <samp>双大括号：`style` 样式需要通过大括号包裹</samp>
+
+  ```jsx
+  <ul style={{
+      backgroundColor: 'black',
+      color: 'pink'
+    }}>
+  </ul>
+  ```
+
+  :::
+
 - <samp>JSX 的注释写在花括号中</samp>
 
 - <samp>数组自动展开</samp>
 
-  ::: details <samp>details</samp>
+  ::: details <samp>展开数组</samp>
 
   ```jsx
   function App() {
@@ -156,6 +164,10 @@
   export default App;
   ```
 
+  - <samp>姓名: 张三, 年龄: 18</samp>
+  - <samp>姓名: 李四, 年龄: 19</samp>
+  - <samp>姓名: 王五, 年龄: 20</samp>
+
   :::
 
 ### <samp>~~createElement~~</samp>
@@ -177,9 +189,17 @@ const element2 = React.createElement('h1', {
 
 <samp>在 React 16.8 推出 hooks 后，开始使用函数组件，标志 React 编程思想的转变</samp>
 
-::: details <samp>类组件</samp>
+::: code-group
 
-```jsx
+```jsx[函数组件]
+export default function Hello() {
+  return (<>
+    <h1>Hello World!</h1>
+  </>);
+}
+```
+
+```jsx[类组件]
 import React from 'react';
 
 class Hello extends React.Component {
@@ -194,19 +214,7 @@ export default Hello;
 
 :::
 
-::: details <samp>函数组件</samp>
-
-```jsx
-export default function Hello() {
-  return (<>
-    <h1>Hello World!</h1>
-  </>);
-}
-```
-
-:::
-
-## <samp>事件</samp>
+### <samp>事件</samp>
 
 <samp>**事件**：React 允许在 JSX 中添加事件处理函数，通常在**点击**、**悬停**、**聚焦表单输入**等交互时触发</samp>
 
@@ -222,7 +230,9 @@ export default function Hello() {
 
 <samp>**点击事件**：通过 `onClick()` 绑定事件</samp>
 
-```jsx
+::: code-group
+
+```jsx[函数组件]
 export default function Hello() {
   function handleClick() {
     console.log('按钮被点击了');
@@ -231,17 +241,73 @@ export default function Hello() {
 }
 ```
 
+```jsx[类组件]
+import React from 'react';
+
+class Button extends React.Component {
+  handleClick = () => {
+    console.log('Hello World!');
+  }
+  
+  render() {
+    return (
+      <button onClick={this.handleClick}>按钮</button>
+    );
+  }
+}
+export default Button;
+```
+
+:::
+
+<samp>**事件处理函数传参**</samp>
+
+- <samp>**类组件**：箭头函数和 `bind()` 实现</samp>
+- <samp>**函数组件**：箭头函数</samp>
+
+::: code-group
+
+```jsx[函数组件]
+export default function Button() {
+  function handleClick(str, e) {
+    console.log(str);
+    e.preventDefault();
+  }
+  return (<button onClick={(e) => handleClick('Hello', e)}>按钮</button>);
+}
+```
+
+```jsx[类组件]
+import React from 'react';
+
+class Button extends React.Component {
+  handleClick = (str, e) => {
+    console.log(str);
+    e.preventDefault();
+  }
+  
+  render() {
+    return (<button onClick={(e) => this.handleClick('按钮被点击了', e)}>按钮</button>);
+    // bind()形式
+    // return (<button onClick={this.handleClick.bind(this, '按钮被点击了')}>按钮</button>); 
+  }
+}
+export default Button;
+```
+
+:::
+
 > <samp>**事件处理函数**通常使用 `handle` 开头，后接事件名称的形式命名</samp>
 
 <samp>**事件默认行为**：在 React 中，不能通过 `return false;` 方式阻止事件的默认行为，必须通过显式地调用 `e.preventDefault`</samp>
 
 ::: code-group
 
-```html
+```HTML
 <a href="https://www.google.com/" onclick="return false;">this is a test</a>
 ```
 
-```jsx
+```JSX
 <a href="https://www.google.com/" onClick={(e) => {
   e.preventDefault();
 }}>this is a test</a>;
@@ -249,21 +315,7 @@ export default function Hello() {
 
 :::
 
-<samp>**事件处理函数传参**：箭头函数和 `bind()` 实现</samp>
-
-::: code-group
-
-```jsx[箭头函数]
-<button onClick={(e) => {})}>Test</button>
-```
-
-```jsx[bind]
-
-```
-
-:::
-
-### <samp>this</samp>
+#### <samp>this</samp>
 
 <samp>`this` 的修正，**只针对类组件**</samp>
 
@@ -309,6 +361,7 @@ export default Hello;
   import React from 'react';
   
   class Hello extends React.Component {
+    
     constructor(props) { // [!code ++]
       super(props); // [!code ++]
       this.handleClick = this.handleClick.bind(this); // [!code ++]
@@ -324,3 +377,297 @@ export default Hello;
   }
   export default Hello;
   ```
+
+### <samp>state</samp>
+
+#### <samp>setState</samp>
+
+<samp>在**类组件**中有两种描述状态的方式</samp>
+
+::: code-group
+
+```jsx[constructor]
+import React from 'react';
+
+class Hello extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      num: 1
+    };
+  }
+
+  render() {
+    return (<>{this.state.num}</>);
+  }
+}
+
+export default Hello;
+```
+
+```jsx[ES6]
+import React from 'react';
+
+class Button extends React.Component {
+
+  state = {
+    num: 1
+  };
+
+  render() {
+    return (<>{ this.state.num }</>);
+  }
+}
+
+export default Button;
+```
+
+:::
+
+> [!NOTE] <samp>注意</samp> 
+>
+> - <samp>不要直接修改 `state`</samp>
+>
+>   ::: details <samp>`state` 是存储在一个对象中的，直接修改可能不会触发重新渲染，而是使用 `setState()`</samp>
+>
+>   ```jsx
+>   return (<>
+>     {this.state.num}
+>   	{/* [!code --] */} 
+>     <button onClick={() => { this.state.num++; }}>num++</button >
+>   	{/* [!code ++] */} 
+>     <button onClick={() => { this.setState({ num: this.state.num + 1 }) }}>num++</button >
+>   </>);
+>   ```
+>
+>   :::
+>
+> - <samp>`state` 的更新可能是异步的</samp>
+>
+>   ::: details <samp>出于性能考虑，React 会将多个 `setState()` 合并成一个调用</samp>
+>
+>   ```jsx
+>   handleClick = () => {
+>     this.setState({
+>       num: this.state.num + 1 // [!code highlight] 2
+>     });
+>     this.setState({
+>       num: this.state.num + 1 // [!code warning] 每次调用拿到的始终是初值
+>     });
+>       this.setState({
+>       num: this.state.num + 1 // [!code warning] 每次调用拿到的始终是初值
+>     });
+>   }
+>   ```
+>
+>   :::
+>
+> - <samp>如果状态改变的代码**在某个事件中**，则是**异步**的，否则是同步的</samp>
+>
+>   ```jsx
+>   handleClick = () => {
+>     this.setState({
+>       num: this.state.num + 1 // 2
+>     });
+>     console.log(this.state.num); // 1
+>   }
+>   ```
+
+::: tip <samp>如何获取 `setState` 执行后的数据</samp>
+
+- <samp>提前使用一个变量存储计算的结果</samp>
+
+  ```jsx
+  handleClick = () => {
+    let newNum = this.state.num + 1;
+    this.setState = ({
+      num: newNum
+    });
+    console.log(newNum);
+  }
+  ```
+
+- <samp>使用 `setState` 的第二个参数，这个参数是一个回调函数，将在 `setState` 更新后调用</samp>
+
+  ```jsx
+  handleClick = () => {
+    this.setState({
+      num: this.state.num + 1
+    }, () => {
+      console.log(this.state.num);
+    });
+  }
+  ```
+
+:::
+
+::: tip
+
+- <samp>把所有的 `setState` 当作是异步的；不要相信调用后的状态</samp>
+
+- <samp>如果使用改变后的状态，则使用回调函数</samp>
+
+- <samp>`setState` 的接收不再是对象，而是一个函数，函数的返回值返回一个对象</samp>
+
+  ```jsx
+  handleClick = () => {
+    this.setState((cur, props) => ({
+      num: cur.num + 1  // 2
+    }), () => {
+      console.log(this.state.num); // [!code warning] 4 React会对异步的setState进行合并, 再触发render 
+    })
+    this.setState((cur, props) => ({
+      num: cur.num + 1  // 3
+    }))
+    this.setState((cur, props) => ({
+      num: cur.num + 1  // 4
+    }))
+  }
+  ```
+
+:::
+
+#### <samp>useState</samp>
+
+<samp>`useState` Hook 跟踪字符串、数字、布尔、数组、对象以及组合</samp>
+
+- <samp>state：保存渲染的数据</samp>
+- <samp>State setter 函数：更新变量触发重新渲染</samp>
+
+```jsx
+import { useState } from 'react';
+
+export default function App() {
+  const [index, setIndex] = useState(0);
+
+  function handleClick() {
+    setIndex(index + 1);
+  }
+
+  return (<>
+    {index}
+    <button onClick={handleClick}>按钮</button>
+  </>)
+}
+```
+
+### <samp>props</samp>
+
+<samp>React 中的组件存在层级关系</samp>
+
+- <samp>`props`：如果父组件向子组件中传递数据</samp>
+
+  ::: code-group
+
+  ```jsx[App.jsx]
+  import Hello from './components/Hello';
+  import World from './components/World';
+  
+  export default function App() {
+    const msg = 'data from App Component';
+    
+    const handleClick = () => {
+      console.log('App Button clicked');
+    };
+  
+    return (<>
+      <Hello data={msg} onClick={handleClick} />
+      <World data={msg} onClick={handleClick} />
+    </>)
+  }
+  ```
+
+  ```jsx[Hello.jsx]
+  import { Component } from 'react'
+  
+  export default class Hello extends Component {
+    constructor(props) {
+      super(props);
+    }
+  
+    render() {
+      return (
+        <>
+          <p>{this.props.data}</p>
+          <button onClick={this.props.onClick}>按钮</button>
+        </>
+      );
+    }
+  }
+  ```
+
+  ```jsx[World.jsx]
+  export default function World(props) {
+    const { data, onClick } = props;
+  
+    return (
+      <>
+        <p>{data}</p>
+        <button onClick={onClick}>按钮</button>
+      </>
+    );
+  }
+  ```
+
+  :::
+
+- <samp>通过 `props.children` 可以实现类似 vue slot 功能</samp>
+
+  ::: code-group
+
+  ```jsx[App.jsx]
+  import Button from './components/Button'
+  
+  export default function App() {
+  
+    return (<>
+      <Button>添加按钮</Button>
+    </>)
+  }
+  ```
+
+  ```jsx[Button.jsx]
+  export default function Button(props) {
+    return (
+      <button>{props.children}</button>
+    )
+  }
+  ```
+
+  :::
+
+- <samp>其他数据</samp>
+
+  ::: code-group
+
+  ```jsx[App.jsx]
+  import Button from './components/Button'
+  
+  export default function App() {
+  
+    return (<>
+      <Button name="Jolyne" age={18} isNum={true}>添加按钮</Button>
+    </>)
+  }
+  ```
+
+  ```jsx[Button.jsx]
+  export default function Button(props) {
+    return (
+      <>
+        <ul>
+          <li>{props.name}</li>
+          <li>{props.age}</li>
+          <li>{props.isNum}</li>   {/* [!code warning] 布尔值不显示 */}
+        </ul>
+        <button>{props.children}</button>
+      </>
+    )
+  }
+  ```
+
+  :::
+
+### <samp>props 验证</samp>
+
