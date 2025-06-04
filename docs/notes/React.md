@@ -425,7 +425,7 @@ export default Button;
 
 :::
 
-> [!NOTE] <samp>注意</samp> 
+> [!NOTE] <samp>注意</samp>
 >
 > - <samp>不要直接修改 `state`</samp>
 >
@@ -669,5 +669,127 @@ export default function App() {
 
   :::
 
-### <samp>props 验证</samp>
+#### <samp>参数默认值</samp>
+
+<samp>在函数组件中，使用 ES6 的参数解构</samp>
+
+<samp>在类组件中，使用 `defaultProps` 属性</samp>
+
+::: code-group
+
+```jsx[App.jsx]
+import Hello from './components/Hello';
+import World from './components/World';
+
+export default function App() {
+
+  return (<>
+    <Hello />
+    <Hello name='Gwen' age={18} />
+    <World />
+    <World name='Jolyne' age={18} />
+  </>)
+}
+```
+
+```jsx[Hello.jsx]
+import { Component } from 'react'
+
+export default class Hello extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const { name, age } = this.props;
+    return (<>
+      <div>
+        <p>姓名: {name}</p>
+        <p>年龄: {age}</p>
+      </div>
+    </>);
+  }
+}
+
+Hello.defaultProps = {
+  name: 'Hello',
+  age: 22
+};
+```
+
+```jsx[World.jsx]
+export default function World({
+  name = "World",
+  age = 22
+}) {
+
+  return (<>
+    <div>
+      <p>姓名: {name}</p>
+      <p>年龄: {age}</p>
+    </div>
+  </>);
+}
+```
+
+:::
+
+#### <samp>[状态提升](https://zh-hans.react.dev/learn/sharing-state-between-components)</samp>
+
+<samp>通过 `props` 实现类似 vue 的 `$emit` ，多个组件反应相同的状态变化，将多个共享状态提升到最近的父组件</samp>
+
+::: code-group
+
+```jsx[App.jsx]
+import Hello from './components/Hello'
+import Panel from './components/Panel'
+
+export default function App() {
+  function handleClick(str, num) {
+    console.log(`来自${str}的数据`, num);
+  }
+  
+  return (<>
+    <Hello title="Hello 组件" handleClick={handleClick} />
+    <Panel title="Panel 组件" handleClick={handleClick} />
+  </>)
+}
+```
+
+```jsx[Panel.jsx]
+export default function Panel({ title, handleClick }) {
+
+  const panelClick = () => {
+    handleClick('Panel', 3);
+  }
+  
+  return (<>
+    <button onClick={panelClick}>{title}</button>
+  </>);
+}
+```
+
+```jsx[Hello.jsx]
+import { Component } from 'react'
+
+export default class Hello extends Component {
+  constructor(props) {
+    super(props);
+  }
+  
+  helloClick = () => {
+    this.props.handleClick('Hello', 4);
+  }
+
+  render() {
+    const { title } = this.props;
+    
+    return (<>
+      <button onClick={this.helloClick}>{title}</button>
+    </>);
+  }
+}
+```
+
+:::
 
