@@ -1,81 +1,297 @@
 # <samp>Vue</samp>
 
-<samp>Vue 提供了一套声明式的、组件化的编程模型</samp>
+::: details <samp>目录</samp>
 
-- <samp>声明式渲染：Vue 扩展了一套模板语法，可以声明式地描述输出 HTML 与 JavaScript 状态之家的关系</samp>
-- <samp>响应式：Vue 会自动跟踪 JavaScript 状态并在发生变化时响应式更新 DOM</samp>
-
-<samp>**单文件组件(Single-File Components，SFC)**：将组件逻辑(JavaScript)、模板(HTML)和样式(CSS)封装在一个文件中</samp>
-
-<samp>**API 风格**</samp>
-
-- <samp>**选项式 API(Options API)**：选项式 API 用包含多个选项的对象来描述组件的逻辑，如：`data`、`methods`、`mounted`；选项所定义的属性最终会暴露在函数内部的 `this` 上，指向当前的组件实例</samp>
-- <samp>**组合式(Composition API)**：通过导入 API 函数来描述组件的逻辑，在单文件组件中，通常搭配 `<script setup>` 使用，`<script setup>` 导入和顶层的变量/函数可以在模板中直接使用</samp>
-
-## <samp>开始</samp>
-
-<samp>在命令行创建项目目录</samp>
-
-::: code-group
-
-```sh[npm]
-npm create vue@latest
-```
-
-```sh[pnpm]
-pnpm create vue@latest
-```
-
-```sh[yarn]
-yarn dlx create-vue@latest
-```
-
-```sh[bun]
-bun create vue@latest
-```
+[[TOC]]
 
 :::
 
-<samp>这将执行 `create-vue` 脚手架工具，空格键开启功能，回车键创建项目</samp>
+<samp>Vue 提供了一套声明式的、组件化的编程模型</samp>
 
-```sh
-✔ Project name: .
-✔ Add TypeScript? … No / Yes
-✔ Add JSX Support? … No / Yes
-✔ Add Vue Router for Single Page Application development? … No / Yes
-✔ Add Pinia for state management? … No / Yes
-✔ Add Vitest for Unit testing? … No / Yes
-✔ Add an End-to-End Testing Solution? … No / Cypress / Nightwatch / Playwright
-✔ Add ESLint for code quality? … No / Yes
-✔ Add Prettier for code formatting? … No / Yes
-✔ Add Vue DevTools 7 extension for debugging? (experimental) … No / Yes
+- <samp>**声明式**：Vue 扩展了一套模板语法，声明式地描述 HTML 与 JavaScript 状态的关系</samp>
+- <samp>**响应式**：Vue 会自动跟踪 JavaScript 状态并在发生变化时响应式更新 DOM</samp>
 
-Scaffolding project in ./<your-project-name>...
-Done.
-```
+## <samp>开始</samp>
 
-<samp>安装依赖并启动开发服务器</samp>
+- <samp>使用 `create-vue`</samp>
+
+  ::: code-group
+
+  ```sh[npm]
+  npm create vue@latest
+  ```
+
+  ```sh[pnpm]
+  pnpm create vue@latest
+  ```
+
+  ```sh[yarn]
+  yarn dlx create-vue@latest
+  ```
+
+  ```sh[bun]
+  bun create vue@latest
+  ```
+
+  :::
+
+- <samp>使用 `create-vite`</samp>
+
+  ::: code-group
+
+  ```sh[npm]
+  npm create vite@latest my-vue-app -- --template vue
+  ```
+
+  ```sh[yarn]
+  yarn create vite my-vue-app --template vue
+  ```
+
+  ```sh[pnpm]
+  pnpm create vite my-vue-app --template vue
+  ```
+
+  ```sh[bun]
+  bun create vite my-vue-app --template vue
+  ```
+
+  ```sh[deno]
+  deno init --npm vite my-vue-app --template vue
+  ```
+
+  :::
+
+### <samp>启动</samp>
 
 ::: code-group
 
 ```sh[npm]
+cd my-vue-app
 npm install
 npm run dev
 ```
 
 ```sh[pnpm]
+cd my-vue-app
 pnpm install
 pnpm run dev
 ```
 
 ```sh[yarn]
+cd my-vue-app
 yarn
 yarn dev
 ```
 
 ```sh[bun]
+cd my-vue-app
 bun install
 bun run dev
+```
+
+```sh[deno]
+cd my-vue-app
+deno install
+deno run dev
+```
+
+:::
+
+## <samp>相较于 Vue2</samp>
+
+- <samp>Vue3 不存在构造函数 `new Vue()`</samp>
+
+  ::: code-group
+
+  ```js[vue2/src/main.js]
+  import Vue from "vue";
+  import App from "./App.vue";
+  
+  new Vue({
+    render: (h) => h(App)
+  }).$mount('#app')
+  ```
+
+  ```js[vue3/src/main.js]
+  import { createApp } from 'vue'; // [!code ++]
+  import App from './App.vue';
+  
+  createApp(App).mount('#app')
+  ```
+
+  :::
+
+  ::: details <samp>区别</samp>
+
+  - <samp>`new Vue()` 构造函数创建的对象，所有实例共享全局组件/指令等</samp>
+  - <samp>`createApp()` 方法应用实例之间具有隔离的环境</samp>
+
+  :::
+
+- <samp>Vue2 的 `this` 指向组件实例，Vue3 的 `this` 指向 `Proxy` 对象</samp>
+
+- <samp>Vue3 有选项式(option)、组合式(composition)两种 API 可选</samp>
+
+  ::: details <samp>composition API</samp>
+
+  - <samp>`setup()` 会在生命周期钩子函数之前调用</samp>
+
+  - <samp>`setup()` 的 `this` 指向 `undefined`</samp>
+
+  - <samp>`setup()` hook 内部的数据、方法直接附着在组件实例上</samp>
+
+  :::
+
+## <samp>文本插值</samp>
+
+<samp>[Mustache 语法](https://cn.vuejs.org/guide/essentials/template-syntax.html)：(双大括号)，在标签中同步更新相应组件实例中的数据</samp>
+
+- <samp>vue 模板可以直接解析组件实例中的属性</samp>
+- <samp>vue 模板可以直接调用属性的方法</samp>
+- <samp>vue 模板可以直接嵌入 JavaScript 表达式</samp>
+
+::: code-group
+
+```vue[App.vue]
+<script setup>
+const text = 'Hello World';
+</script>
+
+<template>
+  <div>
+    <p>{{ text }}</p>
+  </div>
+
+</template>
+```
+
+:::
+
+## <samp>[v-model](https://cn.vuejs.org/api/built-in-directives.html#v-model)</samp>
+
+<samp>`v-model`：双向数据绑定</samp>
+
+- <samp>[`.lazy`](https://cn.vuejs.org/guide/essentials/forms.html#lazy)：输入懒加载</samp>
+- <samp>[`.number`](https://cn.vuejs.org/guide/essentials/forms.html#number)：将输入的合法字符串转为数字</samp>
+- <samp>[`.trim`](https://cn.vuejs.org/guide/essentials/forms.html#trim)：移除输入内容两端空格</samp>
+
+<samp>原生 JS 实现 `v-model`</samp>
+
+::: code-group
+
+```vue[App.vue]
+<script setup>
+import { ref } from 'vue';
+const text = ref('');
+</script>
+
+<template>
+  <div>
+    <input type="text" v-model="text">
+    <p>{{ text }}</p>
+  </div>
+
+</template>
+```
+
+```js[vanilla.js]
+const pEle = document.querySelector('.p-text');
+const inputEle = document.querySelector('.input-text');
+
+inputEle.addEventListener('input', (event) => {
+  pEle.textContent = event.target.value;
+});
+```
+
+:::
+
+<samp>原生 JS 实现 `v-model.lazy`</samp>
+
+::: code-group
+
+```vue[App.vue]
+<script setup>
+import { ref } from 'vue';
+const text = ref('');
+</script>
+
+<template>
+  <div>
+    <input type="text" v-model.lazy="text">
+    <p>{{ text }}</p>
+  </div>
+
+</template>
+```
+
+```js[vanilla.js]
+const pEle = document.querySelector('.p-text');
+const inputEle = document.querySelector('.input-text');
+
+let text = ""; // [!code ++]
+inputEle.addEventListener('input', (event) => {
+  text = event.target.value; // [!code ++]
+});
+inputEle.addEventListener('blur', () => { // [!code ++]
+  pEle.textContent = text; // [!code ++]
+}); // [!code ++]
+```
+
+:::
+
+## <samp>响应式</samp>
+
+<samp>`ref()`：声明响应式的状态</samp>
+
+> - <samp>在 `setup()` 函数中声明时，函数参数实质上是一个带有 `.value` 属性的 `ref` 对象</samp>
+> - <samp>**自动解包**：在组件模板中使用时，具有自动解包</samp>
+
+```vue
+<template>
+  <button @click="count++">{{ count }}</button>
+</template>
+
+<script>
+import { ref } from 'vue'
+export default {
+  setup() {
+    let count = ref(0);
+    return {
+      count,
+    }
+  }
+}
+</script>
+```
+
+::: details <samp>优化：使用 `ref()` 实现类似 React 的 `useState()`</samp>
+
+```vue
+<template>
+  <button @click="increase">{{ count }}</button>
+</template>
+
+<script>
+import { ref } from 'vue'
+function useCount() {
+  let count = ref(0);
+  const increase = () => {
+    count.value++;
+  }
+  return {
+    count,
+    increase
+  }
+}
+export default {
+
+  setup() {
+    return {
+      ...useCount()
+    }
+  }
+}
+</script>
 ```
 
 :::
