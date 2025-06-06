@@ -43,12 +43,12 @@
   npm create vite@latest my-vue-app -- --template vue
   ```
 
-  ```sh[yarn]
-  yarn create vite my-vue-app --template vue
-  ```
-
   ```sh[pnpm]
   pnpm create vite my-vue-app --template vue
+  ```
+
+  ```sh[yarn]
+  yarn create vite my-vue-app --template vue
   ```
 
   ```sh[bun]
@@ -238,6 +238,60 @@ inputEle.addEventListener('blur', () => { // [!code ++]
 ```
 
 :::
+
+## <samp>[v-bind](https://cn.vuejs.org/guide/essentials/class-and-style.html)</samp>
+
+<samp>`v-model` 可以直接绑定 `input`、`select`、`checkbox` 的值，但无法绑定元素的属性</samp>
+
+<samp>`v-bind`：操作元素的 CSS 以及类样式，简写：⌈`:`⌋</samp>
+
+```vue
+<script setup>
+import { ref } from 'vue'
+const textColor = ref('red-text');
+</script>
+
+<template>
+  <h1 class="red-text" :class="textColor">Demo</h1>
+  <select name="" id="" v-model="textColor">
+    <option value="red-text">Red</option>
+    <option value="blue-text">Blue</option>
+  </select>
+</template>
+
+<style scoped>
+.red-text {
+  color: red;
+}
+
+.blue-text {
+  color: blue;
+}
+</style>
+```
+
+## <samp>v-on</samp>
+
+<samp>`v-on`：为元素绑定事件监听器，简写：⌈`@`⌋</samp>
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const btnDisable = ref(false);
+const handleClick = () => {
+  return btnDisable.value = !btnDisable.value;
+}
+</script>
+
+<template>
+  <div>
+    <button :disabled="btnDisable" v-on:click="handleClick">Click</button>
+  </div>
+</template>
+```
+
+
 
 ## <samp>响应式</samp>
 
