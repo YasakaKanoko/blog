@@ -241,7 +241,14 @@ export default function App() {
 
 :::
 
+<samp>[dynamic-circle-demo](https://github.com/YasakaKanoko/dynamic-circle-demo) 练习：</samp>
 
+- <samp>`useState()` 用法</samp>
+- <samp>Derived State 用法</samp>
+- <samp>`style` 样式绑定</samp>
+- <samp>事件处理</samp>
+
+## <samp>列表渲染</samp>
 
 
 

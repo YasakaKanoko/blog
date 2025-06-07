@@ -251,3 +251,165 @@ import path from 'node:path';
 - <samp>`sep`：返回特定平台的路径段分隔符</samp>
   - <samp>UNIX：`/`</samp>
   - <samp>Windows：`\`</samp>
+
+- <samp>`dirname(path)`：返回 `path` 目录</samp>
+
+- <samp>`extname(path)`：返回 `path` 的扩展名</samp>
+
+- <samp>`join(...paths)`：使用特定平台分隔符将给定 `path` 段连接在一起</samp>
+
+- <samp>`normalize(path)`：将绝对路径、相对路径规范化处理成一个符合对应操作系统风格的路径</samp>
+- <samp>`relative(from, to)`：返回从 `from` 到 `to` 的相对路径</samp>
+
+- <samp>`resolve(...path)`：将路径或多个路径作为参数，返回一个绝对路径</samp>
+
+## <samp>URL</samp>
+
+::: code-group
+
+```js[CJS]
+const url = require('node:url');
+```
+
+```js[ESM]
+import url from 'node:url';
+```
+
+:::
+
+::: code-group
+
+```js[URL]
+const url = require('node:url');
+const input = 'https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash';
+
+// new URL(path): url 构造函数, 返回一个对象
+const myURL = new URL(input);
+console.log(myURL);
+
+// parse(): 将一个 URL 字符串作为参数，返回一个包含 URL 各个部分的对象, 类似构造函数
+console.log(url.parse(input));
+
+// searchParams.has(name): 参数是否包含对应键值对
+console.log(myURL.searchParams.has("query")); // true
+
+// searchParams.get(name): 返回第一个匹配的键值
+console.log(myURL.searchParams.get("query")); // string
+
+// format(): 将一个对象作为参数，返回一个 URL 字符串
+const obj = {
+  href: 'https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash', // 完整地址
+  origin: 'https://sub.example.com:8080',
+  protocol: 'https:',
+  username: 'user',
+  password: 'pass',
+  host: 'sub.example.com:8080',
+  hostname: 'sub.example.com',
+  port: '8080',
+  pathname: '/p/a/t/h',
+  search: '?query=string',
+  hash: '#hash'
+};
+const myurl = url.format(obj);
+console.log(myurl); // https://sub.example.com:8080/p/a/t/h?query=string#hash
+```
+
+```shell
+URL {
+  href: 'https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash',
+  origin: 'https://sub.example.com:8080',
+  protocol: 'https:',
+  username: 'user',
+  password: 'pass',
+  host: 'sub.example.com:8080',
+  hostname: 'sub.example.com',
+  port: '8080',
+  pathname: '/p/a/t/h',
+  search: '?query=string',
+  searchParams: URLSearchParams { 'query' => 'string' },
+  hash: '#hash'
+}
+Url {
+  protocol: 'https:',
+  slashes: true,
+  auth: 'user:pass',
+  host: 'sub.example.com:8080',
+  port: '8080',
+  hostname: 'sub.example.com',
+  hash: '#hash',
+  search: '?query=string',
+  query: 'query=string',
+  pathname: '/p/a/t/h',
+  path: '/p/a/t/h?query=string',
+  href: 'https://user:pass@sub.example.com:8080/p/a/t/h?query=string#hash'
+}
+true
+string
+https://sub.example.com:8080/p/a/t/h?query=string#hash
+```
+
+:::
+
+## <samp>util</samp>
+
+::: code-group
+
+```js[CJS]
+const util = require('node:util');
+```
+
+```js[MJS]
+import util from 'node:util';
+```
+
+:::
+
+- <samp>`util.callbackify(original)`：接收一个 `async` 函数(或返回 Promise 的函数)，并返回该函数的回调形式</samp>
+- <samp>`util.promisify(original)`：接收一个回调风格的异步函数，并返回该函数的 Promise 形式</samp>
+
+- <samp>`util.isDeepStrictEqual(val1, val2)`：比较 `val1` 与 `val2` 是否存在深度严格相等</samp>
+
+  ::: details <samp>`isDeepStrictEqual(val1, val2)` 与 `===` 的**区别**</samp>
+
+  ```js
+  const util = require('util');
+  
+  const obj1 = { a: 1, b: 2 };
+  const obj2 = { a: 1, b: 2 };
+  
+  console.log(obj1 === obj2); // false
+  console.log(util.isDeepStrictEqual(obj1, obj2)); // true
+  ```
+
+  :::
+
+## <samp>fs</samp>
+
+- <samp>基于 Promise API</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const fs = require('node:fs/promises');
+  ```
+
+  ```js[ESM]
+  import * as fs from 'node:fs/promises';
+  ```
+
+  :::
+
+- <samp>基于回调和同步 API</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const fs = require('node:fs');
+  ```
+
+  ```js[ESM]
+  import * as fs from 'node:fs';
+  ```
+
+  :::
+
