@@ -358,7 +358,7 @@ https://sub.example.com:8080/p/a/t/h?query=string#hash
 const util = require('node:util');
 ```
 
-```js[MJS]
+```js[ESM]
 import util from 'node:util';
 ```
 
@@ -385,31 +385,178 @@ import util from 'node:util';
 
 ## <samp>fs</samp>
 
-- <samp>基于 Promise API</samp>
+<samp>**基于 Promise API**</samp>
+
+::: code-group
+
+```js[CJS]
+const fs = require('node:fs/promises');
+```
+
+```js[ESM]
+import * as fs from 'node:fs/promises';
+```
+
+:::
+
+<samp>**基于回调和同步 API**</samp>
+
+::: code-group
+
+```js[CJS]
+const fs = require('node:fs');
+```
+
+```js[ESM]
+import * as fs from 'node:fs';
+```
+
+:::
+
+- <samp>`readFile(path, [options])`：读取文件内容</samp>
 
   ::: code-group
 
   ```js[CJS]
-  const fs = require('node:fs/promises');
+  const { readFile } = require('fs/promises');
+  const path = require('path');
+  
+  const filePath = path.resolve(__dirname, 'data.json');
+  
+  async function logFile() {
+    try {
+      const content = await readFile(filePath, { encoding: 'utf8' });
+      console.log(content);
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+  logFile();
   ```
 
   ```js[ESM]
-  import * as fs from 'node:fs/promises';
+  import { readFile } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, 'data.json');
+  
+  try {
+    const content = await readFile(filePath, { encoding: 'utf8' });
+    console.log(content);
+  } catch (err) {
+    console.log(err.message)
+  }
+  ```
+
+  ```json[data.json]
+  [
+    {
+      "name": "Laravel",
+      "tag": "PHP"
+    },
+    {
+      "name": "Django",
+      "tag": "Python"
+    },
+    {
+      "name": "NestJS",
+      "tag": "NodeJS"
+    }
+  ]
   ```
 
   :::
-
-- <samp>基于回调和同步 API</samp>
+- <samp>`writeFile(path, data, [options]`：写入文件内容</samp>
 
   ::: code-group
 
   ```js[CJS]
-  const fs = require('node:fs');
+  const { readFile, writeFile } = require('fs/promises');
+  const path = require('path');
+  
+  const filePath = path.resolve(__dirname, 'data.json');
+  
+  async function logFile() {
+    try {
+      await writeFile(filePath, 'Alex', 'utf8');
+      const content = await readFile(filePath, { encoding: 'utf8' });
+      console.log(content);
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+  logFile();
   ```
 
   ```js[ESM]
-  import * as fs from 'node:fs';
+  import { readFile, writeFile } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, 'data.json');
+  
+  try {
+    await writeFile(filePath, 'Alex', 'utf8');
+    const content = await readFile(filePath, { encoding: 'utf8' });
+    console.log(content);
+  } catch (err) {
+    console.log(err.message)
+  }
   ```
 
   :::
 
+  > <samp>当 `options` 设置为 `{ flag: "a" }` 时，表示追加文件内容，等价于 `appendFile()`</samp>
+- <samp>`appendFile(path, data, [options])`：追加文件内容</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { readFile, appendFile } = require('fs/promises');
+  const path = require('path');
+  
+  const filePath = path.resolve(__dirname, 'data.json');
+  
+  async function logFile() {
+    try {
+      await appendFile(filePath, 'Alex', 'utf8');
+      const content = await readFile(filePath, { encoding: 'utf8' });
+      console.log(content);
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+  logFile();
+  ```
+
+  ```js[ESM]
+  import { readFile, appendFile } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, 'data.json');
+  
+  try {
+    await appendFile(filePath, 'Alex');
+    const content = await readFile(filePath, { encoding: 'utf8' });
+    console.log(content);
+  } catch (err) {
+    console.log(err.message)
+  }
+  ```
+
+  :::
+- <samp>`stat(path)`：获取文件或目录的状态</samp>
+- <samp>`copyFile(from, to, [mode])`</samp>
+- <samp>`readdir(path)`：读取目录的内容，返回一个数组</samp>
+- <samp>`unlink()`：删除文件</samp>
+- <samp>`mkdir()`：创建目录</samp>
+- <samp>`exists(path)`：检查文件或目录是否存在</samp>
+- <samp>[`existsSync(path)`](https://nodejs.org/docs/latest/api/fs.html#fsexistssyncpath)：</samp>
