@@ -469,6 +469,7 @@ import * as fs from 'node:fs';
   ```
 
   :::
+  
 - <samp>`writeFile(path, data, [options]`：写入文件内容</samp>
 
   ::: code-group
@@ -512,6 +513,7 @@ import * as fs from 'node:fs';
   :::
 
   > <samp>当 `options` 设置为 `{ flag: "a" }` 时，表示追加文件内容，等价于 `appendFile()`</samp>
+  
 - <samp>`appendFile(path, data, [options])`：追加文件内容</samp>
 
   ::: code-group
@@ -553,10 +555,719 @@ import * as fs from 'node:fs';
   ```
 
   :::
+  
 - <samp>`stat(path)`：获取文件或目录的状态</samp>
-- <samp>`copyFile(from, to, [mode])`</samp>
-- <samp>`readdir(path)`：读取目录的内容，返回一个数组</samp>
-- <samp>`unlink()`：删除文件</samp>
+
+  - <samp>`isDirectory()`：是否是目录</samp>
+  - <samp>`isFile()`：是否时文件</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { stat } = require('fs/promises');
+  const path = require('path');
+  
+  const filePath = path.resolve(__dirname, './myfiles', 'data.json');
+  
+  async function fileStat() {
+    try {
+      const states = await stat(filePath);
+      console.log(states)
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+  
+  fileStat();
+  ```
+
+  ```js[ESM]
+  import { stat } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, './myfiles', 'data.json');
+  
+  try {
+    const states = await stat(filePath);
+    console.log(states)
+  } catch (e) {
+    console.error(e.message)
+  }
+  ```
+
+  ```sh
+  Stats {
+    dev: 0,
+    mode: 33206,
+    nlink: 1,
+    uid: 0,
+    gid: 0,
+    rdev: 0,
+    blksize: 4096,
+    ino: 30680772461468292,
+    size: 8, # 占用字节数
+    blocks: 0,
+    atimeMs: 1749515530333.382, # 上次访问文件的时间
+    mtimeMs: 1749456681797.5737, # 上次修改文件的时间
+    ctimeMs: 1749515528688.089, # 上次修改文件状态的时间
+    birthtimeMs: 1749453821009.349 # 创建文件的时间
+  }
+  ```
+
+  :::
+
+- <samp>`readdir(path)`：读取目录的子文件和子目录，返回一个数组</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { readdir } = require('fs/promises');
+  const { resolve } = require('path');
+  
+  const filePath = resolve(__dirname, './myfiles');
+  
+  async function filePaths() {
+    try {
+      const paths = await readdir(filePath);
+      console.log(paths)
+    } catch (e) {
+      console.error(e.message)
+    }
+  }
+  
+  filePaths();
+  ```
+
+  ```js[ESM]
+  import { readdir } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, './myfiles');
+  
+  try {
+    const paths = await readdir(filePath);
+    console.log(paths)
+  } catch (e) {
+    console.error(e.message)
+  }
+  ```
+
+  :::
+
 - <samp>`mkdir()`：创建目录</samp>
-- <samp>`exists(path)`：检查文件或目录是否存在</samp>
-- <samp>[`existsSync(path)`](https://nodejs.org/docs/latest/api/fs.html#fsexistssyncpath)：</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { mkdir } = require('fs/promises');
+  const { resolve } = require('path');
+  
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  async function createDir() {
+    try {
+      // recursive: true 表示路径不存在时不报错, 递归创建目录
+      await mkdir(filePath, { recursive: true }); // 创建newdir
+    } catch (e) {
+      console.error(e.message)
+    }
+  }
+  
+  createDir();
+  ```
+
+  ```js[ESM]
+  import { mkdir } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  try {
+    await mkdir(filePath, { recursive: true });
+  } catch (e) {
+    console.error(e.message)
+  }
+  ```
+
+  :::
+
+- <samp>`exists(path)`：~~已废弃~~，需要重写；检查文件或目录是否存在</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { stat, mkdir } = require('fs/promises');
+  const { resolve } = require('path');
+  
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  async function exists(filename) {
+    try {
+      await stat(filename);
+      return true;
+    } catch (e) {
+      if (e.code === 'ENOENT') {
+        // 文件不存在
+        return false;
+      }
+      throw e;
+    }
+  }
+  
+  async function checkPath() {
+    try {
+      const result = await exists(filePath);
+      if (result) {
+        console.log('目录已存在');
+      } else {
+        console.log('目录不存在，创建目录中');
+        await mkdir(filePath);
+        console.log('创建目录成功');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+  
+  checkPath();
+  ```
+
+  ```js[ESM]
+  import { stat, mkdir } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  async function exists(filename) {
+    try {
+      await stat(filename);
+      return true;
+    } catch (e) {
+      if (e.code === 'ENOENT') {
+        // 文件不存在
+        return false;
+      }
+      throw e;
+    }
+  }
+  try {
+    const result = await exists(filePath);
+    if (result) {
+      console.log('目录已存在');
+    } else {
+      console.log('目录不存在，创建目录中');
+      await mkdir(filePath);
+      console.log('创建目录成功');
+    }
+  } catch (e) {
+    throw e;
+  }
+  ```
+
+  :::
+  
+- <samp>`unlink()`：删除文件</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { unlink } = require('fs/promises');
+  
+  const { resolve } = require('path');
+  const filePath = resolve(__dirname, './myfiles/hello.txt');
+  
+  async function deleteFile() {
+    try {
+      await unlink(filePath);
+      console.log('文件已删除')
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  
+  deleteFile();
+  ```
+
+  ```js[ESM]
+  import { unlink } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  
+  const filePath = resolve(__dirname, './myfiles/hello.txt');
+  
+  try {
+    await unlink(filePath);
+    console.log('文件已删除')
+  } catch (e) {
+    console.log(e.message);
+  }
+  ```
+
+  :::
+
+- <samp>`rmdir()`：删除目录</samp>
+
+  ::: code-group
+
+  ```js[CJS]
+  const { rmdir } = require('fs/promises');
+  
+  const { resolve } = require('path');
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  async function deleteDir() {
+    try {
+      await rmdir(filePath);
+      console.log('目录已删除')
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+  
+  deleteDir();
+  ```
+
+  ```js[ESM]
+  import { rmdir } from 'fs/promises';
+  import { fileURLToPath } from 'url';
+  import { dirname, resolve } from 'path';
+  
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  
+  const filePath = resolve(__dirname, './myfiles/newdir');
+  
+  try {
+    await rmdir(filePath);
+    console.log('目录已删除')
+  } catch (e) {
+    console.log(e.message);
+  }
+  ```
+
+  :::
+
+## <samp>stream</samp>
+
+<samp>**流**，是数据的集合，与字符串、数组类似</samp>
+
+<samp>不同之处在于，流不能一次可用，所以它不必适合内存</samp>
+
+<samp>流在处理大量数据和外部数据时非常强大，一次处理一个区块</samp>
+
+<samp>**分类**：可读流、可写流、双工流 </samp>
+
+### <samp>可读流</samp>
+
+<samp>`createReadStream(path, [options])`：创建文件可读流</samp>
+
+- <samp>`start`：起始字节</samp>
+- <samp>`end`：结束字节</samp>
+- <samp>`encoding`：编码类型</samp>
+- <samp>`highWaterMark`：表示流的缓冲区大小(默认为 16KB)</samp>
+- <samp>`autoClose`：表示是否自动关闭流</samp>
+
+```js
+const { createReadStream } = require('fs');
+
+const { resolve } = require('path');
+const filePath = resolve(__dirname, './myfiles/data.json');
+
+const rs = createReadStream(filePath);
+```
+
+<samp>Events</samp>
+
+- <samp>`open`：文件打开时触发</samp>
+
+  ```js
+  rs.on('open', () => {
+    console.log('文件打开');
+  });
+  ```
+
+- <samp>`data`：当流将数据块传递给使用者时触发</samp>
+
+  ```js
+  rs.on('data', (chunk) => {
+    console.log(`读取数据：${chunk.toString()}`);
+  });
+  ```
+
+- <samp>`end`：当流中没有更多数据可供使用时触发</samp>
+
+  ```js
+  rs.on('end', () => {
+    console.log('读取完成')
+  });
+  ```
+
+- <samp>`error`：表示流发生错误</samp>
+
+  ```js
+  rs.on('error', (err) => {
+    console.log(`错误：${err.message}`);
+  });
+  ```
+
+- <samp>`close`：关闭</samp>
+
+  ```js
+  rs.on('close', () => {
+    console.log('流关闭');
+  });
+  ```
+
+- <samp>`readable`：当流中有可读数据时触发</samp>
+
+  ```js
+  rs.on('readable',()=>{
+    console.log('流中有可读的数据')
+  });
+  ```
+
+<samp>Functions</samp>
+
+- <samp>`pipe()`：将流的输出传递给另一个流或函数</samp>
+
+  ```js
+  const { createWriteStream } = require('fs');
+  const inPath = resolve(__dirname, './myfiles/hello.txt');
+  const ws = createWriteStream(inPath);
+  
+  rs.pipe(ws);
+  ```
+
+- <samp>`unpipe()`：停止将流的输出传递给另一个流或函数</samp>
+
+  ```js
+  rs.unpipe(ws);
+  ```
+
+- <samp>`read()`：读取指定大小的数据</samp>
+
+  ```js
+  rs.read(1024);
+  ```
+
+- <samp>`unshift()`：将数据添加到流的开始</samp>
+
+  ```js
+  rs.unshift(Buffer.from('追加数据'));
+  ```
+
+- <samp>`resume()`：恢复流的读取</samp>
+
+  ```js
+  rs.resume();
+  ```
+
+- <samp>`pause()`： 暂停流的读取</samp>
+
+  ```js
+  rs.pause();
+  ```
+
+- <samp>`isPaused()`：检查流是否暂停</samp>
+
+  ```js
+  console.log(rs.isPaused());
+  ```
+
+- <samp>`setEncoding()`：设置流的编码</samp>
+
+  ```js
+  rs.setEncoding('utf8');
+  ```
+
+### <samp>可写流</samp>
+
+<samp>`createWriteStream(path, [options])`：创建文件可写流</samp>
+
+- <samp>`start`：起始字节</samp>
+- <samp>`encoding`：编码类型</samp>
+- <samp>`highWaterMark`：表示流的缓冲区大小（默认为 16KB）</samp>
+- <samp>`autoClose`：表示是否自动关闭流</samp>
+
+```js
+const inPath = resolve(__dirname, './myfiles/hello.txt');
+const ws = createWriteStream(inPath);
+```
+
+<samp>Events</samp>
+
+- <samp>`close`：关闭</samp>
+
+  ```js
+  ws.on('close', () => {
+    console.log('流关闭');
+  });
+  ```
+
+- <samp>`error`：表示流发生错误</samp>
+
+  ```js
+  ws.on('error', (err) => {
+    console.log(`写入错误：${err.message}`);
+  });
+  ```
+
+- <samp>`drain`：当流的缓冲区空闲时触发</samp>
+
+  ```js
+  ws.on('drain', () => {
+    console.log('流缓冲区空闲');
+  });
+  ```
+
+- <samp>`finish`：当流的写入完成时触发</samp>
+
+  ```js
+  ws.on('finish', () => {
+    console.log('写入完成');
+  });
+  ```
+
+- <samp>`pipe`：当流的输出被连接时触发</samp>
+
+  ```js
+  ws.on('pipe', () => {
+    console.log('流的输出被连接');
+  });
+  ```
+
+- <samp>`unpipe`：当流的输出被断开时触发</samp>
+
+  ```js
+  ws.on('unpipe', () => {
+    console.log('流的输出被断开');
+  });
+  ```
+
+<samp>Functions</samp>
+
+- <samp>`write()`：写入数据到流</samp>
+
+  ```js
+  ws.write('写入数据');
+  ```
+
+- <samp>`end()`：结束写入</samp>
+
+  ```js
+  ws.end();
+  ```
+
+- <samp>`cork()`：开启流的缓冲</samp>
+
+  ```js
+  ws.cork();
+  ```
+
+
+- <samp>`uncork()`：取消流的缓冲</samp>
+
+  ```js
+  ws.uncork();
+  ```
+
+- <samp>`setDefaultEncoding()`：设置流的默认编码</samp>
+
+  ```js
+  ws.setDefaultEncoding('utf8');
+  ```
+
+### <samp>双工流</samp>
+
+::: code-group
+
+```js[Duplex 模块]
+const { Duplex } = require('stream');
+
+class MyDuplex extends Duplex {
+  constructor(options) {
+    super(options);
+  }
+
+  _read(size) {
+    // 读取数据
+    this.push('读取数据');
+  }
+
+  _write(chunk, encoding, callback) {
+    // 写入数据
+    this.push(chunk.toString());
+    callback();
+  }
+}
+
+const duplex = new MyDuplex();
+duplex.on('data', (chunk) => {
+  console.log(`读取数据：${chunk}`);
+});
+duplex.write('写入数据');
+```
+
+```js[Transform 流]
+const { Transform } = require('stream');
+
+class MyTransform extends Transform {
+  constructor(options) {
+    super(options);
+  }
+
+  _transform(chunk, encoding, callback) {
+    // 转换数据
+    this.push(chunk.toString());
+    callback();
+  }
+
+  _flush(callback) {
+    // flush数据
+    callback();
+  }
+}
+
+const transform = new MyTransform();
+transform.on('data', (chunk) => {
+  console.log(`读取数据：${chunk}`);
+});
+transform.write('写入数据');
+```
+
+```js[自定义]
+const { Readable, Writable } = require('stream');
+
+class MyDuplex extends Readable {
+  constructor(options) {
+    super(options);
+  }
+
+  _read(size) {
+    // 读取数据
+    this.push('读取数据');
+  }
+}
+
+class MyWritable extends Writable {
+  constructor(options) {
+    super(options);
+  }
+
+  _write(chunk, encoding, callback) {
+    // 写入数据
+    this.push(chunk.toString());
+    callback();
+  }
+}
+
+const duplex = new MyDuplex();
+const writable = new MyWritable();
+duplex.on('data', (chunk) => {
+  console.log(`读取数据：${chunk}`);
+});
+writable.on('finish', () => {
+  console.log('写入完成');
+});
+writable.write('写入数据');
+```
+
+:::
+
+## <samp>net</samp>
+
+<samp>HTTP(Hyper Text Transfer Protocol)，传输数据的协议，HTTP 请求是指从客户端向服务器发送请求的过程</samp>
+
+- <samp>三次握手</samp>
+- <samp>四次挥手</samp>
+
+<samp>`net` 模块，是一个通信模块</samp>
+
+- <samp>IPC：进程间通信</samp>
+
+- <samp>TCP/IP：网络通信</samp>
+
+<samp>`createConnection(port, [host], [connectListener])`：创建一个 TCP 或 UDP 连接，返回值是一个 `socket`，在 Node 中表现为双工流</samp>
+
+```js
+const { createConnection } = require('net');
+const socket = createConnection(8080, 'localhost', () => {
+  console.log('已连接');
+});
+
+socket.write("Hello World!");
+socket.on('close', () => {
+  console.log('连接已关闭');
+});
+```
+
+<samp>`createServer([options], [connectionListener])`：创建服务器</samp>
+
+- <samp>`listen()`：监听端口号</samp>
+- <samp>`listening`：服务器开始监听时触发</samp>
+- <samp>`connection`：当新客户端连接至服务器时触发</samp>
+
+```js
+const { createServer } = require('net');
+
+const server = createServer((socket) => {
+  console.log('连接已建立');
+
+  // 发送HTTP响应头
+  // socket.write('HTTP/1.1 200 OK\r\n');
+  // socket.write('Content-Type: text/html\r\n');
+  // socket.write('Connection: close\r\n');
+  // socket.write('\r\n'); // 空行表示HTTP头结束
+  // socket.write('<h1>Hello World!</h1>');
+
+  // 关闭连接
+  // socket.end();
+
+  socket.write(`HTTP/1.1 200 OK
+Content-Type: text/plain; charset=UTF-8
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World</title>
+  </head>
+<body>
+  <h1>Hello World!</h1>
+</body>
+</html>`);
+  socket.end();
+});
+
+server.listen(3000, () => {
+  console.log('正在监听3000端口')
+});
+
+server.on('listening', () => {
+  console.log('服务器已启动')
+});
+
+server.on('connection', (socket) => {
+  console.log('有新连接')
+});
+```
+
+## <samp>http</samp>
+
