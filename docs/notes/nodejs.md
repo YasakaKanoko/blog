@@ -1191,11 +1191,6 @@ writable.write('写入数据');
 
 ## <samp>net</samp>
 
-<samp>HTTP(Hyper Text Transfer Protocol)，传输数据的协议，HTTP 请求是指从客户端向服务器发送请求的过程</samp>
-
-- <samp>三次握手</samp>
-- <samp>四次挥手</samp>
-
 <samp>`net` 模块，是一个通信模块</samp>
 
 - <samp>IPC：进程间通信</samp>
@@ -1229,30 +1224,14 @@ const server = createServer((socket) => {
   console.log('连接已建立');
 
   // 发送HTTP响应头
-  // socket.write('HTTP/1.1 200 OK\r\n');
-  // socket.write('Content-Type: text/html\r\n');
-  // socket.write('Connection: close\r\n');
-  // socket.write('\r\n'); // 空行表示HTTP头结束
-  // socket.write('<h1>Hello World!</h1>');
+  socket.write('HTTP/1.1 200 OK\r\n');
+  socket.write('Content-Type: text/html\r\n');
+  socket.write('Connection: close\r\n');
+  socket.write('\r\n'); // 空行表示HTTP头结束
+  socket.write('<h1>Hello World!</h1>');
 
   // 关闭连接
-  // socket.end();
-
-  socket.write(`HTTP/1.1 200 OK
-Content-Type: text/plain; charset=UTF-8
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World</title>
-  </head>
-<body>
-  <h1>Hello World!</h1>
-</body>
-</html>`);
+  socket.end();
   socket.end();
 });
 
@@ -1270,4 +1249,69 @@ server.on('connection', (socket) => {
 ```
 
 ## <samp>http</samp>
+
+<samp>`http` 模块是基于 `net` 模块的用于创建客户端和服务器的核心模块，支持创建 HTTP 服务和发送 HTTP 请求</samp>
+
+<samp>`request({options}, callback)`：发送 HTTP 请求，返回一个 `clientRequest` 对象</samp>
+
+::: code-group
+
+```js[GET]
+import { request } from "http";
+
+const options = {
+  hostname: 'localhost',
+  port: 3000,
+  method: 'GET',
+};
+
+const req = request(options, (res) => {
+  console.log(`服务器状态码: ${res.statusCode}`);
+  console.log(`服务器响应头: ${JSON.stringify(res.headers)}`);
+  res.on('data', chunk => {
+    console.log(chunk.toString('utf-8'));
+  });
+});
+
+req.on('error', (e) => {
+  console.error(`problem with request: ${e.message}`);
+});
+
+req.end();
+```
+
+```js[POST]
+import { request } from "http";
+
+const options = {
+  hostname: 'localhost',
+  port: 3000,
+  method: 'POST', // [!code ++]
+  headers: { // [!code ++]
+    'Content-Type': 'application/json', // [!code ++]
+    'Content-Length': Buffer.byteLength(JSON.stringify({ key: 'value' })) // [!code ++]
+  } // [!code ++]
+};
+
+const data = JSON.stringify({ // [!code ++]
+  key: 'value' // [!code ++] 
+}); // [!code ++]
+
+const req = request(options, (res) => {
+  console.log(`服务器状态码: ${res.statusCode}`);
+  console.log(`服务器响应头: ${JSON.stringify(res.headers)}`);
+  res.on('data', chunk => {
+    console.log(chunk.toString('utf-8'));
+  });
+});
+
+req.on('error', (e) => {
+  console.error(`problem with request: ${e.message}`);
+});
+
+req.write(JSON.stringify(data)); // [!code ++]
+req.end();
+```
+
+:::
 

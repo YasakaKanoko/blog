@@ -55,10 +55,6 @@
   bun create vite my-vue-app --template vue
   ```
 
-  ```sh[deno]
-  deno init --npm vite my-vue-app --template vue
-  ```
-
   :::
 
 ### <samp>启动</samp>
@@ -74,7 +70,7 @@ npm run dev
 ```sh[pnpm]
 cd my-vue-app
 pnpm install
-pnpm run dev
+pnpm dev
 ```
 
 ```sh[yarn]
@@ -87,12 +83,6 @@ yarn dev
 cd my-vue-app
 bun install
 bun run dev
-```
-
-```sh[deno]
-cd my-vue-app
-deno install
-deno run dev
 ```
 
 :::
@@ -128,7 +118,7 @@ deno run dev
 
   :::
 
-- <samp>Vue2 的 `this` 指向组件实例，Vue3 的 `this` 指向 `Proxy` 对象</samp>
+- <samp>Vue2 的 `this` 指向组件实例；Vue3 的 `this` 指向 `Proxy` 对象</samp>
 
 - <samp>Vue3 有选项式(option)、组合式(composition)两种 API 可选</samp>
 
@@ -217,7 +207,8 @@ const text = ref('');
 
 <template>
   <div>
-    <input type="text" v-model.lazy="text">
+  	<!-- [!code ++] -->
+    <input type="text" v-model.lazy="text"> 
     <p>{{ text }}</p>
   </div>
 
@@ -274,24 +265,144 @@ const textColor = ref('red-text');
 
 <samp>`v-on`：为元素绑定事件监听器，简写：⌈`@`⌋</samp>
 
-```vue
-<script setup>
-import { ref } from 'vue'
+::: code-group
 
-const btnDisable = ref(false);
-const handleClick = () => {
-  return btnDisable.value = !btnDisable.value;
-}
-</script>
-
+```vue[template]
 <template>
-  <div>
-    <button :disabled="btnDisable" v-on:click="handleClick">Click</button>
-  </div>
+  <form>
+    <label for="txt">
+      账号: <input 
+      type="text" 
+      id='txt' 
+      placeholder="Enter your username" 
+      v-model="username" 
+      :class="username_is_error" />
+    </label><br />
+
+    <label for="pwd">
+      密码: <input 
+      type="password" 
+      id='pwd' 
+      placeholder="Enter your password" 
+      v-model="password"
+      :class="password_is_error" />
+    </label><br />
+
+    <!-- prevent: 阻止默认事件 -->
+    <button type="submit" @click.prevent="submit">Login</button>
+  </form>
 </template>
 ```
 
+```vue[script]
+<script setup>
+import { ref } from 'vue'
+let username = ref('');
+let password = ref('');
+let username_is_error = ref('');
+let password_is_error = ref('');
 
+const submit = () => {
+  username_is_error.value = '';
+  password_is_error.value = '';
+
+  if (username.value.length < 3 || password.value.length < 3) {
+
+    if (username.value.length < 3) {
+      username_is_error.value = 'input-error';
+    }
+
+    if (password.value.length < 3) {
+      password_is_error.value = 'input-error';
+    }
+
+    console.log('The input length smaller than 3 ');
+  }
+  
+  console.log(`Your username is ${username.value}, Your password is ${password.value}`);
+}
+</script>
+```
+
+```vue[style]
+<style scoped>
+input {
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.input-error {
+  border: solid 1px red;
+}
+
+button {
+  margin-bottom: 10px;
+}
+</style>
+```
+
+:::
+
+## <samp>watch</samp>
+
+<samp>`watch`：监听一个或多个数据源，当数据变化时调用回调函数</samp>
+
+```js
+const countRef = ref(0)
+watch(countRef, (newCount, oldCount) => {
+})
+```
+
+<samp>监听多个数据源时</samp>
+
+```js
+watch([fooRef, barRef], ([newFoo, newBar], [oldFoo, oldBar]) => {
+})
+```
+
+```vue
+<script setup>
+import { ref, watch } from 'vue'
+
+const usernameRef = ref('');
+const passwordRef = ref('');
+const titleRef = ref('Title');
+
+watch([usernameRef, passwordRef, titleRef], ([newUsername, newPassword, newTitle], [prevUsername, prevPassword, prevTitle]) => {
+  titleRef.value = "Title";
+  if (newUsername.length < 3) {
+    titleRef.value = 'Error occur';
+  }
+  if (newPassword.length < 3) {
+    titleRef.value = 'Error occur';
+  }
+  if (newTitle === prevTitle) {
+    return;
+  }
+  if (prevTitle === 'Error occur') {
+    console.log('Input valid!');
+    return;
+  }
+  console.log('Input Error!');
+})
+
+
+</script>
+
+<template>
+  <h1>{{ titleRef }}</h1>
+  <form>
+    <label for="txt">
+      账号: <input type="text" id='txt' placeholder="Enter your username" v-model="usernameRef" />
+    </label><br />
+
+    <label for="pwd">
+      密码: <input type="password" id='pwd' placeholder="Enter your password" v-model="passwordRef" />
+    </label><br />
+  </form>
+</template>
+```
 
 ## <samp>响应式</samp>
 
