@@ -1,7 +1,7 @@
 # <samp>Notes</samp>
 
-- <samp>[Sass](/notes/Sass)</samp>
-- <samp>[Less](/notes/Less)</samp>
+- <samp>[Sass](/notes/sass)</samp>
+- <samp>[Less](/notes/less)</samp>
 - <samp>[nvm](/notes/nvm)</samp>
 - <samp>[corepack](/notes/corepack)</samp>
 - <samp>[npm](/notes/npm)</samp>
