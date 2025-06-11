@@ -200,6 +200,70 @@
 
 ## <samp>DOM</samp>
 
+
+
+## <samp>AJAX</samp>
+
+<samp>AJAX (Asynchronous JavaScript And XML)是指浏览器和服务器之间异步数据传输</samp>
+
+- <samp>XHR(XMLHTTPRequest)：IE 通过 XHR API 完成请求的发送，通过一个构造函数完成</samp>
+
+- <samp>Fetch API：由于 XHR API 的诸多缺陷，在 HTML5 和 ES6 发布后，产生一套更完善的 API 来发送请求，这个函数是 `fetch`，返回一个 Promise，当接受完服务器的响应头，Promise 完成</samp>
+
+::: code-group
+
+```js[XHR API]
+// 创建发送请求的对象
+var xhr = new XMLHttpRequest();
+
+// 事件
+xhr.onreadystatechange = () => {
+  // 事件处理函数: 当请求的状态发生变化时运行的函数
+  // readyState属性: 0-4之间的整数, 表示请求/响应的状态, 如下
+  // 1. open()被调用
+  // 2. send()被调用
+  // 3. 接收到响应信息
+  // 4. 请求完成
+
+  // xhr.responseText // 获取服务器响应的消息体文本
+  if (xhr.readyState === 4) {
+    console.log('服务器已完成响应');
+    console.log(JSON.stringify(xhr.responseText));
+  }
+  // xhr.getResponseHeader('Content-Type'); // 获取响应头Content-Type的值
+}
+// 配置请求: 请求方法, 地址
+xhr.open('GET', 'http://localhost:3000/');
+// 设置请求头
+xhr.setRequestHeader('Content-Type', 'application/json');
+// 构建请求体，如果没有请求体则直接传递null
+xhr.send(null);
+```
+
+```js[Fetch API]
+fetch('http://localhost:3000/').then((res) => {
+  // 返回response属性和方法
+  // console.log(res);
+  // 响应头类型
+  // console.log(res.headers.get('Content-Type'))
+  // text(): 使用文本格式返回响应体内容
+  // json(): 使用json格式返回响应体内容
+  return res.text();
+}).then((res) => {
+  // 输出响应体的内容
+  console.log(res)
+});
+
+
+async function fetchData() {
+  const headers = await fetch('http://localhost:3000/');
+  const body = await headers.text();
+  return body;
+}
+```
+
+:::
+
 ## <samp>ES6</samp>
 
 ### <samp>变量声明</samp>
@@ -248,3 +312,22 @@
 
   - <samp>**块级作用域**</samp>
   - <samp>**暂时性死区**：不允许重复声明</samp>
+
+### <samp>模板字符串</samp>
+
+<samp>使用反引号 <code>`</code> 表示，使用 <code>${}</code> 实现文本插值</samp>
+
+- <samp>多行字符串</samp>
+
+- <samp>字符串拼接</samp>
+
+<samp>**标记函数**：允许自定义模板字符串的处理方式</samp>
+
+```js
+let name = 'John';
+let age = 18;
+
+let html = highlight`<p>My name is ${name}, and I am ${age} years old.</p>`;
+
+```
+

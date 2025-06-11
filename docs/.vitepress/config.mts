@@ -62,8 +62,8 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'Notes', items: [
-          { text: 'JavaScript', link: '/notes/JavaScript' },
-          { text: "TypeScript", link: '/notes/TypeScript' },
+          { text: 'JavaScript', link: '/notes/javascript' },
+          { text: "TypeScript", link: '/notes/typescript' },
         ]
       },
       { text: 'Blog', link: '/post' },

@@ -1315,3 +1315,103 @@ req.end();
 
 :::
 
+## <samp>https</samp>
+
+<samp>HTTPS 是 HTTP 的安全版本，用于客户端和服务器发送数据的主要协议，经过加密以提高数据传输的安全性</samp>
+
+- <samp>网上购买证书</samp>
+- <samp>本地生成证书</samp>
+
+<samp>HTTPS 使用加密协议对通信进行加密，该协议称为传输层安全性(TLS)，以前称为安全套接字层(SSL)，该协议通过所谓的非对称公钥基础架构保护通信</samp>
+
+- <samp>私钥：该密钥由网站所有者控制，是私有的位于 Web 服务器，用于解密来自公钥加密的信息</samp>
+- <samp>公钥：以安全的方式与服务器交互，使用公钥加密的信息只能使用对应的私钥进行解密</samp>
+
+<samp>如何在本地生成证书</samp>
+
+- <samp>安装 OpenSSL</samp>
+
+  ```sh
+  openssl --version
+  ```
+
+- <samp>生成 CA 私钥</samp>
+
+  ```sh
+  openssl genrsa -des3 -out ca-pri-key.pem 1024
+  ```
+
+- <samp>生成 CA 公钥</samp>
+
+  ```sh
+  openssl req -new -key ca-pri-key.pem -out ca-pub-key.pem
+  ```
+
+- <samp>生成 CA 证书</samp>
+
+  ```sh
+  openssl x509 -req -in ca-pub-key.pem -signkey ca-pri-key.pem -out ca-cert.crt
+  ```
+
+- <samp>生成服务器私钥</samp>
+
+  ```sh
+  openssl genrsa -out server-key.pem 1024
+  ```
+
+- <samp>生成服务器公钥</samp>
+
+  ```sh
+  openssl req -new -key server-key.pem -out server-scr.pem
+  ```
+
+- <samp>生成服务器证书</samp>
+
+  ```sh
+  openssl x509 -req -CA ca-cert.crt -CAkey ca-pri-key.pem -CAcreateserial -in server-scr.pem -out server-cert.crt
+  ```
+
+- <samp>`https` 模块：创建 HTTPS 服务器</samp>
+
+  ```js
+  const { createServer } = require('https');
+  const { readFileSync } = require('fs');
+  const { resolve } = require('path');
+  
+  
+  const options = {
+    // 私钥
+    key: readFileSync(resolve(__dirname, './server-key.pem')),
+    // 证书
+    cert: readFileSync(resolve(__dirname, './server-cert.crt'))
+  };
+  createServer(options, (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello World!\n');
+  }).listen(443);
+  console.log('Server running at https://localhost:443/');
+  ```
+
+
+## <samp>生命周期</samp>
+
+<samp>Node 的事件循环由 6 个阶段组成</samp>
+
+1. <samp>Timers</samp>
+   - <samp>这个阶段会执行 `setTimeout()` 和 `setInterval()` 的回调</samp>
+   - <samp>如果有多个定时器回调，则会按照预定预定的时间顺序执行</samp>
+2. <samp>Pending Callbacks</samp>
+   - <samp>这个阶段会执行一些系统操作回调，如：TCP 错误事件</samp>
+   - <samp>这些回调由操作系统安排，而不是通过 JavaScript 直接安排</samp>
+3. <samp>Idle、Prepare</samp>
+   - <samp>这两个阶段用于 Node.js 内部工作，开发者无需关心</samp>
+4. <samp>Poll</samp>
+   - <samp>这个阶段负责获取新的 I/O 事件，并在适当的时间阻塞</samp>
+   - <samp>如果事件循环进入 Poll，但却没有任何事件可以处理，就会一直阻塞在这个阶段，直到新事件到来</samp>
+5. <samp>Check</samp>
+   - <samp>这个阶段执行 `setImmediate()` 回调函数</samp>
+   - <samp>需要注意的是：`setImmediate()` 与 `setTimeout(fn, 0)` 的区别在于，`setImmediate()` 的回调会被安排在 Check 阶段执行</samp>
+6. <samp>Close Callbacks</samp>
+   - <samp>这个阶段执行 `close` 事件的回调函数，当一个 `socket` 或其他资源关闭时，`close` 事件的回调函数触发</samp>
+
+
