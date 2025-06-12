@@ -260,7 +260,7 @@ export default function App() {
 ::: code-group
 
 ```jsx[MyApp.jsx]
-import '../assets/MyApp.css';
+import '@/assets/MyApp.css';
 
 export default function MyApp() {
   const cities = [

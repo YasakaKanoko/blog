@@ -49,7 +49,7 @@ clearTimeout(timeId);
 
 ### <samp>setInterval</samp>
 
-<samp>`setInterval()`：定时器函数；是一个实现定时调用的函数</samp>
+<samp>`setInterval()`：定时器函数；一个实现定时调用的函数</samp>
 
 ::: code-group
 
@@ -76,7 +76,7 @@ clearInterval(timeId);
 
 ### <samp>setImmediate</samp>
 
-<samp>`setImmediate()`：用在下一事件循环(next tick)开始时执行一个函数，类似于 `setTimeout(0)`</samp>
+<samp>`setImmediate()`：在下一事件循环(next tick)开始时执行一个函数，类似于 `setTimeout(fn, 0)`</samp>
 
 ```js
 console.log('开始');
@@ -155,7 +155,7 @@ console.log(buffer); // Buffer(11) [72, 101, 108, 108, 111, 32, 119, 111, 114, 1
 
   2. <samp>检查当前目录是否包含 `node_modules`</samp>
 
-  3. <samp>向上级目录递归查找是否包含 node_modules</samp>
+  3. <samp>向上级目录递归查找是否包含 `node_modules`</samp>
 
   4. <samp>成功找到目标模块返回该模块的绝对路径，否则报错</samp>
 
@@ -240,7 +240,7 @@ import path from 'node:path';
 
 :::
 
-<samp>`node:path` 模块提供了处理文件和目录路径的工具</samp>
+<samp>`path` 模块提供了处理文件和目录路径的工具</samp>
 
 - <samp>`basename(path, [suffix])`：返回 `path` 的最后一部分</samp>
 
@@ -558,8 +558,8 @@ import * as fs from 'node:fs';
   
 - <samp>`stat(path)`：获取文件或目录的状态</samp>
 
-  - <samp>`isDirectory()`：是否是目录</samp>
-  - <samp>`isFile()`：是否时文件</samp>
+  - <samp>`isDirectory()`：是否为目录</samp>
+  - <samp>`isFile()`：是否为文件</samp>
 
   ::: code-group
 
@@ -1411,8 +1411,9 @@ req.end();
 3. <samp>Idle、Prepare</samp>
    - <samp>这两个阶段用于 Node.js 内部工作，开发者无需关心</samp>
 4. <samp>Poll</samp>
-   - <samp>这个阶段负责获取新的 I/O 事件，并在适当的时间阻塞</samp>
-   - <samp>如果事件循环进入 Poll，但却没有任何事件可以处理，就会一直阻塞在这个阶段，直到新事件到来</samp>
+   - <samp>除了 Timers、Check，绝大部分的回调都会存放在该队列，如：I/O 事件</samp>
+   - <samp>如果 Poll 中有回调，依次执行回调，直到清空队列</samp>
+   - <samp>如果事件循环进入 Poll，但却没有任何事件可以处理，等待直到新事件到来</samp>
 5. <samp>Check</samp>
    - <samp>这个阶段执行 `setImmediate()` 回调函数</samp>
    - <samp>需要注意的是：`setImmediate()` 与 `setTimeout(fn, 0)` 的区别在于，`setImmediate()` 的回调会被安排在 Check 阶段执行</samp>
