@@ -13,49 +13,29 @@
 
 ## <samp>开始</samp>
 
-- <samp>使用 `create-vue`</samp>
+<samp>使用 `create-vue`</samp>
 
-  ::: code-group
+::: code-group
 
-  ```sh[npm]
-  npm create vue@latest
-  ```
+```sh[npm]
+npm create vue@latest
+```
 
-  ```sh[pnpm]
-  pnpm create vue@latest
-  ```
+```sh[pnpm]
+pnpm create vue@latest
+```
 
-  ```sh[yarn]
-  yarn dlx create-vue@latest
-  ```
+```sh[yarn]
+yarn dlx create-vue@latest
+```
 
-  ```sh[bun]
-  bun create vue@latest
-  ```
+```sh[bun]
+bun create vue@latest
+```
 
-  :::
+:::
 
-- <samp>使用 `create-vite`</samp>
 
-  ::: code-group
-
-  ```sh[npm]
-  npm create vite@latest my-vue-app -- --template vue
-  ```
-
-  ```sh[pnpm]
-  pnpm create vite my-vue-app --template vue
-  ```
-
-  ```sh[yarn]
-  yarn create vite my-vue-app --template vue
-  ```
-
-  ```sh[bun]
-  bun create vite my-vue-app --template vue
-  ```
-
-  :::
 
 ### <samp>启动</samp>
 
@@ -406,6 +386,10 @@ watch([usernameRef, passwordRef, titleRef], ([newUsername, newPassword, newTitle
 
 ## <samp>computed</samp>
 
+## <samp>v-if</samp>
+
+
+
 
 
 ## <samp>响应式</samp>
@@ -521,3 +505,62 @@ render(h) {
 
 - <samp>模板更贴近实际 HTML，这样更方便重用已有的 HTML 代码片段，能够带来更好的可访问性体验、更方便地使用 CSS 样式，并且更易理解和修改</samp>
 - <samp>由于确定的语法，更容易对模板进行静态分析，使得 Vue 模板编译器能够应用许多编译时优化来提升虚拟 DOM 的性能</samp>
+
+## <samp>Vite</samp>
+
+::: code-group
+
+```sh[npm]
+npm create vite@latest my-vue-app -- --template vue
+```
+
+```sh[pnpm]
+pnpm create vite my-vue-app --template vue
+```
+
+```sh[yarn]
+yarn create vite my-vue-app --template vue
+```
+
+```sh[bun]
+bun create vite my-vue-app --template vue
+```
+
+:::
+
+### <samp>相较于 webpack</samp>
+
+<samp>**webpack 原理**</samp>
+
+- <samp>**依赖图构建**：webpack 会从入口文件开始，递归地分析项目中的依赖关系，构建一个依赖图</samp>
+- <samp>**模块转换**：webpack 会使用各种 loader 将不同类型的模块(如 JS、CSS、图片等)转换为 webpack 可以理解的模块</samp>
+- <samp>**代码优化**：webpack 提供了各种插件来优化输出的代码，如代码压缩、tree shaking 等</samp>
+- <samp>**输出打包**：webpack 最终会将所有模块打包成一个或多个 bundle 文件，供浏览器加载和执行</samp>
+
+<samp>**Vite 的工作原理**</samp>
+
+1. <samp>**原生 ES 模块**：Vite 利用浏览器原生支持的 ES 模块机制，在开发环境下无需打包，直接以原生 ES 模块的方式运行应用</samp>
+2. <samp>**按需编译**：Vite 只会在浏览器请求时即时编译所需的模块，大大提高了开发环境下的构建速度</samp>
+3. <samp>**HMR 机制**：Vite 采用 native ESM HMR 机制，可以实现快速的模块热更新</samp>
+4. <samp>**生产环境打包**：在生产环境下，Vite 会使用 rollup 进行打包优化，生成最终的生产包</samp>
+
+<samp>**Why Vite**</samp>
+
+- <samp>缓慢的服务器启动</samp>
+
+  - <samp>传统打包工具(webpack)需要先构建整个应用才能启动开发服务器，这将导致启动时间较长</samp>
+  - <samp>vite 通过将应用分为依赖和源码，并使用 esbuild 预构建依赖，大幅缩短开发服务器启动时间</samp>
+
+- <samp>按需编译</samp>
+
+  - <samp>传统打包工具(webpack)在文件修改后，需要重新构建整个包，这会导致更新速度随应用规模增长而下降</samp>
+
+  - <samp>vite 利用原生 ESM 实现精确的模块失活和 HMR，使得无论应用的规模如何，更新速度始终都能保持快速</samp>
+
+    > - <samp>现代浏览器原生支持 ESM，自动向依赖的 Module 发出请求</samp>
+    >
+    > - <samp>HMR：当改动模块后，仅需让浏览器重新请求该模块，而不是像传统打包工具那样将模块的相关依赖模块全部编译一次，效率更高</samp>
+
+- <samp>生产环境：生产环境的 ESM 仍然效率低下，Vite 附带了一套构建优化的构建命令，确保开发和生产环境的输出和行为一致</samp>
+
+  > <samp>vite 使用传统的 rollup 插件 API 进行打包，主要优势体现在开发阶段，未来可能切换基于 Rust 的 Rolldown 进一步提高构建性能</samp>
