@@ -213,7 +213,7 @@ fn main() {
      //   1）当=右边的表达式执行成功，则会返回一个 Ok(f32) 的类型，若失败，则会返回一个 Err(e) 类型，if let 的作用就是仅匹配 Ok 也就是成功的情况，如果是错误，就直接忽略
      //   2）同时 if let 还会做一次解构匹配，通过 Ok(length) 去匹配右边的 Ok(f32)，最终把相应的 f32 值赋给 length
      //
-     // 3. 当然你也可以忽略成功的情况，用 if let Err(e) = fields[1].parse::<f32>() {...}匹配出错误，然后打印出来，但是没啥卵用
+     // 3. 当然也可以忽略成功的情况，用 if let Err(e) = fields[1].parse::<f32>() {...}匹配出错误，然后打印出来，但是没啥用
      if let Ok(length) = fields[1].parse::<f32>() {
          // 输出到标准输出
          println!("{}, {}cm", name, length);
@@ -221,6 +221,170 @@ fn main() {
    }
  }
 ```
+
+### <samp>镜像</samp>
+
+- <samp>使用全局代理</samp>
+
+  ```sh
+  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7891
+  ```
+
+  ```sh
+  $env:HTTP_PROXY="http://127.0.0.1:7890"; $env:HTTPS_PROXY="http://127.0.0.1:7890"
+  ```
+
+- <samp>在 `%homepath%/.cargo/config.toml` 添加镜像</samp>
+
+  <samp>新增地址</samp>
+
+  ::: code-group
+
+  ```toml[%homepath%/.cargo/config.toml]
+  [registries]
+  ustc = { index = "https://mirrors.ustc.edu.cn/crates.io-index/" }
+  ```
+
+  :::
+
+  <samp>在项目中指定该地址</samp>
+
+  ::: code-group
+
+  ```toml[Cargo.toml]
+  [dependencies]
+  time = {  registry = "ustc" }
+  ```
+
+  :::
+
+- <samp>科大镜像</samp>
+
+  ```toml
+  [source.ustc]
+  registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+  ```
+
+- <samp>字节跳动</samp>
+
+  ```toml
+  [source.crates-io]
+  replace-with = 'rsproxy'
+  
+  [source.rsproxy]
+  registry = "https://rsproxy.cn/crates.io-index"
+  
+  # 稀疏索引，要求 cargo >= 1.68
+  [source.rsproxy-sparse]
+  registry = "sparse+https://rsproxy.cn/index/"
+  
+  [registries.rsproxy]
+  index = "https://rsproxy.cn/crates.io-index"
+  
+  [net]
+  git-fetch-with-cli = true
+  ```
+
+- <samp>覆盖默认的镜像地址</samp>
+
+  ::: code-group
+
+  ```toml[%homepath%/.cargo/config.toml]
+  [source.crates-io]
+  replace-with = 'ustc'
+  
+  [source.ustc]
+  registry = "git://mirrors.ustc.edu.cn/crates.io-index"
+  ```
+
+  :::
+
+## <samp>基本语法</samp>
+
+```rs
+// Rust 程序入口函数
+fn main() {
+    // let 声明变量, a是不可变的
+    // 类型推断: i32, 有符号32位整数
+    let a = 10;
+    
+    // 声明b的类型为i32
+    let b: i32 = 20;
+
+    // 1. 在数值中带上类型: 30i32表示数值是30, 类型是i32
+    // 2. c是可变的, mut是mutable的缩写
+    let mut c = 30i32;
+    
+    // 在数值和类型中间添加一个下划线, 让可读性更好
+    let d = 30_i32;
+    
+    // 可以使用一个函数的返回值来作为另一个函数的参数
+    let e = add(add(a, b), add(c, d));
+
+    // println!是宏调用，看起来像是函数但是它返回的是宏定义的代码块
+    // 该函数将指定的格式化字符串输出到标准输出中(控制台)
+    // {}是占位符，在具体执行过程中，会把e的值代入进来
+    println!("( a + b ) + ( c + d ) = {}", e);
+}
+
+// 定义一个函数, 输入两个i32类型的32位有符号整数, 返回它们的和
+fn add(i: i32, j: i32) -> i32 {
+    // 返回相加值, 这里可以省略return
+    i + j
+}
+```
+
+> [!NOTE] <samp>注意</samp>
+>
+> - <samp>在上面的 `add` 函数中，不要为 `i+j` 添加 `;`，这会改变语法导致函数返回 `()` 而不是 `i32`</samp>
+> - <samp>字符串应使用双引号(`""`)而非单引号(`''`)，单引号是留给单个字符类型(`char`)的</samp>
+> - <samp>`{}` 作为格式化输出的占位符，`println!` 会推导出具体的类型，无需指定</samp>
+
+### <samp>变量</samp>
+
+### <samp>变量可变性</samp>
+
+- <samp>声明可变变量提供灵活性</samp>
+- <samp>声明不可变变量提供安全性</samp>
+
+- <samp>在运行性能上，不可变变量在运行时，避免一些多余的 `runtime` 检查</samp>
+
+### <samp>变量绑定</samp>
+
+<samp>**所有权**，Rust 的核心原则，任何内存对象都是有主人的，变量绑定后，将该内存对象绑定为一个变量(之前的变量会丧失对该对象的所有权)</samp>
+
+- <samp>**变量声明**：使用 `mut` 声明可变变量</samp>
+
+- <samp>**未使用的变量**：如果一个变量始终未使用，会弹出警告，使用 `_` 开头的变量名忽略警告</samp>
+
+- <samp>**变量解构**</samp>
+
+  ```rs
+  let (a, mut b): (bool,bool) = (true, false);
+  ```
+
+- <samp>**解构赋值**</samp>
+
+  ```rs
+  // .. 匹配数组中间任意数量的元素
+  // _ 匹配最后一个元素, 但不绑定变量
+  [c, .., d, _] = [1, 2, 3, 4, 5];
+  ```
+
+### <samp>常量</samp>
+
+<samp>常量，使用 `const` 声明，编译时常量</samp>
+
+let 与 const 都表示不可变变量
+
+- 常量
+  - let：运行时常量
+  - const：编译时常量
+- 作用域
+  - let：局部作用域
+  - const：全局作用域
+
+
 
 ## <samp>参考</samp>
 
