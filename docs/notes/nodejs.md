@@ -183,7 +183,6 @@ export default class Point {
     this.y = y;
   }
 } 
-
 ```
 
 ```js[index.js]
@@ -1417,6 +1416,249 @@ req.end();
 5. <samp>Check</samp>
    - <samp>这个阶段执行 `setImmediate()` 回调函数</samp>
    - <samp>需要注意的是：`setImmediate()` 与 `setTimeout(fn, 0)` 的区别在于，`setImmediate()` 的回调会被安排在 Check 阶段执行</samp>
+
+     ```js
+     // 两种运行结果都有可能
+     setTimeout(() => {
+       console.log(0);
+     }, 0)
+     setImmediate(() => {
+       console.log(1);
+     });
+     ```
+
+     ::: code-group
+
+     ```js
+     // I/O -> Check -> Timers 
+     const { readFile } = require('fs');
+     readFile('./index.js', () => {
+       setTimeout(() => console.log(0), 0);
+       setImmediate(() => console.log(1));
+     });
+     ```
+
+     ```shell
+     1
+     0
+     ```
+
+     :::
 6. <samp>Close Callbacks</samp>
    - <samp>这个阶段执行 `close` 事件的回调函数，当一个 `socket` 或其他资源关闭时，`close` 事件的回调函数触发</samp>
+
+> [!TIP]
+>
+> <samp>`nextTick()` 与 `Promise`</samp>
+>
+> <samp>在整个事件循环开始前都会先检查 `nextTick()` 和 `Promise`，再进入事件循环</samp>
+>
+> ```js
+> setImmediate(() => {
+>   console.log(1);
+> });
+> process.nextTick(() => {
+>   console.log(2);
+>   process.nextTick(() => {
+>     console.log(3);
+>   });
+> })
+> console.log(4);
+> Promise.resolve().then(() => {
+>   console.log(5);
+>   process.nextTick(() => {
+>     console.log(6);
+>   })
+> });
+> // 4 2 3 5 6 1
+> ```
+
+::: code-group
+
+```js
+async function async1() {
+  console.log("async1 start");
+  await async2();
+  console.log("async1 end");
+}
+
+async function async2() {
+  console.log("async2");
+}
+
+console.log("script start"); 
+
+setTimeout(function() {
+  console.log("setTimeout0");
+}, 0);
+
+setTimeout(function() {
+  console.log("setTimeout3");
+}, 3);
+
+setImmediate(() => console.log("setImmediate"));
+
+process.nextTick(() => console.log("nextTick"));
+
+async1();
+
+new Promise(function(resolve) {
+  console.log("promise1");
+  resolve();
+  console.log("promise2");
+}).then(function() {
+  console.log("promise3");
+});
+
+console.log("script end");
+```
+
+```sh
+script start
+async1 start
+async2
+promise1
+promise2
+script end
+nextTick
+async1 end
+promise3
+setTimeout0
+setImmediate
+setTimeout3
+```
+
+:::
+
+## <samp>EventEmitter</samp>
+
+<samp>`EventEmitter`：Node.js 中处理事件驱动编程</samp>
+
+- <samp>**事件 Event**：如：`'data'`、`'error'`、`close`</samp>  
+- <samp>**监听器 Listener**：事件发生时调用的函数</samp>
+
+<samp>**方法**</samp>
+
+- <samp>`once()`：事件只触发一次</samp>
+
+  ```js
+  const { EventEmitter } = require('events');
+  
+  // 创建事件处理函数对象
+  const emitter = new EventEmitter();
+  
+  emitter.once('greet', (name) => {
+    console.log(`Hello ${name}`);
+  });
+  
+  emitter.emit('greet', 'Leo'); // Hello Leo
+  emitter.emit('greet', 'John'); // 事件不触发
+  ```
+
+- <samp>`emit`：触发事件</samp>
+
+- <samp>`off()`：移除事件</samp>
+
+  ```js
+  const { EventEmitter } = require('events');
+  
+  // 创建事件处理函数对象
+  const emitter = new EventEmitter();
+  const greetHandler = (name) => {
+    console.log(`Hello ${name}`);
+  };
+  emitter.on('greet', greetHandler);
+  emitter.emit('greet', 'Leo'); // 输出：Hello, Leo!
+  
+  emitter.off('greet', greetHandler); // 移除监听器
+  emitter.emit('greet', 'Alice'); // 不会输出
+  ```
+
+## <samp>MySQL</samp>
+
+<samp>**GUI**</samp>
+
+- <samp>VSCode 插件</samp>
+- <samp>Navicat</samp>
+
+<samp>[LeetCode 题库](https://leetcode.cn/problemset/database/)</samp>
+
+### <samp>配置</samp>
+
+- <samp>下载 [MySQL Community Server](https://dev.mysql.com/downloads/mysql/)</samp>
+
+- <samp>解压后，在根目录新建 `my.ini`</samp>
+
+  ```ini
+  [mysqld]
+  # 设置3306端口
+  port=3306
+  # 设置mysql的安装目录
+  basedir=D:\mysql-8.0.27
+  # 设置mysql数据库的数据的存放目录, data文件夹它会自行创建，不要自己手动创建
+  datadir= D:\mysql-8.0.27\Data
+  # 允许最大连接数
+  max_connections=200
+  # 允许连接失败的次数
+  max_connect_errors=10
+  # 服务端使用的字符集默认为utf8mb4
+  character-set-server=utf8mb4
+  # 创建新表时将使用的默认存储引擎
+  default-storage-engine=INNODB
+  # 默认使用"mysql_native_password"插件认证
+  #mysql_native_password
+  default_authentication_plugin=mysql_native_password
+  [mysql]
+  # 设置mysql客户端默认字符集
+  default-character-set=utf8mb4
+  [client]
+  # 设置mysql客户端连接服务端时默认使用的端口
+  port=3306
+  default-character-set=utf8mb4
+  ```
+
+- <samp>初始化 MySQL</samp>
+
+  ```sh
+  cd D:\mysql-8.0.27\bin
+  
+  mysqld --initialize --console
+  
+  # 安装mysql服务
+  mysqld --install
+  
+  # 启动mysql服务
+  net start mysql
+  
+  # 重置密码
+  mysql -uroot -p
+  ```
+
+- <samp>配置环境变量</samp>
+
+  | `Path` | `D:\mysql-8.0.27\bin` |
+  | ------ | --------------------- |
+
+- <samp>查看版本号</samp>
+
+  ```sh
+  mysql -V
+  ```
+
+### <samp>命令行</samp>
+
+```sh
+# 进入mysql命令行
+mysql -uroot -p
+
+# 查看字符编码
+show variables like 'character\_set\_%';
+
+# 重启mysql服务
+net stop mysql
+net start mysql
+
+# 查看当前数据库
+show databases
+```
 

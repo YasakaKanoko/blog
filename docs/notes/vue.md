@@ -35,8 +35,6 @@ bun create vue@latest
 
 :::
 
-
-
 ### <samp>启动</samp>
 
 ::: code-group
