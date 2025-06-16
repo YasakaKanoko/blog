@@ -6,6 +6,12 @@
 
 :::
 
+<samp>Visual Studio Code</samp>
+
+- <samp>`Ctrl` + <code>`</code>：打开/关闭终端</samp>
+- <samp>`Ctrl` + `,`：打开/关闭侧边栏</samp>
+- <samp>`Ctrl` + `Shift` + `P` -> Terminal: Select Default Profile：设置默认终端</samp>
+
 ## <samp>global</samp>
 
 <samp>`global` ：全局对象；所有全局变量(包括自身)和函数都是 `global` 对象的属性，与 `window` 相似</samp>

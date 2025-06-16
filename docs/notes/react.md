@@ -6,16 +6,21 @@
 
 :::
 
-<samp>React 是一个用于构建**交互式用户界面的** JavaScript **库**</samp>
+ 
 
-<samp>**特点**</samp>
 
-- <samp>**声明式**：UI=f(state)</samp>
 
-- <samp>**组件化**</samp>
-- <samp>**单向数据流**</samp>
-- <samp>**虚拟 DOM**</samp>
-- <samp>**Diff 算法**</samp>
+## <samp>What's New in React 19</samp>
+
+-  <samp>`useTransition()`</samp>
+- <samp>New Compiler</samp>
+- <samp>Actions</samp>
+- <samp>New Hooks</samp>
+- <samp>Refs</samp>
+- <samp>`use()`</samp>
+- <samp>Other miscellaneous improvement to React</samp>
+
+
 
 ## <samp>开始</samp>
 
