@@ -6,13 +6,13 @@
 
 :::
 
-<samp>Vite 是一款能让你立即启动项目并实时查看修改的构建工具</samp>
+<samp>Vite 是一款立即启动项目并实时查看修改的构建工具</samp>
 
-<samp>适用场景</samp>
+<samp>**场景**</samp>
 
 - <samp>使用 React、Vue 和 Svelte 等框架的快速前端开发</samp>
-- <samp>需要极简配置就能获得优化生产构建的应用</samp>
-- <samp>寻求比 Webpack 等传统打包工具更轻量高效的工具的开发者</samp>
+- <samp>极简的配置获得优化生产构建的应用</samp>
+- <samp>寻求比 Webpack 等传统打包工具更轻量高效的工具</samp>
 
 <samp>Vite 需要 Node.js 18 或 20 以上版本支持</samp>
 
@@ -77,7 +77,7 @@ Ok to proceed? (y)
 - <samp>`package.json`：存放相关依赖</samp>
 - <samp>`vite.config.json`：配置和插件列表</samp>
 
-<samp>特点</samp>
+<samp>**特点**</samp>
 
 - <samp>Fast startup time：无论项目规模大小，Vite 都能以极简配置提供闪电般的开发体验，实现效率最大化</samp>
 
@@ -140,13 +140,13 @@ Ok to proceed? (y)
 
 - <samp>Copy As Is</samp>
 
-  ```sh
+  ```txt
   Vite_app
   ├─ public
   │  └─ vite.svg
   ├─ src
-  │  ├─ assets
-  │  │  └─ react.svg
+  │  └─ assets
+  │     └─ react.svg
   └─ README.md
   ```
 
@@ -218,11 +218,331 @@ Ok to proceed? (y)
 
     :::
 
+<samp>例：获取 IP 地址</samp>
+
+::: code-group
+
+```ini[.env]
+VITE_API_URL=https://api.ipify.org
+```
+
+```jsx[App.jsx]
+import { useEffect, useState } from 'react'
+
+export default function App() {
+
+  const [ipAddress, setIpAddress] = useState('');
+  useEffect(() => {
+    const fetchIpAddress = async () => {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      try {
+        const response = await fetch(`${apiUrl}?format=json`);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        const data = await response.json();
+        setIpAddress(data.ip);
+      }
+      catch (err) {
+        setIpAddress('NOT AVAILABLE');
+        console.log(err.message);
+      }
+    }
+    fetchIpAddress();
+  }, [])
+  return (
+    <>
+      <h3>Your IP Address is {ipAddress}</h3>
+    </>
+  )
+}
+```
+
+:::
+
 ## <samp>TypeScript development</samp>
+
+<samp>TypeScript 开发工具分为两类</samp>
+
+- <samp>Transpilation：Vite 负责开箱即用，转译</samp>
+
+- <samp>Type Checking：IDE、tsc 类型检查</samp>
+
+<samp>vite+ts</samp>
+
+::: code-group
+
+```sh[npm]
+npm create vite@latest my-app -- --template react-ts
+```
+
+```sh[yarn]
+yarn create vite my-app --template react-ts
+```
+
+```sh[pnpm]
+pnpm create vite my-app --template react-ts
+```
+
+```sh[bun]
+bun create vite my-app --template react-ts
+```
+
+:::
+
+<samp>JavaScript to TypeScript Migration</samp>
+
+1. <samp>Create a separate boilerplate project with Vite, choosing TypeScript as the language variant.</samp>
+
+2. <samp>Form that project, bring in all the config files that Vite provides: `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json` and `vite-env.d.ts`</samp>
+
+   ::: code-group
+
+   ```ts[src/vite-env.d.ts]
+   /// <reference types="vite/client" />
+   ```
+
+   :::
+
+3. <samp>Install all the TypeScript-related dependencies.</samp>
+
+   ::: code-group
+
+   ```json[package.json]
+   "devDependencies": {
+     "@eslint/js": "^9.25.0",
+     "@types/react": "^19.1.2",
+     "@types/react-dom": "^19.1.2",
+     "@vitejs/plugin-react": "^4.4.1",
+     "eslint": "^9.25.0",
+     "eslint-plugin-react-hooks": "^5.2.0",
+     "eslint-plugin-react-refresh": "^0.4.19",
+     "globals": "^16.0.0",
+     "typescript": "~5.8.3", // [!code ++]
+     "typescript-eslint": "^8.30.1", // [!code ++]
+     "vite": "^6.3.5"
+   }
+   ```
+
+   :::
+
+4. <samp>Add the TypeScript compiler to your build script like so:</samp>
+
+   ::: code-group
+
+   ```json[package.json]
+   "scripts": {
+     "dev": "vite",
+     "build": "tsc -b && vite build", // [!code ++]
+     "lint": "eslint .",
+     "preview": "vite preview"
+   }
+   ```
+
+   :::
+
+5. <samp>Rename each file you want to migrate to TypeScript and add the types as needed.</samp>
+
+   ::: code-group
+
+   ```sh
+   mv src/main.jsx src/main.tsx
+   mv src/App.jsx src/App.tsx
+   ```
+
+   ```html[index.html]
+   <script type="module" src="/src/main.tsx"></script>
+   ```
+
+   :::
+
+6. <samp>Adjust `eslint.config.js` file to include TypeScript</samp>
+
+   ::: code-group
+
+   ```js[eslint.config.js]
+   import js from '@eslint/js'
+   import globals from 'globals'
+   import reactHooks from 'eslint-plugin-react-hooks'
+   import reactRefresh from 'eslint-plugin-react-refresh'
+   import tseslint from 'typescript-eslint' // [!code ++]
+   
+   export default tseslint.config( // [!code ++]
+     { ignores: ['dist'] },
+     {
+       extends: [js.configs.recommended, ...tseslint.configs.recommended], // [!code ++]
+       files: ['**/*.{ts,tsx}'], // [!code ++]
+       languageOptions: {
+         ecmaVersion: 2020,
+         globals: globals.browser,
+         parserOptions: { // [!code --]
+           ecmaVersion: 'latest', // [!code --]
+           ecmaFeatures: { jsx: true }, // [!code --]
+           sourceType: 'module', // [!code --]
+         }, // [!code --]
+       },
+       plugins: {
+         'react-hooks': reactHooks,
+         'react-refresh': reactRefresh,
+       },
+       rules: {
+         ...js.configs.recommended.rules, // [!code --]
+         ...reactHooks.configs.recommended.rules,
+         'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }], // [!code --]
+         'react-refresh/only-export-components': [
+           'warn',
+           { allowConstantExport: true },
+         ],
+       },
+     },
+   )
+   ```
+
+   :::
+
+7. <samp>Update the `vite.config.js` file to `vite.config.ts`</samp>
+
+8. <samp>Restart development server</samp>
 
 ## <samp>Building for production</samp>
 
+- <samp>`dev`：`vite dev` 和 `vite serve` 是 `vite` 的别名，在本地开启一个开发服务器</samp>
+- <samp>`build`：构建并输出到名为 `dist` 的目录</samp>
+- <samp>`preview`：本地测试或预览构建</samp>
+
 ## <samp>Configuring and extending Vite</samp>
 
-## <samp>HMR and What makes Vite fast</samp>
+<samp>Vite 预置了很多默认设置，这使得它能开箱即用</samp>
+
+::: code-group
+
+```js[vite.config.js]
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  // 修改开发服务器的默认端口号
+  server: {
+    port: 3000
+  },
+  // 修改构建生成的目录
+  build: {
+    outDir: 'out'
+  }
+})
+
+```
+
+:::
+
+### <samp>Extend with plugins</samp>
+
+<samp>How to use a Vite plugin</samp>
+
+1. <samp>Import the plugin as a dev dependency in `package.json`</samp>
+
+   ```sh
+   npm i -D vite-plugin-qrcode
+   ```
+
+2. <samp>Import and add it to the plugins array in `vite.config.js`</samp>
+
+   ::: code-group
+
+   ```js[vite.config.js]
+   import { defineConfig } from 'vite'
+   import react from '@vitejs/plugin-react'
+   import { qrcode } from 'vite-plugin-qrcode' // [!code ++]
+   
+   // https://vite.dev/config/
+   export default defineConfig({
+     plugins: [react(), qrcode()], // [!code ++]
+   })
+   ```
+
+   ```json[package.json]
+   "scripts": {
+     "dev": "vite --host",
+     "build": "vite build",
+     "lint": "eslint .",
+     "preview": "vite preview"
+   },
+   ```
+
+   :::
+
+3. <samp>Check the plugin docs for any additional configurations.</samp>
+
+<samp>使用 `svgr` 插件将 `svg` 转为组件</samp>
+
+1. <samp>添加依赖</samp>
+
+   ```sh
+   npm i -D vite-plugin-svgr
+   ```
+
+2. <samp>在 `vite.config.js` 中导入插件</samp>
+
+   ::: code-group
+
+   ```js[vite.config.js]
+   import { defineConfig } from 'vite'
+   import react from '@vitejs/plugin-react'
+   import svgr from 'vite-plugin-svgr' // [!code ++]
+   
+   // https://vite.dev/config/
+   export default defineConfig({
+     plugins: [react(), svgr()], // [!code ++]
+   })
+   ```
+
+   :::
+
+3. <samp>使用</samp>
+
+   ::: code-group
+
+   ```jsx[App.jsx]
+   import ReactLogo from './assets/react.svg?react' // [!code ++]
+   import viteLogo from '/vite.svg'
+   import './App.css'
+   
+   export default function App() {
+   
+     return (
+       <>
+         <div>
+           <a href="https://vite.dev" target="_blank">
+             <img src={viteLogo} className="logo" alt="Vite logo" />
+           </a>
+           <a href="https://react.dev" target="_blank">
+             {/* [!code --] */}
+             <img src={reactLogo} className="logo react" alt="React logo" />
+              {/* [!code ++] */}
+             <ReactLogo className="logo react" />
+           </a>
+         </div>
+         <h1>Vite + React</h1>
+         <p className="read-the-docs">
+           Click on the Vite and React logos to learn more
+         </p>
+       </>
+     )
+   }
+   ```
+
+   ```css[App.css]
+   .logo {
+     height: 6em;
+     /* [!code ++] */
+     width: 6em; 
+     padding: 1.5em;
+     will-change: filter;
+     transition: filter 300ms;
+   }
+   ```
+
+   :::
 
