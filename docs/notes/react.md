@@ -6,21 +6,85 @@
 
 :::
 
- 
+ <samp>React 是一个构建用户界面的 JavaScript 库</samp>
 
+- <samp>**组件化**：React 将 UI 划分成独立的、可重用的组件。每个组件都有自己的状态和行为，可以组合成复杂的 UI</samp>
+- <samp>**声明式**：React 使用声明式编程范式，只需描述 UI ，而不需要关心具体的实现细节</samp>
+- <samp>**虚拟 DOM**： React 使用虚拟 DOM 来优化 UI 的更新。当状态改变时，React 会计算出最小化的 DOM 操作，从而提高性能</samp>
+- <samp>**跨平台**：React 用于构建 Web 应用，React Native 用于构建移动应用</samp>
+- <samp>**高性能**：React 的虚拟 DOM 和优化机制使得应用具有出色的性能</samp>
 
+## <samp>Hello World</samp>
 
-## <samp>What's New in React 19</samp>
+- <samp>`React.createElement(type, props, ...children)`：创建一个 React 元素</samp>
+- <samp>`ReactDOM.createRoot(domNode, options?)`：创建一个根节点以渲染 React 组件</samp>
 
--  <samp>`useTransition()`</samp>
-- <samp>New Compiler</samp>
-- <samp>Actions</samp>
-- <samp>New Hooks</samp>
-- <samp>Refs</samp>
-- <samp>`use()`</samp>
-- <samp>Other miscellaneous improvement to React</samp>
+::: code-group
 
+```html
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 
+<div id="app"></div>
+<script>
+  const hello = React.createElement('div', { id: 'message', className: 'hello' }, 'Hello World!');
+  const app = ReactDOM.createRoot(document.getElementById('app'));
+  app.render(hello);
+</script>
+```
+
+```html[组件]
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<div id="app"></div>
+<script>
+  function Message(props){
+    return React.createElement('div', null, props);
+  }
+  const hello = Message('Hello World!');
+  const app = ReactDOM.createRoot(document.getElementById('app'));
+  app.render(hello);
+</script>
+```
+
+:::
+
+## <samp>JSX</samp>
+
+ <samp>JSX，是一个 JavaScript 的语法扩展，在 React 中使用 JSX 来描述 UI，实际上是 `React.createElement` 语法糖</samp>
+
+::: code-group
+
+```jsx
+const element = <h1>Hello, World!</h1>;
+```
+
+```js[React.createElement]
+const element = React.createElement('h1', null, 'Hello, World!');
+```
+
+:::
+
+- <samp>**在 JSX 中使用插值**：`{}`</samp>
+
+  > <samp>变量、函数调用、数学计算等</samp>
+
+- <samp>**JSX 属性名**：需要使用 camelCase (驼峰命名法)，如：`className`、`onClick`</samp>
+
+- <samp>**JSX 属性值**：字符串或 `{}` 表达式</samp>
+
+- <samp>JSX 必须有一个根元素</samp>
+
+  > <samp>使用 `<React.Fragment></React.Fragment>` 或  `<></>` ，避免生成额外 DOM 节点</samp>
+
+- <samp>JSX 中的所有**标签必须闭合**</samp>
+
+- <samp>**JSX 注释**：`{/* 注释 */}`</samp>
+
+> [!TIP]
+>
+> <samp>建议将 JSX 包裹在一个括号中，可以避免遇到自动插入分号陷阱</samp>
 
 ## <samp>开始</samp>
 
@@ -45,6 +109,75 @@ bun create vite my-app --template react
 ```
 
 :::
+
+<samp>组件</samp>
+
+::: code-group
+
+```jsx[App.jsx]
+export default function App() {
+  return (
+    <>
+      <h1>Hello World!</h1>
+    </>
+  )
+}
+```
+
+```jsx[main.jsx]
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+```
+
+```html[index.html]
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
+
+:::
+
+## <samp>组件</samp>
+
+<samp>组件可以将 UI 分为独立的、可重用的部分，并单独考虑每个部分</samp>
+
+<samp>React 组件可以分为：函数组件、类组件</samp>
+
+- <samp>函数组件最初被称为"无状态组件"，因为它们只是简单的函数，没有自己的状态管理</samp>
+
+- <samp>无状态函数组件只是接受 `props` 并返回 JSX 元素，没有生命周期方法或状态</samp>
+- <samp>随着 React 16.8 的引入，函数组件通过 Hooks 获得了状态管理和生命周期方法的能力，成为"有状态组件"</samp>
+
+## <samp>What's New in React 19</samp>
+
+-  <samp>`useTransition()`</samp>
+- <samp>New Compiler</samp>
+- <samp>Actions</samp>
+- <samp>New Hooks</samp>
+- <samp>Refs</samp>
+- <samp>`use()`</samp>
+- <samp>Other miscellaneous improvement to React</samp>
+
+
+
+
 
 ## <samp>响应式</samp>
 
@@ -79,42 +212,6 @@ inputEle.addEventListener('input', (event) => {
 ```
 
 :::
-
-## <samp>JSX</samp>
-
- <samp>JSX，是一个 JavaScript 的语法扩展，实际上是 `React.createElement` 语法糖</samp>
-
-::: code-group
-
-```jsx
-const element = <h1>Hello, World!</h1>;
-```
-
-```js[React.createElement]
-const element = React.createElement('h1', null, 'Hello, World!');
-```
-
-:::
-
-- <samp>**插值**：`{}` 在 JSX 中可以嵌入 JS 表达式</samp>
-
-  > <samp>`{}` 内部可以使用变量、函数调用、数学计算等，但不能写语句</samp>
-
-- <samp>JSX 属性名：需要使用 camelCase (驼峰命名法)，如：`className`、`onClick`</samp>
-
-- <samp>JSX 属性值：可以是字符串或 `{}` 表达式</samp>
-
-- <samp>JSX 必须有一个根元素</samp>
-
-  > <samp>使用 `<React.Fragment></React.Fragment>` 或  `<></>` ，避免生成额外 DOM 节点</samp>
-
-- <samp>所有标签必须闭合</samp>
-
-- <samp>注释：`{/* 注释 */}`</samp>
-
-> [!TIP]
->
-> <samp>建议将 JSX 包裹在一个括号中，可以避免遇到自动插入分号陷阱</samp>
 
 ## <samp>表单</samp>
 
