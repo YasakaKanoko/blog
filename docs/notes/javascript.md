@@ -200,7 +200,31 @@
 
 ## <samp>DOM</samp>
 
+<samp>文档对象模型 ( Document Object Model, 简称 DOM )，是实现网站交互的关键要素。它是一种接口，允许编程语言操作网站的内容、结构和样式</samp>
 
+<samp>`document` 是一个内置对象，提供的属性和方法，可用于访问和修改网站</samp>
+
+- <samp>在浏览器控制台中，输入 `document`，将输出与 Elements 选项卡相同的内容</samp>
+
+- <samp>`document` 是一个对象，修改 DOM ，就是修改 `document` 的属性</samp>
+
+  ::: code-group
+
+  ```js
+  document.body.style.backgroundColor = 'fuchsia';
+  ```
+
+  ```html
+  <body style="background-color: fuchsia;">
+    <h1>Document Object Model</h1>
+  </body>
+  ```
+
+  :::
+
+> [!NOTE]
+>
+> <samp>任何连字符的 CSS 属性在 JavaScript 中都将以驼峰命名法(camelCase)形式书写</samp>
 
 ## <samp>AJAX</samp>
 
