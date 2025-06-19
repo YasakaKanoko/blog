@@ -126,6 +126,8 @@ bun run dev
 - <samp>不必递归遍历所有属性，而是直接得到一个 `Proxy`，在 Vue3 中，对数据的访问是动态的，当访问某个属性时，动态获得值与设置，极大提升了在组件初始阶段的效率</samp>
 - <samp>`Proxy` 可以监控成员的新增和删除，在 Vue3 中新增、删除成员、访问索引等都可以触发重新渲染</samp>
 
+
+
 ## <samp>文本插值</samp>
 
 <samp>[Mustache 语法](https://cn.vuejs.org/guide/essentials/template-syntax.html)：(双大括号)，在标签中同步更新相应组件实例中的数据</samp>
