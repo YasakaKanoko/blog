@@ -6,8 +6,6 @@
 
 :::
 
-
-
 <samp>System Requirements：Node.js 18.18 or later.</samp>
 
 ::: code-group
