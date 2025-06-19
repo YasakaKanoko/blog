@@ -6,49 +6,64 @@
 
 :::
 
- <samp>React 是一个构建用户界面的 JavaScript 库</samp>
+ <samp>React 是由 Facebook 开发的用于构建用户界面的强大的 JavaScript 库，它允许开发者将 UI 分解成更小的可重用的部分(称为"组件")来创建动态的且具有交互式的 Web 程序</samp>
 
-- <samp>**组件化**：React 将 UI 划分成独立的、可重用的组件。每个组件都有自己的状态和行为，可以组合成复杂的 UI</samp>
-- <samp>**声明式**：React 使用声明式编程范式，只需描述 UI ，而不需要关心具体的实现细节</samp>
-- <samp>**虚拟 DOM**： React 使用虚拟 DOM 来优化 UI 的更新。当状态改变时，React 会计算出最小化的 DOM 操作，从而提高性能</samp>
-- <samp>**跨平台**：React 用于构建 Web 应用，React Native 用于构建移动应用</samp>
-- <samp>**高性能**：React 的虚拟 DOM 和优化机制使得应用具有出色的性能</samp>
+- <samp>JSX 是一种 JavaScript 语法糖，使用 JSX 可以直接将 JavaScript 注入到 UI 中，作为组件的返回语句返回</samp>
 
-## <samp>Hello World</samp>
+- <samp>**组件**(Component)是一个普通的 JavaScript 函数</samp>
 
-- <samp>`React.createElement(type, props, ...children)`：创建一个 React 元素</samp>
-- <samp>`ReactDOM.createRoot(domNode, options?)`：创建一个根节点以渲染 React 组件</samp>
+  - <samp>返回值不再是字符串、数值或布尔值等，而是返回 JSX UI，如：按钮、表单、页面等</samp>
+
+  - <samp>轻松**重用**和管理代码，易于维护</samp>
+
+    > <samp>`props`：在组件之间传递数据，根据调用时传递参数的不同，从而让 UI 返回不同的结果，props 允许你将数据从父组件传递到子组件</samp>
+    >
+    > <samp>在 React 中，父子概念非常普遍</samp>
+
+- <samp>**虚拟 DOM**：DOM(文档对象模型)，代表网页的结构。虚拟 DOM 是真实 DOM 轻量级的副本，当应用程序的数据发生变化时，React 会首先更新虚拟 DOM，然后将有效的更改与真实 DOM 同步</samp>
+
+## <samp>开始</samp>
 
 ::: code-group
 
-```html
-<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
-<div id="app"></div>
-<script>
-  const hello = React.createElement('div', { id: 'message', className: 'hello' }, 'Hello World!');
-  const app = ReactDOM.createRoot(document.getElementById('app'));
-  app.render(hello);
-</script>
+```sh[npm]
+npm create vite@latest my-app -- --template react
 ```
 
-```html[组件]
-<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+```sh[pnpm]
+pnpm create vite my-app --template react
+```
 
-<div id="app"></div>
-<script>
-  function Message(props){
-    return React.createElement('div', null, props);
-  }
-  const hello = Message('Hello World!');
-  const app = ReactDOM.createRoot(document.getElementById('app'));
-  app.render(hello);
-</script>
+```sh[yarn]
+yarn create vite my-app --template react
+```
+
+```sh[bun]
+bun create vite my-app --template react
 ```
 
 :::
+
+<samp>Project Structure</samp> 
+
+```txt
+react-app
+├─ eslint.config.js
+├─ index.html
+├─ package.json
+├─ pnpm-lock.yaml
+├─ public
+│  └─ vite.svg
+├─ README.md
+├─ src
+│  ├─ App.css
+│  ├─ App.jsx
+│  ├─ assets
+│  │  └─ react.svg
+│  ├─ index.css
+│  └─ main.jsx
+└─ vite.config.js
+```
 
 ## <samp>JSX</samp>
 
@@ -85,30 +100,6 @@ const element = React.createElement('h1', null, 'Hello, World!');
 > [!TIP]
 >
 > <samp>建议将 JSX 包裹在一个括号中，可以避免遇到自动插入分号陷阱</samp>
-
-## <samp>开始</samp>
-
-<samp>Vite+React</samp>
-
-::: code-group
-
-```sh[npm]
-npm create vite@latest my-app -- --template react
-```
-
-```sh[pnpm]
-pnpm create vite my-app --template react
-```
-
-```sh[yarn]
-yarn create vite my-app --template react
-```
-
-```sh[bun]
-bun create vite my-app --template react
-```
-
-:::
 
 <samp>组件</samp>
 
