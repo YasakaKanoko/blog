@@ -352,6 +352,14 @@ let name = 'John';
 let age = 18;
 
 let html = highlight`<p>My name is ${name}, and I am ${age} years old.</p>`;
-
 ```
 
+### <samp>Promise</samp>
+
+#### <samp>What's Asynchronous JavaScript?</samp>
+
+<samp>Asynchronous JavaScript allows you to break down bigger projects into smaller tasks.</samp>
+
+- <samp>Callbacks</samp>
+- <samp>Promises</samp>
+- <samp>Async/Await</samp>
