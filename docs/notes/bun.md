@@ -24,7 +24,7 @@
 
    :::
 
-   
+
 
 2. <samp>`bun` 可以直接运行 TS 代码，在 Node 中，需要通过 `nodemon` 实现热更新</samp>
 
@@ -38,9 +38,9 @@
    # "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts"
    npm run dev
    ```
-   
+
    :::
-   
+
    > [!TIP]
    >
    > <samp>`--hot` 与 `--watch` 区别</samp>
@@ -196,70 +196,6 @@ console.log(process.version);
   ```
 
   > <samp>值得注意的是：bun 中可以同时使用 ES 模块和 commonjs 模块标准</samp>
-
-## <samp>bun add</samp>
-
-- <samp>添加依赖</samp>
-
-  ```sh
-  bun add lodash
-  ```
-
-- <samp>`--dev` 或 `-d` 或 `-D`：开发依赖</samp>
-
-  ```sh
-  bun add -d lodash
-  ```
-
-- <samp>`--optional`：可选依赖项</samp>
-
-  ```sh
-  bun add --optional lodash
-  ```
-
-- <samp>`--peer`：对等依赖项</samp>
-
-  ```sh
-  bun add --peer @types/bun
-  ```
-
-- <samp>`--exact` 或 `-E`：使用确定版本</samp>
-
-  ```sh
-  bun add react -E
-  ```
-
-## <samp>bun update</samp>
-
-- <samp>`bun update`：更新所有依赖项至最新版本</samp>
-
-  ```sh
-  # 更新至最新版
-  bun update --latest
-  ```
-
-- <samp>`bun update <package>`：更新特定依赖至最新版本</samp>
-
-## <samp>bun remove</samp>
-
-```sh
-bun remove ts-node
-```
-
-## <samp>bun create</samp>
-
-<samp>vue</samp>
-
-```sh
-# bun构建
-bun create vue@latest
-```
-
-<samp>React</samp>
-
-```sh
-bun create react-app my-app
-```
 
 ## <samp>bun test</samp>
 

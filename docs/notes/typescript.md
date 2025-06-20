@@ -6,24 +6,6 @@
 
 :::
 
-<samp>**特点**</samp>
-
-- <samp>TS 是一个可选的、**静态的类型系统**</samp>
-
-  ::: details
-
-  <samp>**静态**：类型检查始终发生在编译时，而非运行时</samp>
-
-  <samp>**类型系统**：对代码中的标识符(变量、函数、参数、返回值)进行类型检查</samp>
-
-  :::
-
-- <samp>TS 是 JS 的**超集**</samp>
-
-- <samp>拥抱 ES 标准</samp>
-
-- <samp>**类型检查**增强了面向对象开发</samp>
-
 ## <samp>编译选项</samp>
 
 <samp>"**编译(Compile)**"：TS 编译器将 TypeScript 代码编译成 JavaScript 代码的过程，编译时会将类型声明和相关的代码删除，不改变 JavaScript 的运行结果</samp>

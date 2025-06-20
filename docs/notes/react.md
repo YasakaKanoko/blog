@@ -68,11 +68,11 @@ react-app
 
 ::: code-group
 
-```jsx
+```jsx[JSX]
 const element = <h1>Hello, World!</h1>;
 ```
 
-```js[React.createElement]
+```js[createElement]
 const element = React.createElement('h1', null, 'Hello, World!');
 ```
 
@@ -95,6 +95,8 @@ const element = React.createElement('h1', null, 'Hello, World!');
 - <samp>`style` 属性接受 JavaScript 对象，而不是 CSS 字符串</samp>
 - <samp>注释：`{/* 注释 */}`</samp>
 
+
+
 ## <samp>条件渲染</samp>
 
 - <samp>数组作为子节点时，自动展开渲染</samp>
@@ -108,6 +110,7 @@ const element = React.createElement('h1', null, 'Hello, World!');
     return (<ul>{result}</ul>);
   }
   ```
+
 - <samp>条件渲染使用 JavaScript 逻辑(如：三元运算符、`&&`)</samp>
 - <samp>列表渲染时，每个子元素需要绑定一个唯一的 `key` 属性</samp>
 
@@ -122,8 +125,6 @@ const element = React.createElement('h1', null, 'Hello, World!');
 
 - <samp>初始化状态值：`useState(initialState)`</samp>
 - <samp>更新状态：`setState(newValue)` 或 `setState(prev => newValue)`</samp>
-
-
 
 
 
