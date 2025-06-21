@@ -169,35 +169,6 @@
 - <samp>`pixelDepth`：返回屏幕的位深度/色彩深度</samp>
 - <samp>`width`：返回屏幕的宽度</samp>
 
-## <samp>浏览器</samp>
-
-浏览器的组成
-
-1. 用户界面
-2. 浏览器引擎
-3. 渲染引擎
-4. 网络
-5. UI 后端
-6. JS 引擎
-7. 数据存储
-
-<samp>浏览器解析网页的过程</samp>
-
-1. <samp>DNS 解析</samp>
-2. <samp>TCP 三次握手</samp>
-3. <samp>TCP 四次挥手</samp>
-4. <samp>服务器返回资源，浏览器缓存资源</samp>
-5. <samp>浏览器解析、渲染</samp>
-
-## <samp>执行机制</samp>
-
-- <samp>js 引擎线程：解释执行 js 代码、用户输入、网络请求</samp>
-
-- <samp>GUI 线程：绘制用户界面。(与 js 主线程是互斥)</samp>
-- <samp>http 网络请求线程：处理用户的 `get`、`post` 等请求，等返回结果后将回调函数推入任务队列</samp>
-- <samp>定时器触发器线程：`setTimeout`、`setInterval` 等待时间结束后将执行函数推入任务队列中</samp>
-- <samp>浏览器事件处理线程：将 `click`、`mouse` 等交互事件发生后将事件放入事件队列中</samp>
-
 ## <samp>DOM</samp>
 
 <samp>文档对象模型 ( Document Object Model, 简称 DOM )，是实现网站交互的关键要素。它是一种接口，允许编程语言操作网站的内容、结构和样式</samp>
@@ -363,3 +334,12 @@ let html = highlight`<p>My name is ${name}, and I am ${age} years old.</p>`;
 - <samp>Callbacks</samp>
 - <samp>Promises</samp>
 - <samp>Async/Await</samp>
+
+## <samp>函数式编程</samp>
+
+### <samp>柯里化</samp>
+
+<samp>柯里化主要用于简化代码结构，提高系统的维护性。一个方法只有一个参数，强制功能的单一性，自然做到功能内聚，降低耦合</samp>
+
+<samp>优点：降低代码的重复，提高代码的适应性</samp>
+
